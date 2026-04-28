@@ -13,7 +13,11 @@ import {
   Menu,
   MenuItem,
   Stack,
-  Chip
+  Chip,
+  AppBar,
+  Toolbar,
+  Divider,
+  ListItemIcon
 } from '@mui/material'
 import {
   Add as AddIcon,
@@ -28,10 +32,18 @@ import {
   Info as InfoIcon,
   MoreHoriz as MoreHorizIcon,
   Warning as WarningIcon,
-  CheckCircle as CheckCircleIcon
+  CheckCircle as CheckCircleIcon,
+  Menu as MenuIcon,
+  Dashboard as DashboardIcon,
+  Assessment as AssessmentIcon,
+  ChevronRight as ChevronRightIcon,
+  SupportAgent as SupportAgentIcon,
+  Person as PersonIcon,
+  AccountCircle as AccountCircleIcon
 } from '@mui/icons-material'
 
 const drawerWidth = 280
+const navDrawerWidth = 240
 
 function App() {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -41,6 +53,8 @@ function App() {
   const [isThinking, setIsThinking] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
   const [quoteStatus, setQuoteStatus] = useState('Draft')
+  const [navDrawerOpen, setNavDrawerOpen] = useState(false)
+  const [currentApp, setCurrentApp] = useState('quick-quote')
   const open = Boolean(anchorEl)
 
   const handleClick = (event) => {
@@ -58,7 +72,7 @@ function App() {
       // First file upload
       setMessages([{
         type: 'user',
-        text: 'User attached "Copy of Justin\'s Proposal IL 2.5.26 (1).xlsx"',
+        text: 'User attached "Justin\'s client data po history.xlsx"',
         timestamp: '03:06 PM'
       }])
 
@@ -79,7 +93,7 @@ function App() {
       // Second file upload (updated file)
       setMessages(prev => [...prev, {
         type: 'user',
-        text: 'User attached "Copy of Justin\'s Proposal IL 2.5.26 (2).xlsx"',
+        text: 'User attached "Justin\'s client data po history (updated).xlsx"',
         timestamp: '03:07 PM'
       }])
 
@@ -207,50 +221,12 @@ function App() {
         setTimeout(() => {
           setIsThinking(true)
 
-          // After thinking, show third decision card
-          setTimeout(() => {
-            setIsThinking(false)
-            setCurrentStep(5) // Show decision card 3
-          }, 2000)
-        }, 800)
-      }, 500)
-    }, 300)
-  }
-
-  const handleDecision3Button = () => {
-    // User chooses "Apply nearest state rate"
-    setCurrentStep(6) // Hide Decision Card 3 immediately
-    setMessages(prev => [...prev, {
-      type: 'system',
-      text: 'User was informed that some retailers were not in the contracted rate table and had the option to apply proxy rates.',
-      timestamp: '03:08 PM',
-      isArchive: true
-    }])
-
-    setTimeout(() => {
-      setMessages(prev => [...prev, {
-        type: 'user',
-        text: 'Apply nearest state rate',
-        timestamp: '03:08 PM'
-      }])
-
-      setTimeout(() => {
-        setMessages(prev => [...prev, {
-          type: 'system',
-          text: 'Got it. I\'ve applied proxy rates for the 2 uncontracted retailers: Walmart DC #6009 → Tennessee state rate ($180/pallet), Costco Wholesale → California state rate ($300/pallet). These will be flagged in the quote output so RJW can follow up on contracted rates if volume justifies it.',
-          timestamp: '03:08 PM'
-        }])
-
-        // Show thinking indicator
-        setTimeout(() => {
-          setIsThinking(true)
-
-          // After thinking, show final preview
+          // After thinking, show final preview with pricing factors
           setTimeout(() => {
             setIsThinking(false)
             setMessages(prev => [...prev, {
               type: 'system',
-              text: 'Your file processed successfully — 117 shipments across 4 retailers. Before I build the quote, I need you to confirm a few things I\'ve pulled from the data.',
+              text: 'Your file processed successfully — 117 shipments across 4 retailers. Before I build the quote, let me explain the pricing factors and customer analysis.',
               timestamp: '03:08 PM'
             }])
             setCurrentStep(7) // Show preview card
@@ -259,6 +235,7 @@ function App() {
       }, 500)
     }, 300)
   }
+
 
   const handleDecision2Button2 = () => {
     // User chooses "Keep As Is (1.14 LBS)"
@@ -323,10 +300,202 @@ function App() {
   ]
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh', bgcolor: '#fafafa' }}>
-      {/* Sidebar */}
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: '#fafafa' }}>
+      {/* Top App Bar with Hamburger Menu */}
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{
+          bgcolor: 'white',
+          borderBottom: '1px solid #e0e0e0',
+          zIndex: (theme) => theme.zIndex.drawer + 1
+        }}
+      >
+        <Toolbar sx={{ minHeight: '48px !important', px: 2 }}>
+          <IconButton
+            edge="start"
+            onClick={() => setNavDrawerOpen(true)}
+            sx={{ mr: 2, color: '#666' }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" sx={{ fontSize: '16px', fontWeight: 600, color: '#333' }}>
+            Quick Quote
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      {/* Navigation Drawer */}
       <Drawer
-        variant="permanent"
+        anchor="left"
+        open={navDrawerOpen}
+        onClose={() => setNavDrawerOpen(false)}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: navDrawerWidth,
+            bgcolor: '#f5f5f5',
+            display: 'flex',
+            flexDirection: 'column'
+          }
+        }}
+      >
+        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+          {/* Drive Applications Header */}
+          <Box sx={{ px: 2, pt: 2, pb: 1.5 }}>
+            <Typography variant="caption" sx={{ color: '#666', fontSize: '11px', fontWeight: 500 }}>
+              Drive Applications
+            </Typography>
+          </Box>
+
+          <Divider />
+
+          {/* Navigation Links */}
+          <List sx={{ py: 0, flexGrow: 1 }}>
+            <ListItem
+              button
+              onClick={() => {
+                setCurrentApp('quick-quote')
+                setNavDrawerOpen(false)
+              }}
+              sx={{
+                py: 1.5,
+                bgcolor: currentApp === 'quick-quote' ? 'rgba(0, 68, 106, 0.12)' : 'transparent',
+                borderLeft: currentApp === 'quick-quote' ? '4px solid #00446A' : '4px solid transparent',
+                '&:hover': { bgcolor: 'rgba(0, 68, 106, 0.08)' }
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <DashboardIcon sx={{ color: currentApp === 'quick-quote' ? '#00446A' : '#666' }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Quick Quote"
+                primaryTypographyProps={{
+                  fontSize: '14px',
+                  fontWeight: currentApp === 'quick-quote' ? 600 : 400,
+                  color: currentApp === 'quick-quote' ? '#00446A' : '#666'
+                }}
+              />
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                setCurrentApp('insight-analytics')
+                setNavDrawerOpen(false)
+              }}
+              sx={{
+                py: 1.5,
+                bgcolor: currentApp === 'insight-analytics' ? 'rgba(0, 68, 106, 0.12)' : 'transparent',
+                borderLeft: currentApp === 'insight-analytics' ? '4px solid #00446A' : '4px solid transparent',
+                '&:hover': { bgcolor: 'rgba(0, 68, 106, 0.08)' }
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <AssessmentIcon sx={{ color: currentApp === 'insight-analytics' ? '#00446A' : '#666' }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Insight Analytics"
+                primaryTypographyProps={{
+                  fontSize: '14px',
+                  fontWeight: currentApp === 'insight-analytics' ? 600 : 400,
+                  color: currentApp === 'insight-analytics' ? '#00446A' : '#666'
+                }}
+              />
+            </ListItem>
+          </List>
+
+          <Divider />
+
+          {/* User Resources Section */}
+          <Box>
+            <Box sx={{ px: 2, pt: 2, pb: 1 }}>
+              <Typography variant="caption" sx={{ color: '#666', fontSize: '11px', fontWeight: 500 }}>
+                User Resources
+              </Typography>
+            </Box>
+
+            <List sx={{ py: 0 }}>
+              <ListItem
+                button
+                sx={{
+                  py: 1.5,
+                  '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.04)' }
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 40 }}>
+                  <SupportAgentIcon sx={{ color: '#666', fontSize: 20 }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Get Customer Support"
+                  primaryTypographyProps={{
+                    fontSize: '13px',
+                    color: '#333'
+                  }}
+                />
+                <ChevronRightIcon sx={{ color: '#999', fontSize: 18 }} />
+              </ListItem>
+              <ListItem
+                button
+                sx={{
+                  py: 1.5,
+                  '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.04)' }
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 40 }}>
+                  <PersonIcon sx={{ color: '#666', fontSize: 20 }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Impersonate User"
+                  primaryTypographyProps={{
+                    fontSize: '13px',
+                    color: '#333'
+                  }}
+                />
+                <ChevronRightIcon sx={{ color: '#999', fontSize: 18 }} />
+              </ListItem>
+            </List>
+
+            <Divider sx={{ my: 1 }} />
+
+            {/* User Info */}
+            <Box sx={{ px: 2, py: 1.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <AccountCircleIcon sx={{ color: '#666', fontSize: 32 }} />
+              <Box sx={{ flexGrow: 1 }}>
+                <Typography variant="body2" sx={{ fontSize: '13px', fontWeight: 500, color: '#333' }}>
+                  Emma Eshler
+                </Typography>
+                <Typography variant="caption" sx={{ fontSize: '11px', color: '#666' }}>
+                  eeshler@insight2profit.com
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Logout Button */}
+            <Box sx={{ px: 2, pb: 2 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{
+                  bgcolor: '#1976d2',
+                  textTransform: 'none',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  py: 1,
+                  '&:hover': {
+                    bgcolor: '#1565c0'
+                  }
+                }}
+              >
+                LOGOUT
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Drawer>
+
+      <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden' }}>
+        {/* Sidebar */}
+        <Drawer
+          variant="permanent"
         sx={{
           width: drawerWidth,
           flexShrink: 0,
@@ -430,6 +599,90 @@ function App() {
 
       {/* Main Content */}
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        {currentApp === 'insight-analytics' ? (
+          // Insight Analytics - Embedded Power BI
+          <Box sx={{
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            bgcolor: '#f5f5f5',
+            overflow: 'hidden'
+          }}>
+            {/* Power BI Header */}
+            <Box sx={{
+              p: 2,
+              bgcolor: 'white',
+              borderBottom: '1px solid #e0e0e0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '18px' }}>
+                RJW Logistics Analytics Dashboard
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  sx={{ textTransform: 'none', borderColor: '#e0e0e0', color: '#666' }}
+                >
+                  Refresh
+                </Button>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  sx={{ textTransform: 'none', borderColor: '#e0e0e0', color: '#666' }}
+                >
+                  Export
+                </Button>
+              </Box>
+            </Box>
+
+            {/* Power BI Embedded Frame Placeholder */}
+            <Box sx={{
+              flexGrow: 1,
+              bgcolor: 'white',
+              m: 2,
+              borderRadius: 1,
+              border: '1px solid #e0e0e0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative'
+            }}>
+              <Box sx={{ textAlign: 'center', p: 4 }}>
+                <AssessmentIcon sx={{ fontSize: 80, color: '#00446A', mb: 2 }} />
+                <Typography variant="h5" sx={{ fontWeight: 600, color: '#00446A', mb: 1 }}>
+                  Power BI Dashboard
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#666', maxWidth: 400 }}>
+                  Embedded Power BI analytics and reporting dashboard would appear here.
+                  This space is reserved for interactive charts, KPIs, and data visualizations.
+                </Typography>
+              </Box>
+
+              {/* Power BI Watermark */}
+              <Box sx={{
+                position: 'absolute',
+                bottom: 16,
+                right: 16,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                opacity: 0.5
+              }}>
+                <Typography variant="caption" sx={{ color: '#666' }}>
+                  Powered by
+                </Typography>
+                <Typography variant="caption" sx={{ fontWeight: 600, color: '#00446A' }}>
+                  Power BI
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        ) : (
+          // Quick Quote App
+          <>
         {/* Header */}
         <Box
           sx={{
@@ -443,8 +696,11 @@ function App() {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              RJW Quick Quote
+              Justin's IL Consolidation Program
             </Typography>
+            <IconButton size="small" sx={{ color: '#666' }}>
+              <EditIcon sx={{ fontSize: 18 }} />
+            </IconButton>
             <Chip
               label={quoteStatus}
               size="small"
@@ -568,54 +824,6 @@ function App() {
           ) : (
             // Conversation View
             <Box sx={{ maxWidth: 1000, mx: 'auto', width: '100%' }}>
-              {/* Workflow Progress Indicator */}
-              <Box sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 1,
-                mb: 3,
-                pb: 2,
-                borderBottom: '1px solid #e0e0e0'
-              }}>
-                {[
-                  { step: 0, label: 'Upload' },
-                  { step: 1, label: 'Validation 1/3' },
-                  { step: 3, label: 'Validation 2/3' },
-                  { step: 5, label: 'Validation 3/3' },
-                  { step: 7, label: 'Review' },
-                  { step: 8, label: 'Generate' },
-                  { step: 9, label: 'Finalize' }
-                ].map((item, index, array) => (
-                  <Box key={item.step} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
-                      <Box
-                        sx={{
-                          width: 12,
-                          height: 12,
-                          borderRadius: '50%',
-                          bgcolor: currentStep >= item.step ? '#ffc107' : '#e0e0e0',
-                          transition: 'background-color 0.3s'
-                        }}
-                      />
-                      <Typography variant="caption" sx={{ fontSize: '10px', color: currentStep >= item.step ? '#ffc107' : '#999' }}>
-                        {item.label}
-                      </Typography>
-                    </Box>
-                    {index < array.length - 1 && (
-                      <Box
-                        sx={{
-                          width: 40,
-                          height: 2,
-                          bgcolor: currentStep > item.step ? '#ffc107' : '#e0e0e0',
-                          transition: 'background-color 0.3s',
-                          mb: 2
-                        }}
-                      />
-                    )}
-                  </Box>
-                ))}
-              </Box>
               {messages.map((message, index) => (
                 <Box
                   key={index}
@@ -627,14 +835,73 @@ function App() {
                 >
                   <Box
                     sx={{
-                      maxWidth: message.isArchive ? '85%' : (message.isHeadsUp ? '100%' : '70%'),
-                      bgcolor: message.isHeadsUp ? '#fff3cd' : (message.isArchive ? '#f5f5f5' : (message.type === 'user' ? '#c5d9f1' : 'white')),
+                      maxWidth: message.isArchive ? '85%' : (message.isHeadsUp || message.isSuccess ? '100%' : '70%'),
+                      bgcolor: message.isSuccess ? '#e8f5e9' : (message.isHeadsUp ? '#fff3cd' : (message.isArchive ? '#f5f5f5' : (message.type === 'user' ? '#c5d9f1' : 'white'))),
                       p: message.isArchive ? 1.5 : 2,
                       borderRadius: 2,
-                      border: message.isHeadsUp ? '1px solid #ffc107' : (message.type === 'system' ? '1px solid #e0e0e0' : 'none'),
+                      border: message.isSuccess ? '1px solid #4caf50' : (message.isHeadsUp ? '1px solid #ffc107' : (message.type === 'system' ? '1px solid #e0e0e0' : 'none')),
                       borderLeft: message.isArchive ? '3px solid #00446A' : 'none'
                     }}
                   >
+                    {message.isSuccess && (
+                      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                        <CheckCircleIcon sx={{ color: '#4caf50', mt: 0.5 }} />
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="overline" sx={{ fontWeight: 600, color: '#4caf50', display: 'block', mb: 0.5 }}>
+                            SUCCESS
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#333', fontWeight: 600, mb: 1 }}>
+                            {message.text}
+                          </Typography>
+                          {message.changes && message.changes.length > 0 && (
+                            <Box sx={{ mb: message.showFinalizeButton ? 2 : 0 }}>
+                              <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+                                Updated fields:
+                              </Typography>
+                              <Box component="ul" sx={{ m: 0, pl: 3 }}>
+                                {message.changes.map((change, idx) => (
+                                  <Typography component="li" key={idx} variant="body2" sx={{ color: '#333', mb: 0.5 }}>
+                                    {change}
+                                  </Typography>
+                                ))}
+                              </Box>
+                            </Box>
+                          )}
+                          {message.showFinalizeButton && (
+                            <Button
+                              variant="contained"
+                              onClick={handleFinalizeQuote}
+                              startIcon={
+                                <Box
+                                  sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    bgcolor: '#ffc107',
+                                    animation: 'pulse 2s infinite',
+                                    '@keyframes pulse': {
+                                      '0%, 100%': { opacity: 1 },
+                                      '50%': { opacity: 0.5 }
+                                    }
+                                  }}
+                                />
+                              }
+                              sx={{
+                                bgcolor: '#4caf50',
+                                textTransform: 'none',
+                                borderRadius: '4px',
+                                padding: '10px 20px',
+                                '&:hover': {
+                                  bgcolor: '#388e3c'
+                                }
+                              }}
+                            >
+                              Finalize Quote, All Details Correct
+                            </Button>
+                          )}
+                        </Box>
+                      </Box>
+                    )}
                     {message.isHeadsUp && (
                       <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
                         <WarningIcon sx={{ color: '#ff9800', mt: 0.5 }} />
@@ -649,6 +916,21 @@ function App() {
                             <Button
                               variant="contained"
                               onClick={handleFinalizeQuote}
+                              startIcon={
+                                <Box
+                                  sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    bgcolor: '#ffc107',
+                                    animation: 'pulse 2s infinite',
+                                    '@keyframes pulse': {
+                                      '0%, 100%': { opacity: 1 },
+                                      '50%': { opacity: 0.5 }
+                                    }
+                                  }}
+                                />
+                              }
                               sx={{
                                 bgcolor: '#ef6c00',
                                 textTransform: 'none',
@@ -665,7 +947,7 @@ function App() {
                         </Box>
                       </Box>
                     )}
-                    {!message.isHeadsUp && (
+                    {!message.isHeadsUp && !message.isSuccess && (
                       <>
                         <Typography
                           variant="body2"
@@ -812,13 +1094,28 @@ function App() {
                     <Button
                       variant="contained"
                       onClick={handleDecisionButton1}
+                      startIcon={
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            bgcolor: '#ffc107',
+                            animation: 'pulse 2s infinite',
+                            '@keyframes pulse': {
+                              '0%, 100%': { opacity: 1 },
+                              '50%': { opacity: 0.5 }
+                            }
+                          }}
+                        />
+                      }
                       sx={{
-                        bgcolor: '#d32f2f',
+                        bgcolor: '#00446A',
                         textTransform: 'none',
                         borderRadius: '4px',
                         padding: '10px 20px',
                         '&:hover': {
-                          bgcolor: '#b71c1c'
+                          bgcolor: '#003350'
                         }
                       }}
                     >
@@ -828,12 +1125,12 @@ function App() {
                       variant="contained"
                       onClick={handleDecisionButton2}
                       sx={{
-                        bgcolor: '#d32f2f',
+                        bgcolor: '#00446A',
                         textTransform: 'none',
                         borderRadius: '4px',
                         padding: '10px 20px',
                         '&:hover': {
-                          bgcolor: '#b71c1c'
+                          bgcolor: '#003350'
                         }
                       }}
                     >
@@ -868,7 +1165,7 @@ function App() {
                         letterSpacing: '0.4px'
                       }}
                     >
-                      DECISION NEEDED (2/3)
+                      DECISION NEEDED (2/2)
                     </Typography>
                   </Box>
 
@@ -884,6 +1181,21 @@ function App() {
                     <Button
                       variant="contained"
                       onClick={handleDecision2Button1}
+                      startIcon={
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            bgcolor: '#ffc107',
+                            animation: 'pulse 2s infinite',
+                            '@keyframes pulse': {
+                              '0%, 100%': { opacity: 1 },
+                              '50%': { opacity: 0.5 }
+                            }
+                          }}
+                        />
+                      }
                       sx={{
                         bgcolor: '#00446A',
                         textTransform: 'none',
@@ -926,105 +1238,117 @@ function App() {
                     mb: 2
                   }}
                 >
-                  {/* CLIENT DETAILS */}
-                  <Typography variant="overline" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 2 }}>
-                    CLIENT DETAILS
-                  </Typography>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3, mb: 4 }}>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Client</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>RJW Logistics Group</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Opportunity / project</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>IL Consolidation Program</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Quote date</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>April 28, 2026</Typography>
-                    </Box>
-                  </Box>
+                    {/* Project Info - Compact Table */}
+                    <Box sx={{
+                      display: 'grid',
+                      gridTemplateColumns: 'auto 1fr',
+                      gap: 2,
+                      mb: 3,
+                      pb: 3,
+                      borderBottom: '1px solid #e0e0e0'
+                    }}>
+                      <Typography variant="body2" sx={{ color: '#666' }}>Client:</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>Justin</Typography>
 
-                  {/* SCOPE ASSUMPTIONS */}
-                  <Typography variant="overline" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 2 }}>
-                    SCOPE ASSUMPTIONS
-                  </Typography>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 2 }}>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Service type</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>Internal consolidation</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Temperature</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>Dry only</Typography>
-                    </Box>
-                  </Box>
-                  <Box sx={{ mb: 4 }}>
-                    <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Retailers in scope</Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 600 }}>CVS, Kehe, SuperValu, All Others</Typography>
-                  </Box>
-                  <Box sx={{ mb: 4 }}>
-                    <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Geography</Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 600 }}>National (US)</Typography>
-                  </Box>
+                      <Typography variant="body2" sx={{ color: '#666' }}>Project:</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>IL Consolidation Program</Typography>
 
-                  {/* MARKET RATE INPUTS */}
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="overline" sx={{ fontWeight: 600, color: '#666' }}>
-                      MARKET RATE INPUTS
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: '#1976d2' }}>
-                      Pulled from proposal tab
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3, mb: 4 }}>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Pallet weight assumption</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>1,620 lbs / pallet</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>In/out handling (dry)</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>$9.50 / inbound pallet</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Initial storage</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>$9.00 / pallet (up to 57")</Typography>
-                    </Box>
-                  </Box>
-                  <Box sx={{ mb: 4 }}>
-                    <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Case picking</Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 600 }}>$0.37 / case</Typography>
-                  </Box>
+                      <Typography variant="body2" sx={{ color: '#666' }}>Analysis Period:</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>Oct 2024 - Sep 2025 (12-month lookback)</Typography>
 
-                  {/* DATE RANGE */}
-                  <Typography variant="overline" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 2 }}>
-                    DATE RANGE
-                  </Typography>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 4 }}>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Invoice history period</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>Oct 2024 - Sep 2025</Typography>
+                      <Typography variant="body2" sx={{ color: '#666' }}>Quote Date:</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>April 28, 2026</Typography>
                     </Box>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666', display: 'block' }}>Annualization</Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>12-month lookback (full)</Typography>
-                    </Box>
-                  </Box>
 
-                  {/* SPECIAL REQUIREMENTS */}
-                  <Typography variant="overline" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 2 }}>
-                    SPECIAL REQUIREMENTS
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontStyle: 'italic', color: '#666', mb: 3 }}>
-                    Nothing captured yet — add anything that should factor into pricing (e.g. appointment requirements, driver assist, extended storage exposure).
-                  </Typography>
+                    {/* Pricing Factors - Badge Style */}
+                    <Box sx={{ mb: 3, pb: 3, borderBottom: '1px solid #e0e0e0' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#00446A' }}>
+                        Pricing Factors
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+                        <Box sx={{
+                          bgcolor: '#e3f2fd',
+                          px: 2,
+                          py: 1,
+                          borderRadius: 1,
+                          border: '1px solid #90caf9'
+                        }}>
+                          <Typography variant="caption" sx={{ color: '#666', display: 'block', fontSize: '11px' }}>
+                            Volume
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#1976d2' }}>
+                            High
+                          </Typography>
+                        </Box>
+                        <Box sx={{
+                          bgcolor: '#fff3e0',
+                          px: 2,
+                          py: 1,
+                          borderRadius: 1,
+                          border: '1px solid #ffb74d'
+                        }}>
+                          <Typography variant="caption" sx={{ color: '#666', display: 'block', fontSize: '11px' }}>
+                            Pallet Density
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#f57c00' }}>
+                            Medium
+                          </Typography>
+                        </Box>
+                        <Box sx={{
+                          bgcolor: '#ffebee',
+                          px: 2,
+                          py: 1,
+                          borderRadius: 1,
+                          border: '1px solid #ef5350'
+                        }}>
+                          <Typography variant="caption" sx={{ color: '#666', display: 'block', fontSize: '11px' }}>
+                            Competition
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#d32f2f' }}>
+                            High
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Customer Analysis - Highlighted Box */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: '#00446A' }}>
+                        Customer Analysis
+                      </Typography>
+                      <Box sx={{
+                        bgcolor: '#f5f5f5',
+                        p: 2,
+                        borderRadius: 1,
+                        borderLeft: '4px solid #00446A'
+                      }}>
+                        <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.7 }}>
+                          Justin's shipment mix is heavily weighted toward CVS (68% of volume), with consistent pallet counts across lanes. The geographic spread is national but concentrated in the Midwest and East Coast. Recommended approach: tiered pricing by retailer channel with volume incentives for CVS expansion.
+                        </Typography>
+                      </Box>
+                    </Box>
 
                   {/* Generate Quote Button */}
-                  <Box sx={{ pt: 2, borderTop: '1px solid #e0e0e0' }}>
+                  <Box sx={{ pt: 3, borderTop: '1px solid #e0e0e0' }}>
                     <Button
                       variant="contained"
                       fullWidth
                       onClick={handleGenerateQuote}
+                      startIcon={
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            bgcolor: '#ffc107',
+                            animation: 'pulse 2s infinite',
+                            '@keyframes pulse': {
+                              '0%, 100%': { opacity: 1 },
+                              '50%': { opacity: 0.5 }
+                            }
+                          }}
+                        />
+                      }
                       sx={{
                         bgcolor: '#00446A',
                         textTransform: 'none',
@@ -1040,78 +1364,6 @@ function App() {
                       Generate Quote
                     </Button>
                   </Box>
-                </Box>
-              )}
-
-              {/* Decision Card 3 */}
-              {currentStep === 5 && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    padding: '14px 16px',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    gap: '10px',
-                    borderRadius: '4px',
-                    border: '1px solid rgba(0, 0, 0, 0.12)',
-                    background: '#E1F5FE',
-                    mb: 2
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <InfoIcon sx={{ color: '#1976d2' }} />
-                    <Typography
-                      sx={{
-                        fontWeight: 400,
-                        fontSize: '12px',
-                        lineHeight: '166%',
-                        letterSpacing: '0.4px'
-                      }}
-                    >
-                      DECISION NEEDED (3/3)
-                    </Typography>
-                  </Box>
-
-                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                    Retailer not in your contracted rate table
-                  </Typography>
-
-                  <Typography variant="body2" sx={{ color: '#333' }}>
-                    We found shipments to Walmart DC #6009 (Shelbyville, TN) and Costco Wholesale (Tracy, CA). Neither appears in RJW's current rate table. These could be one-off spot shipments, or retailers you're actively quoting that should be added.
-                  </Typography>
-
-                  <Stack direction="row" spacing={2}>
-                    <Button
-                      variant="contained"
-                      onClick={handleDecision3Button}
-                      sx={{
-                        bgcolor: '#00446A',
-                        textTransform: 'none',
-                        borderRadius: '4px',
-                        padding: '10px 20px',
-                        '&:hover': {
-                          bgcolor: '#003350'
-                        }
-                      }}
-                    >
-                      Apply Nearest State Rate
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() => setCurrentStep(6)}
-                      sx={{
-                        bgcolor: '#00446A',
-                        textTransform: 'none',
-                        borderRadius: '4px',
-                        padding: '10px 20px',
-                        '&:hover': {
-                          bgcolor: '#003350'
-                        }
-                      }}
-                    >
-                      Update Excel
-                    </Button>
-                  </Stack>
                 </Box>
               )}
             </Box>
@@ -1138,7 +1390,7 @@ function App() {
               }}
             >
               <AddIcon />
-              {currentStep === 0 && selectedClient && (
+              {((currentStep === 0 && selectedClient) || currentStep === 2 || currentStep === 8) && (
                 <Box
                   sx={{
                     position: 'absolute',
@@ -1210,6 +1462,9 @@ function App() {
             InsightAI can make mistakes. Consider checking important information.
           </Typography>
         </Box>
+        </>
+        )}
+      </Box>
       </Box>
     </Box>
   )
