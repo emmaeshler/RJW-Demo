@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RJW Quick Quote - IL Consolidation Program</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: #00446A;
+            color: white;
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .tabs {
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+            padding: 0 40px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .tab:hover {
+            background: #f9f9f9;
+            color: #00446A;
+        }
+
+        .tab.active {
+            border-bottom-color: #00446A;
+            color: #00446A;
+        }
+
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Overview Styles */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .metric {
+            font-size: 32px;
+            font-weight: 700;
+            color: #00446A;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .info-item {
+            margin-bottom: 12px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: #f9f9f9;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        th.right {
+            text-align: right;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        td.right {
+            text-align: right;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        .total-row {
+            background: #f9f9f9;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .total-row td {
+            border-top: 2px solid #e0e0e0;
+            padding: 20px 16px;
+        }
+
+        .proxy-row {
+            background: #fffbf0;
+        }
+
+        .proxy-label {
+            display: block;
+            font-size: 11px;
+            color: #ff9800;
+            margin-top: 4px;
+        }
+
+        .editable {
+            background: #fff9e6;
+            border: 1px solid #ffe066;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: inherit;
+            min-width: 100px;
+        }
+
+        .editable:focus {
+            outline: 2px solid #ffc107;
+            background: white;
+        }
+
+        .note {
+            background: #f0f7ff;
+            border-left: 3px solid #00446A;
+            padding: 16px;
+            border-radius: 4px;
+            margin-top: 24px;
+        }
+
+        .note strong {
+            color: #00446A;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">RJW LOGISTICS GROUP</div>
+        <h1>Quick Quote - IL Consolidation Program</h1>
+        <div style="font-size: 14px;">April 28, 2026</div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('overview')">Overview</div>
+        <div class="tab" onclick="showTab('proposal')">Proposal & Rates</div>
+        <div class="tab" onclick="showTab('fuel')">Fuel Surcharge</div>
+        <div class="tab" onclick="showTab('inbound')">Inbound Rates</div>
+        <div class="tab" onclick="showTab('pricing-factors')">Pricing Factors</div>
+        <div class="tab" onclick="showTab('assumptions')">Assumptions</div>
+        <div class="tab" onclick="showTab('cvs')">CVS</div>
+        <div class="tab" onclick="showTab('kehe')">Kehe</div>
+        <div class="tab" onclick="showTab('supervalu')">SuperValu</div>
+        <div class="tab" onclick="showTab('walmart')">Walmart</div>
+        <div class="tab" onclick="showTab('costco')">Costco</div>
+    </div>
+
+    <div class="content">
+        <!-- OVERVIEW TAB -->
+        <div id="overview" class="tab-content active">
+            <h2 class="section-title">Quote Overview</h2>
+
+            <div class="overview-grid">
+                <div class="card">
+                    <h3>Total Annual Cost</h3>
+                    <div class="metric">$585,768</div>
+                    <div class="metric-label">Based on 117 shipments</div>
+                </div>
+
+                <div class="card">
+                    <h3>Shipment Volume</h3>
+                    <div class="metric">117</div>
+                    <div class="metric-label">Across 5 retailers • 2,808 pallets</div>
+                </div>
+
+                <div class="card">
+                    <h3>Average Rate</h3>
+                    <div class="metric">$209</div>
+                    <div class="metric-label">Per pallet (blended)</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Client Details</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Client</div>
+                        <div class="info-value">RJW Logistics Group</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Opportunity / Project</div>
+                        <div class="info-value">IL Consolidation Program</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Service Type</div>
+                        <div class="info-value">Internal consolidation</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Temperature</div>
+                        <div class="info-value">Dry only</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Geography</div>
+                        <div class="info-value">National (US)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Date Range</div>
+                        <div class="info-value">Oct 2024 - Sep 2025</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Retailer Breakdown</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Retailer</th>
+                            <th class="right">Shipments</th>
+                            <th class="right">Pallets</th>
+                            <th class="right">Avg Rate</th>
+                            <th class="right">Total Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CVS</td>
+                            <td class="right">48</td>
+                            <td class="right">1,152</td>
+                            <td class="right">$215/pallet</td>
+                            <td class="right">$247,680</td>
+                        </tr>
+                        <tr>
+                            <td>Kehe</td>
+                            <td class="right">34</td>
+                            <td class="right">816</td>
+                            <td class="right">$198/pallet</td>
+                            <td class="right">$161,568</td>
+                        </tr>
+                        <tr>
+                            <td>SuperValu</td>
+                            <td class="right">23</td>
+                            <td class="right">552</td>
+                            <td class="right">$205/pallet</td>
+                            <td class="right">$113,160</td>
+                        </tr>
+                        <tr class="proxy-row">
+                            <td>
+                                Walmart DC #6009
+                                <span class="proxy-label">⚠ Proxy: TN state rate applied</span>
+                            </td>
+                            <td class="right">8</td>
+                            <td class="right">192</td>
+                            <td class="right">$180/pallet</td>
+                            <td class="right">$34,560</td>
+                        </tr>
+                        <tr class="proxy-row">
+                            <td>
+                                Costco Wholesale
+                                <span class="proxy-label">⚠ Proxy: CA state rate applied</span>
+                            </td>
+                            <td class="right">4</td>
+                            <td class="right">96</td>
+                            <td class="right">$300/pallet</td>
+                            <td class="right">$28,800</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>TOTAL</strong></td>
+                            <td class="right"><strong>117</strong></td>
+                            <td class="right"><strong>2,808</strong></td>
+                            <td class="right">—</td>
+                            <td class="right" style="color: #00446A;"><strong>$585,768</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="note">
+                    <strong>💡 Note:</strong> Proxy rates (highlighted) were applied for Walmart DC #6009 and Costco Wholesale based on their respective state rates. These retailers should be reviewed for potential contracted rate negotiations if volume justifies.
+                </div>
+            </div>
+        </div>
+
+        <!-- PROPOSAL TAB -->
+        <div id="proposal" class="tab-content">
+            <h2 class="section-title">Proposal & Warehouse Rates</h2>
+
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>WH Rates</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Charges</th>
+                            <th class="right">Rate</th>
+                            <th>UOM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Receiving Processing</td>
+                            <td class="right">$9.00</td>
+                            <td>Pallet</td>
+                        </tr>
+                        <tr>
+                            <td>Pallet Labeling</td>
+                            <td class="right">$0.40</td>
+                            <td>Order</td>
+                        </tr>
+                        <tr>
+                            <td>Shrink Wrap</td>
+                            <td class="right">$0.50</td>
+                            <td>% Pallet, $3 MC for WM</td>
+                        </tr>
+                        <tr>
+                            <td>Label Purchase</td>
+                            <td class="right">$12.00</td>
+                            <td>% Pallet, $4 MC for WM</td>
+                        </tr>
+                        <tr>
+                            <td>In/Out Handling</td>
+                            <td class="right">$9.50</td>
+                            <td>Pallet</td>
+                        </tr>
+                        <tr>
+                            <td>Case Picking</td>
+                            <td class="right">$0.37</td>
+                            <td>Case</td>
+                        </tr>
+                        <tr>
+                            <td>Initial Storage Up To 57"</td>
+                            <td class="right">$9.00</td>
+                            <td>Pallet</td>
+                        </tr>
+                        <tr>
+                            <td>Recurring Storage 58 to 63"</td>
+                            <td class="right">$11.00</td>
+                            <td>Pallet</td>
+                        </tr>
+                        <tr>
+                            <td>Extended Storage Surcharge - after 180 Days</td>
+                            <td class="right">—</td>
+                            <td>Pallet</td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Pallet Labels</td>
+                            <td class="right">$0.40</td>
+                            <td>Pallet</td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Case Labels</td>
+                            <td class="right">$0.40</td>
+                            <td>Case</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping Cartons Fee</td>
+                            <td class="right">$9.50</td>
+                            <td>Cartons</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Other Charges That Can Apply</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Charges</th>
+                            <th class="right">Rate</th>
+                            <th>UOM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ASN</td>
+                            <td class="right">$0.85</td>
+                            <td>PO</td>
+                        </tr>
+                        <tr>
+                            <td>ASN Monthly</td>
+                            <td class="right">$100.00</td>
+                            <td>Month</td>
+                        </tr>
+                        <tr>
+                            <td>Route - 100k - 199k annual cases</td>
+                            <td class="right">$150.00</td>
+                            <td>Month</td>
+                        </tr>
+                        <tr>
+                            <td>Exchange Monthly - Per Retailer</td>
+                            <td class="right">$100.00</td>
+                            <td>Month</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Temp Controlled Warehouse Rates</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Charges</th>
+                            <th class="right">Rate</th>
+                            <th>UOM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>In/Out Handling</td>
+                            <td class="right">$12.00</td>
+                            <td>Inbound Pallets</td>
+                        </tr>
+                        <tr>
+                            <td>Initial Storage Up To 57"</td>
+                            <td class="right">$18.00</td>
+                            <td>Pallet</td>
+                        </tr>
+                        <tr>
+                            <td>Recurring Storage Up to 57"</td>
+                            <td class="right">$22.00</td>
+                            <td>Pallet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FUEL TAB -->
+        <div id="fuel" class="tab-content">
+            <h2 class="section-title">Fuel Surcharge Schedule</h2>
+
+            <div class="note" style="margin-bottom: 24px;">
+                <strong>*</strong>The below fuel surcharge schedule will be assessed when the DOE national average exceeds $4.00 per gallon
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>Through</th>
+                            <th class="right">Fuel Surcharge (% of LH Cost)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>$4.000</td><td>$4.009</td><td class="right">0.1%</td></tr>
+                        <tr><td>$4.010</td><td>$4.019</td><td class="right">0.2%</td></tr>
+                        <tr><td>$4.020</td><td>$4.029</td><td class="right">0.3%</td></tr>
+                        <tr><td>$4.030</td><td>$4.039</td><td class="right">0.4%</td></tr>
+                        <tr><td>$4.040</td><td>$4.049</td><td class="right">0.5%</td></tr>
+                        <tr><td>$4.050</td><td>$4.059</td><td class="right">0.6%</td></tr>
+                        <tr><td>$4.060</td><td>$4.069</td><td class="right">0.7%</td></tr>
+                        <tr><td>$4.070</td><td>$4.079</td><td class="right">0.8%</td></tr>
+                        <tr><td>$4.080</td><td>$4.089</td><td class="right">0.9%</td></tr>
+                        <tr><td>$4.090</td><td>$4.099</td><td class="right">1.0%</td></tr>
+                        <tr><td>$4.100</td><td>$4.109</td><td class="right">1.1%</td></tr>
+                        <tr><td>$4.110</td><td>$4.119</td><td class="right">1.2%</td></tr>
+                        <tr><td>$4.120</td><td>$4.129</td><td class="right">1.3%</td></tr>
+                        <tr><td>$4.130</td><td>$4.139</td><td class="right">1.4%</td></tr>
+                        <tr><td>$4.140</td><td>$4.149</td><td class="right">1.5%</td></tr>
+                        <tr><td>$4.150</td><td>$4.159</td><td class="right">1.6%</td></tr>
+                        <tr><td>$4.160</td><td>$4.169</td><td class="right">1.7%</td></tr>
+                        <tr><td>$4.170</td><td>$4.179</td><td class="right">1.8%</td></tr>
+                        <tr><td>$4.180</td><td>$4.189</td><td class="right">1.9%</td></tr>
+                        <tr><td>$4.190</td><td>$4.199</td><td class="right">2.0%</td></tr>
+                        <tr><td>$4.200</td><td>$4.209</td><td class="right">2.1%</td></tr>
+                        <tr><td>$4.210</td><td>$4.219</td><td class="right">2.2%</td></tr>
+                        <tr><td>$4.220</td><td>$4.229</td><td class="right">2.3%</td></tr>
+                        <tr><td>$4.230</td><td>$4.239</td><td class="right">2.4%</td></tr>
+                        <tr><td>$4.240</td><td>$4.249</td><td class="right">2.5%</td></tr>
+                        <tr><td>$4.250</td><td>$4.259</td><td class="right">2.6%</td></tr>
+                        <tr><td>$4.260</td><td>$4.269</td><td class="right">2.7%</td></tr>
+                        <tr><td>$4.270</td><td>$4.279</td><td class="right">2.8%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- INBOUND TAB -->
+        <div id="inbound" class="tab-content">
+            <h2 class="section-title">Inbound Rates</h2>
+
+            <div class="note" style="margin-bottom: 24px;">
+                <strong>💡 Note:</strong> Customer can adjust highlighted rates below to optimize the quote.
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pickup</th>
+                            <th class="right">IB Mix</th>
+                            <th class="right">IL Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Louisville, KY</td>
+                            <td class="right">44%</td>
+                            <td class="right"><input type="number" class="editable" value="850.00" step="0.01" /></td>
+                        </tr>
+                        <tr>
+                            <td>Fresno, CA</td>
+                            <td class="right">25%</td>
+                            <td class="right"><input type="number" class="editable" value="4450.00" step="0.01" /></td>
+                        </tr>
+                        <tr>
+                            <td>Annapolis, MD</td>
+                            <td class="right">10%</td>
+                            <td class="right"><input type="number" class="editable" value="1400.00" step="0.01" /></td>
+                        </tr>
+                        <tr>
+                            <td>Stone Mountain, GA</td>
+                            <td class="right">9%</td>
+                            <td class="right"><input type="number" class="editable" value="1275.00" step="0.01" /></td>
+                        </tr>
+                        <tr>
+                            <td>Delta, BC</td>
+                            <td class="right">7%</td>
+                            <td class="right"><input type="number" class="editable" value="3525.00" step="0.01" /></td>
+                        </tr>
+                        <tr>
+                            <td>Oakdale, CA</td>
+                            <td class="right">2%</td>
+                            <td class="right"><input type="number" class="editable" value="4325.00" step="0.01" /></td>
+                        </tr>
+                        <tr>
+                            <td>Springerville, UT</td>
+                            <td class="right">1%</td>
+                            <td class="right"><input type="number" class="editable" value="2925.00" step="0.01" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PRICING FACTORS TAB -->
+        <div id="pricing-factors" class="tab-content">
+            <h2 class="section-title">Pricing Factors & Customer Analysis</h2>
+
+            <div class="note" style="margin-bottom: 24px;">
+                <strong>💡 Note:</strong> Adjust the factors below to optimize pricing. Auto-calculated metrics are based on uploaded data.
+            </div>
+
+            <!-- Auto-Calculated Metrics -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Auto-Calculated Customer Metrics</h3>
+                <div class="overview-grid">
+                    <div class="info-item">
+                        <div class="info-label">% Walmart Volume</div>
+                        <div class="info-value">6.8%</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 4px;">8 shipments / 117 total</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Avg Pallets Per Order</div>
+                        <div class="info-value">24.0</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 4px;">2,808 pallets / 117 orders</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"># of End Retailers</div>
+                        <div class="info-value">5</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 4px;">CVS, Kehe, SuperValu, Walmart, Costco</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Factor-Based Adjustments -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Factor-Based Pricing Adjustments</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pricing Factor</th>
+                            <th class="right">Current Value</th>
+                            <th class="right">Adjustment %</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pallet Weight Assumption</td>
+                            <td class="right"><input type="number" class="editable" value="1620" step="1" style="width: 100px;" /> lbs</td>
+                            <td class="right">—</td>
+                            <td>Standard weight per pallet</td>
+                        </tr>
+                        <tr>
+                            <td>Volume Discount</td>
+                            <td class="right">2,808 pallets/year</td>
+                            <td class="right"><input type="number" class="editable" value="0" step="0.1" style="width: 80px;" />%</td>
+                            <td>Based on annual volume</td>
+                        </tr>
+                        <tr>
+                            <td>Customer Size Factor</td>
+                            <td class="right">Mid-Market</td>
+                            <td class="right"><input type="number" class="editable" value="0" step="0.1" style="width: 80px;" />%</td>
+                            <td>Revenue tier adjustment</td>
+                        </tr>
+                        <tr>
+                            <td>Retailer Complexity</td>
+                            <td class="right">5 retailers</td>
+                            <td class="right"><input type="number" class="editable" value="0" step="0.1" style="width: 80px;" />%</td>
+                            <td>Multi-retailer handling premium</td>
+                        </tr>
+                        <tr>
+                            <td>Walmart Premium</td>
+                            <td class="right">6.8% of volume</td>
+                            <td class="right"><input type="number" class="editable" value="0" step="0.1" style="width: 80px;" />%</td>
+                            <td>Special handling requirements</td>
+                        </tr>
+                        <tr>
+                            <td>Competitive Pressure</td>
+                            <td class="right">—</td>
+                            <td class="right"><input type="number" class="editable" value="0" step="0.1" style="width: 80px;" />%</td>
+                            <td>Market rate adjustment</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Customer Scorecard -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Customer Scorecard</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Attribute</th>
+                            <th class="right">Score / Rating</th>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Estimated Annual Revenue Potential</td>
+                            <td class="right">$585,768</td>
+                            <td>Based on current quote scope</td>
+                        </tr>
+                        <tr>
+                            <td>Customer Size Perspective</td>
+                            <td class="right">
+                                <select class="editable" style="width: 150px;">
+                                    <option>Small</option>
+                                    <option selected>Mid-Market</option>
+                                    <option>Enterprise</option>
+                                    <option>Strategic</option>
+                                </select>
+                            </td>
+                            <td>Classification based on total revenue</td>
+                        </tr>
+                        <tr>
+                            <td>Growth Potential</td>
+                            <td class="right">
+                                <select class="editable" style="width: 150px;">
+                                    <option>Low</option>
+                                    <option>Medium</option>
+                                    <option selected>High</option>
+                                    <option>Very High</option>
+                                </select>
+                            </td>
+                            <td>Estimated expansion opportunity</td>
+                        </tr>
+                        <tr>
+                            <td>Service Complexity</td>
+                            <td class="right">
+                                <select class="editable" style="width: 150px;">
+                                    <option>Simple</option>
+                                    <option selected>Moderate</option>
+                                    <option>Complex</option>
+                                    <option>Very Complex</option>
+                                </select>
+                            </td>
+                            <td>Based on # of retailers and requirements</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Competitor Information -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Competitor Information</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Competitor</th>
+                            <th>Service Offered</th>
+                            <th class="right">Estimated Rate</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" class="editable" placeholder="Competitor name..." style="width: 180px;" /></td>
+                            <td><input type="text" class="editable" placeholder="Service type..." style="width: 200px;" /></td>
+                            <td class="right"><input type="number" class="editable" placeholder="0.00" step="0.01" style="width: 100px;" /></td>
+                            <td><input type="text" class="editable" placeholder="Additional notes..." style="width: 250px;" /></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="editable" placeholder="Competitor name..." style="width: 180px;" /></td>
+                            <td><input type="text" class="editable" placeholder="Service type..." style="width: 200px;" /></td>
+                            <td class="right"><input type="number" class="editable" placeholder="0.00" step="0.01" style="width: 100px;" /></td>
+                            <td><input type="text" class="editable" placeholder="Additional notes..." style="width: 250px;" /></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="editable" placeholder="Competitor name..." style="width: 180px;" /></td>
+                            <td><input type="text" class="editable" placeholder="Service type..." style="width: 200px;" /></td>
+                            <td class="right"><input type="number" class="editable" placeholder="0.00" step="0.01" style="width: 100px;" /></td>
+                            <td><input type="text" class="editable" placeholder="Additional notes..." style="width: 250px;" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Parent Company Analysis -->
+            <div class="card">
+                <h3>Parent Company Revenue & Margin Analysis</h3>
+                <div class="note" style="margin-bottom: 16px;">
+                    <strong>💡 Note:</strong> This table shows revenue distribution and opportunity costs across all parent companies in the portfolio.
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parent</th>
+                            <th class="right">Total Revenue</th>
+                            <th class="right">Total Margin %</th>
+                            <th class="right">Total Margin per Pallet</th>
+                            <th class="right">WHS Opp $</th>
+                            <th class="right">WHS Opp %</th>
+                            <th class="right">LOG Opp $</th>
+                            <th class="right">LOG Opp %</th>
+                            <th class="right">Total Opp $</th>
+                            <th class="right">Total Opp %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PK KINDER CO INC</td>
+                            <td class="right">$16,025,320</td>
+                            <td class="right">43.6%</td>
+                            <td class="right">$342</td>
+                            <td class="right">$588,366</td>
+                            <td class="right">6.0%</td>
+                            <td class="right">$25,347</td>
+                            <td class="right">0.4%</td>
+                            <td class="right">$613,713</td>
+                            <td class="right">3.8%</td>
+                        </tr>
+                        <tr>
+                            <td>JFC INTERNATIONAL</td>
+                            <td class="right">$11,865,084</td>
+                            <td class="right">49.6%</td>
+                            <td class="right">$550</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$281</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$281</td>
+                            <td class="right">0.0%</td>
+                        </tr>
+                        <tr>
+                            <td>KING ARTHUR FLOUR CO</td>
+                            <td class="right">$10,781,596</td>
+                            <td class="right">34.2%</td>
+                            <td class="right">$467</td>
+                            <td class="right">$166,306</td>
+                            <td class="right">4.0%</td>
+                            <td class="right">$203,309</td>
+                            <td class="right">3.1%</td>
+                            <td class="right">$369,615</td>
+                            <td class="right">3.4%</td>
+                        </tr>
+                        <tr>
+                            <td>BLACK RIFLE COFFEE CO</td>
+                            <td class="right">$10,628,677</td>
+                            <td class="right">39.1%</td>
+                            <td class="right">$435</td>
+                            <td class="right">$170,219</td>
+                            <td class="right">4.0%</td>
+                            <td class="right">$50,636</td>
+                            <td class="right">0.8%</td>
+                            <td class="right">$220,854</td>
+                            <td class="right">2.1%</td>
+                        </tr>
+                        <tr>
+                            <td>LEGENDARY FOODS</td>
+                            <td class="right">$8,092,004</td>
+                            <td class="right">46.1%</td>
+                            <td class="right">$469</td>
+                            <td class="right">$136,961</td>
+                            <td class="right">4.0%</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$136,961</td>
+                            <td class="right">1.7%</td>
+                        </tr>
+                        <tr>
+                            <td>WINE BARREL HOLDINGS, LLC</td>
+                            <td class="right">$7,778,434</td>
+                            <td class="right">46.6%</td>
+                            <td class="right">$471</td>
+                            <td class="right">$198,334</td>
+                            <td class="right">4.0%</td>
+                            <td class="right">$27,719</td>
+                            <td class="right">1.0%</td>
+                            <td class="right">$226,054</td>
+                            <td class="right">2.9%</td>
+                        </tr>
+                        <tr>
+                            <td>Bragg Live Food Products</td>
+                            <td class="right">$6,910,274</td>
+                            <td class="right">40.9%</td>
+                            <td class="right">$416</td>
+                            <td class="right">$105,736</td>
+                            <td class="right">4.0%</td>
+                            <td class="right">$50,429</td>
+                            <td class="right">1.2%</td>
+                            <td class="right">$156,165</td>
+                            <td class="right">2.3%</td>
+                        </tr>
+                        <tr>
+                            <td>Trove Brands LLC</td>
+                            <td class="right">$6,676,554</td>
+                            <td class="right">46.2%</td>
+                            <td class="right">$744</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$16,807</td>
+                            <td class="right">0.6%</td>
+                            <td class="right">$16,807</td>
+                            <td class="right">0.3%</td>
+                        </tr>
+                        <tr>
+                            <td>GARZA FOOD VENTURES</td>
+                            <td class="right">$5,927,266</td>
+                            <td class="right">48.7%</td>
+                            <td class="right">$778</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$1,996</td>
+                            <td class="right">0.1%</td>
+                            <td class="right">$1,996</td>
+                            <td class="right">0.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Harry's USA Inc</td>
+                            <td class="right">$5,770,947</td>
+                            <td class="right">44.6%</td>
+                            <td class="right">$382</td>
+                            <td class="right">$197,646</td>
+                            <td class="right">6.0%</td>
+                            <td class="right">$11,145</td>
+                            <td class="right">0.4%</td>
+                            <td class="right">$208,791</td>
+                            <td class="right">3.6%</td>
+                        </tr>
+                        <tr>
+                            <td>DAHLANI</td>
+                            <td class="right">$5,766,417</td>
+                            <td class="right">46.9%</td>
+                            <td class="right">$572</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$31,915</td>
+                            <td class="right">1.0%</td>
+                            <td class="right">$31,915</td>
+                            <td class="right">0.6%</td>
+                        </tr>
+                        <tr>
+                            <td>RAW SUGAR LLC</td>
+                            <td class="right">$5,298,425</td>
+                            <td class="right">44.4%</td>
+                            <td class="right">$558</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$12,176</td>
+                            <td class="right">0.5%</td>
+                            <td class="right">$12,176</td>
+                            <td class="right">0.2%</td>
+                        </tr>
+                        <tr>
+                            <td>Dr Squatch Soap Co Inc</td>
+                            <td class="right">$5,262,859</td>
+                            <td class="right">45.6%</td>
+                            <td class="right">$431</td>
+                            <td class="right">$101,682</td>
+                            <td class="right">4.0%</td>
+                            <td class="right">$3,104</td>
+                            <td class="right">0.1%</td>
+                            <td class="right">$104,785</td>
+                            <td class="right">2.0%</td>
+                        </tr>
+                        <tr>
+                            <td>OLDE THOMPSON dba OFI</td>
+                            <td class="right">$5,188,215</td>
+                            <td class="right">42.1%</td>
+                            <td class="right">$674</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$16,523</td>
+                            <td class="right">0.7%</td>
+                            <td class="right">$16,523</td>
+                            <td class="right">0.3%</td>
+                        </tr>
+                        <tr>
+                            <td>PACIFIC WORLD CORPORATION</td>
+                            <td class="right">$5,043,965</td>
+                            <td class="right">51.7%</td>
+                            <td class="right">$533</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$1,424</td>
+                            <td class="right">0.1%</td>
+                            <td class="right">$1,424</td>
+                            <td class="right">0.0%</td>
+                        </tr>
+                        <tr>
+                            <td>NATURE'S BAKERY</td>
+                            <td class="right">$5,022,096</td>
+                            <td class="right">43.5%</td>
+                            <td class="right">$1,765</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$72,343</td>
+                            <td class="right">2.2%</td>
+                            <td class="right">$72,343</td>
+                            <td class="right">1.4%</td>
+                        </tr>
+                        <tr>
+                            <td>VNGR Beverage, LLC dba Poppi</td>
+                            <td class="right">$4,834,481</td>
+                            <td class="right">42.9%</td>
+                            <td class="right">$942</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$94,975</td>
+                            <td class="right">2.9%</td>
+                            <td class="right">$94,975</td>
+                            <td class="right">2.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Gooders Foods DBA Goodies Inc</td>
+                            <td class="right">$4,780,316</td>
+                            <td class="right">47.3%</td>
+                            <td class="right">$589</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$6,918</td>
+                            <td class="right">0.2%</td>
+                            <td class="right">$6,918</td>
+                            <td class="right">0.1%</td>
+                        </tr>
+                        <tr>
+                            <td>SPINDRIFT BEVERAGE CO INC</td>
+                            <td class="right">$4,208,797</td>
+                            <td class="right">38.5%</td>
+                            <td class="right">$922</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$75,255</td>
+                            <td class="right">2.4%</td>
+                            <td class="right">$75,255</td>
+                            <td class="right">1.8%</td>
+                        </tr>
+                        <tr>
+                            <td>THRIVING BRANDS</td>
+                            <td class="right">$4,021,290</td>
+                            <td class="right">40.7%</td>
+                            <td class="right">$956</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$6,605</td>
+                            <td class="right">0.4%</td>
+                            <td class="right">$6,605</td>
+                            <td class="right">0.2%</td>
+                        </tr>
+                        <tr>
+                            <td>LESSERFEVIL LLC</td>
+                            <td class="right">$4,008,986</td>
+                            <td class="right">43.6%</td>
+                            <td class="right">$269</td>
+                            <td class="right">$202,249</td>
+                            <td class="right">8.0%</td>
+                            <td class="right">$88,985</td>
+                            <td class="right">6.0%</td>
+                            <td class="right">$291,235</td>
+                            <td class="right">7.3%</td>
+                        </tr>
+                        <tr>
+                            <td>Cumberland Packaging</td>
+                            <td class="right">$4,005,306</td>
+                            <td class="right">46.0%</td>
+                            <td class="right">$287</td>
+                            <td class="right">$123,311</td>
+                            <td class="right">8.0%</td>
+                            <td class="right">$6,030</td>
+                            <td class="right">0.2%</td>
+                            <td class="right">$129,341</td>
+                            <td class="right">3.2%</td>
+                        </tr>
+                        <tr>
+                            <td>TONY DOWNS FOODS CO</td>
+                            <td class="right">$3,957,262</td>
+                            <td class="right">48.2%</td>
+                            <td class="right">$1,172</td>
+                            <td class="right">$0</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$170</td>
+                            <td class="right">0.0%</td>
+                            <td class="right">$170</td>
+                            <td class="right">0.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Trove Brands LLC</td>
+                            <td class="right">$3,936,798</td>
+                            <td class="right">41.0%</td>
+                            <td class="right">$159</td>
+                            <td class="right">$238,852</td>
+                            <td class="right">8.0%</td>
+                            <td class="right">$26,333</td>
+                            <td class="right">2.8%</td>
+                            <td class="right">$265,185</td>
+                            <td class="right">6.7%</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>Total</strong></td>
+                            <td class="right"><strong>$348,918,746</strong></td>
+                            <td class="right"><strong>44.6%</strong></td>
+                            <td class="right"><strong>$688</strong></td>
+                            <td class="right"><strong>$4,400,114</strong></td>
+                            <td class="right"><strong>2.5%</strong></td>
+                            <td class="right"><strong>$2,619,462</strong></td>
+                            <td class="right"><strong>1.5%</strong></td>
+                            <td class="right"><strong>$7,019,576</strong></td>
+                            <td class="right"><strong>2.0%</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ASSUMPTIONS TAB -->
+        <div id="assumptions" class="tab-content">
+            <h2 class="section-title">Assumptions</h2>
+
+            <div class="card">
+                <h3>Scope & Service Parameters</h3>
+                <div style="margin-bottom: 24px;">
+                    <div class="info-item">
+                        <div class="info-label">Service Type</div>
+                        <div class="info-value">Internal consolidation</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Temperature Requirements</div>
+                        <div class="info-value">Dry only</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Retailers in Scope</div>
+                        <div class="info-value">CVS, Kehe, SuperValu, All Others</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Geographic Coverage</div>
+                        <div class="info-value">National (US)</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 32px;">Market Rate Inputs</h3>
+                <div style="margin-bottom: 24px;">
+                    <div class="info-item">
+                        <div class="info-label">Pallet Weight Assumption</div>
+                        <div class="info-value">1,620 lbs / pallet</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">In/Out Handling (Dry)</div>
+                        <div class="info-value">$9.50 / inbound pallet</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Initial Storage</div>
+                        <div class="info-value">$9.00 / pallet (up to 57")</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Case Picking</div>
+                        <div class="info-value">$0.37 / case</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 32px;">Data & Analysis Period</h3>
+                <div style="margin-bottom: 24px;">
+                    <div class="info-item">
+                        <div class="info-label">Invoice History Period</div>
+                        <div class="info-value">Oct 2024 - Sep 2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Annualization Method</div>
+                        <div class="info-value">12-month lookback (full)</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 32px;">Special Requirements</h3>
+                <div style="font-style: italic; color: #666;">
+                    Nothing captured yet — add anything that should factor into pricing (e.g. appointment requirements, driver assist, extended storage exposure).
+                </div>
+            </div>
+        </div>
+
+        <!-- CHANNEL TABS -->
+        <div id="cvs" class="tab-content">
+            <h2 class="section-title">CVS Channel Details</h2>
+
+            <div class="overview-grid" style="margin-bottom: 32px;">
+                <div class="card">
+                    <h3>Total Outbound Pallets</h3>
+                    <div class="metric">1,152</div>
+                    <div class="metric-label">From 48 shipments</div>
+                </div>
+
+                <div class="card">
+                    <h3>Total Outbound Weight</h3>
+                    <div class="metric">1,866,240 lbs</div>
+                    <div class="metric-label">Based on 1,620 lbs/pallet</div>
+                </div>
+
+                <div class="card">
+                    <h3>Annual Spend</h3>
+                    <div class="metric">$247,680</div>
+                    <div class="metric-label">Total cost for CVS</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Warehouse Cost Breakdown</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th class="right">Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Receiving/Out-Loading</td>
+                            <td class="right">$24,480.00</td>
+                        </tr>
+                        <tr>
+                            <td>Pallet Labeling</td>
+                            <td class="right">$1,224.00</td>
+                        </tr>
+                        <tr>
+                            <td>Shrink Wrap</td>
+                            <td class="right">$3,138.42</td>
+                        </tr>
+                        <tr>
+                            <td>Label Purchase</td>
+                            <td class="right">$5,904.77</td>
+                        </tr>
+                        <tr>
+                            <td>In/Out Handling - Dry</td>
+                            <td class="right">$4,674.61</td>
+                        </tr>
+                        <tr>
+                            <td>Storage Up to 57" - Dry</td>
+                            <td class="right">$4,428.50</td>
+                        </tr>
+                        <tr>
+                            <td>Case Picking</td>
+                            <td class="right">$24,578.60</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>Total Warehouse Cost</strong></td>
+                            <td class="right" style="color: #00446A;"><strong>$68,428.90</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Freight Cost Summary</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th class="right">Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Outbound Freight Dry</td>
+                            <td class="right">$65,305.78</td>
+                        </tr>
+                        <tr>
+                            <td>Total Outbound Freight Cost</td>
+                            <td class="right">$65,368.78</td>
+                        </tr>
+                        <tr>
+                            <td>Inbound Freight Dry</td>
+                            <td class="right">$40,838.28</td>
+                        </tr>
+                        <tr>
+                            <td>Total Inbound Freight Cost</td>
+                            <td class="right">$40,838.28</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>Combined Freight Cost</strong></td>
+                            <td class="right" style="color: #00446A;"><strong>$106,207.06</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Cost Analysis</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th class="right">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cost Per Case Without Inbound</td>
+                            <td class="right">$2.02</td>
+                        </tr>
+                        <tr>
+                            <td>Cost Per Case With Inbound</td>
+                            <td class="right">$2.63</td>
+                        </tr>
+                        <tr>
+                            <td>Total Cost Without Inbound Freight</td>
+                            <td class="right">$133,854.74</td>
+                        </tr>
+                        <tr>
+                            <td>Total Cost With Inbound Freight</td>
+                            <td class="right">$174,693.02</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="kehe" class="tab-content">
+            <h2 class="section-title">Kehe Channel Details</h2>
+            <p>Kehe channel details coming soon...</p>
+        </div>
+
+        <div id="supervalu" class="tab-content">
+            <h2 class="section-title">SuperValu Channel Details</h2>
+            <p>SuperValu channel details coming soon...</p>
+        </div>
+
+        <div id="walmart" class="tab-content">
+            <h2 class="section-title">Walmart Channel Details</h2>
+            <p>Walmart channel details coming soon...</p>
+        </div>
+
+        <div id="costco" class="tab-content">
+            <h2 class="section-title">Costco Channel Details</h2>
+            <p>Costco channel details coming soon...</p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
