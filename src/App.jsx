@@ -63,7 +63,30 @@ function App() {
   const [quoteStatus, setQuoteStatus] = useState('Draft')
   const [navDrawerOpen, setNavDrawerOpen] = useState(false)
   const [currentApp, setCurrentApp] = useState('quick-quote')
+  const [insightView, setInsightView] = useState('scorecard') // 'scorecard' or 'customer-detail'
+  const [selectedCustomerDetail, setSelectedCustomerDetail] = useState(null)
+  const [contextMenu, setContextMenu] = useState(null)
   const open = Boolean(anchorEl)
+
+  // Customer detail data for drill-in
+  const customerDetails = {
+    'Justin': {
+      name: 'Justin',
+      currentPalletRate: '$42.50',
+      palletLanes: [
+        { from: 'Chicago, IL', to: 'CVS - Northeast DC', pallets: 245, currentRate: '$38.25', suggested: '$42.00', savings: '-$918.75' },
+        { from: 'Chicago, IL', to: 'Walgreens - Memphis', pallets: 132, currentRate: '$45.50', suggested: '$48.00', savings: '-$330.00' },
+        { from: 'Chicago, IL', to: 'Target - Atlanta', pallets: 89, currentRate: '$42.75', suggested: '$45.50', savings: '-$244.75' },
+        { from: 'Dallas, TX', to: 'CVS - Southwest DC', pallets: 156, currentRate: '$39.00', suggested: '$41.75', savings: '-$429.00' }
+      ],
+      warehouseRates: [
+        { location: 'Chicago, IL - Primary', currentRate: '$3.25/pallet/day', suggested: '$3.50/pallet/day', monthlyCost: '$4,875', suggestedCost: '$5,250' },
+        { location: 'Dallas, TX - Secondary', currentRate: '$2.95/pallet/day', suggested: '$3.15/pallet/day', monthlyCost: '$2,360', suggestedCost: '$2,520' }
+      ],
+      suggestion: 'Based on current market rates and lane analysis, we recommend adjusting pallet rates across all major lanes. The current pricing is $42/shipment below LTL benchmark, representing significant revenue opportunity. Warehouse rates are competitive but slight adjustments align with regional market increases.',
+      potentialImpact: '+$1,922.50/month in transportation revenue, +$535/month in warehouse revenue'
+    }
+  }
 
   const aiRecommendations = {
     'Justin': {
@@ -106,6 +129,32 @@ function App() {
   const handleAIClose = () => {
     setAiModalOpen(false)
     setSelectedAIClient(null)
+  }
+
+  const handleCustomerRightClick = (event, customerName) => {
+    event.preventDefault()
+    setContextMenu({
+      mouseX: event.clientX,
+      mouseY: event.clientY,
+      customerName: customerName
+    })
+  }
+
+  const handleContextMenuClose = () => {
+    setContextMenu(null)
+  }
+
+  const handleViewCustomerDetail = () => {
+    if (contextMenu && customerDetails[contextMenu.customerName]) {
+      setSelectedCustomerDetail(customerDetails[contextMenu.customerName])
+      setInsightView('customer-detail')
+    }
+    handleContextMenuClose()
+  }
+
+  const handleBackToScorecard = () => {
+    setInsightView('scorecard')
+    setSelectedCustomerDetail(null)
   }
 
   const handleClick = (event) => {
@@ -657,6 +706,7 @@ function App() {
       {/* Main Content */}
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         {currentApp === 'insight-analytics' ? (
+          insightView === 'scorecard' ? (
           // Insight Analytics - Client Scorecard
           <Box sx={{
             flexGrow: 1,
@@ -874,7 +924,18 @@ function App() {
                     </thead>
                     <tbody>
                       <tr style={{ background: 'white', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Justin</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e, 'Justin')}
+                        >
+                          Justin
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$585,768</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -967,7 +1028,18 @@ function App() {
                         </td>
                       </tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Bragg Live Food</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Bragg Live Food')}
+                        >
+                          Bragg Live Food
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$892,450</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1013,7 +1085,18 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Trove Brands LLC</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Trove Brands LLC')}
+                        >
+                          Trove Brands LLC
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,245,880</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1062,7 +1145,18 @@ function App() {
                         </td>
                       </tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>WHIRLYBIRD GRANOLA</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'WHIRLYBIRD GRANOLA')}
+                        >
+                          WHIRLYBIRD GRANOLA
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$324,560</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1102,7 +1196,18 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>AB WORLD FOODS</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'AB WORLD FOODS')}
+                        >
+                          AB WORLD FOODS
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,567,230</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1177,7 +1282,18 @@ function App() {
                         </td>
                       </tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Nature's Path Foods</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,"Nature's Path Foods")}
+                        >
+                          Nature's Path Foods
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$2,145,900</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1205,7 +1321,18 @@ function App() {
                         </td>
                       </tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>KULI KULI FOODS</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'KULI KULI FOODS')}
+                        >
+                          KULI KULI FOODS
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$456,280</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1258,7 +1385,18 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Simple Mills</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Simple Mills')}
+                        >
+                          Simple Mills
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$3,892,400</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1307,7 +1445,18 @@ function App() {
                         </td>
                       </tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Good Health Brands</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Good Health Brands')}
+                        >
+                          Good Health Brands
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$734,560</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1360,7 +1509,18 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>LESSER EVIL</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'LESSER EVIL')}
+                        >
+                          LESSER EVIL
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,678,200</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1388,7 +1548,18 @@ function App() {
                         </td>
                       </tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Hippeas</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Hippeas')}
+                        >
+                          Hippeas
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$542,890</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1441,7 +1612,18 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Made Good Foods</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Made Good Foods')}
+                        >
+                          Made Good Foods
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,923,450</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1469,7 +1651,18 @@ function App() {
                         </td>
                       </tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Hu Kitchen</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Hu Kitchen')}
+                        >
+                          Hu Kitchen
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$687,340</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1522,7 +1715,18 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Tia Lupita Foods</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Tia Lupita Foods')}
+                        >
+                          Tia Lupita Foods
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$298,750</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1562,7 +1766,18 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Partake Foods</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Partake Foods')}
+                        >
+                          Partake Foods
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$823,190</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1637,7 +1852,18 @@ function App() {
                         </td>
                       </tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Chomps</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Chomps')}
+                        >
+                          Chomps
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$2,567,800</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1665,7 +1891,18 @@ function App() {
                         </td>
                       </tr>
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Purely Elizabeth</td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            color: '#0078D4',
+                            fontWeight: 500,
+                            cursor: 'context-menu',
+                            textDecoration: 'underline'
+                          }}
+                          onContextMenu={(e) => handleCustomerRightClick(e,'Purely Elizabeth')}
+                        >
+                          Purely Elizabeth
+                        </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,234,670</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -1708,8 +1945,353 @@ function App() {
                   </table>
                 </Box>
               </Box>
+
             </Box>
           </Box>
+          ) : (
+            // Customer Detail View
+            <Box sx={{
+              flexGrow: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              bgcolor: '#f5f5f5',
+              overflow: 'hidden'
+            }}>
+              {/* Header with Back Button */}
+              <Box sx={{
+                p: 2,
+                bgcolor: 'white',
+                borderBottom: '1px solid #e0e0e0',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2
+              }}>
+                <IconButton
+                  onClick={handleBackToScorecard}
+                  sx={{
+                    color: '#0078D4',
+                    '&:hover': { bgcolor: 'rgba(0, 120, 212, 0.08)' }
+                  }}
+                >
+                  <ChevronRightIcon sx={{ transform: 'rotate(180deg)' }} />
+                </IconButton>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '18px', color: '#323130' }}>
+                    {selectedCustomerDetail?.name} - Customer Detail
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#605E5C' }}>
+                    Rate analysis and recommendations
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* Content */}
+              <Box sx={{ flexGrow: 1, overflow: 'auto', p: 3, bgcolor: '#f5f5f5' }}>
+                {selectedCustomerDetail && (
+                  <>
+                    {/* KPI Cards - Power BI Style */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2.5, mb: 3 }}>
+                      {/* Avg Pallet Rate Card */}
+                      <Box sx={{
+                        bgcolor: 'white',
+                        p: 3,
+                        borderRadius: '4px',
+                        boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                        borderLeft: '4px solid #0078D4',
+                        transition: 'box-shadow 0.3s',
+                        '&:hover': {
+                          boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
+                        }
+                      }}>
+                        <Typography variant="caption" sx={{
+                          color: '#8A8886',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px',
+                          display: 'block',
+                          mb: 1.5
+                        }}>
+                          Avg Pallet Rate
+                        </Typography>
+                        <Typography sx={{
+                          fontSize: '36px',
+                          fontWeight: 600,
+                          color: '#323130',
+                          lineHeight: 1,
+                          mb: 1
+                        }}>
+                          {selectedCustomerDetail.currentPalletRate}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
+                          vs. $38.20 market avg
+                        </Typography>
+                        <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
+                          <Box sx={{ width: '72%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                        </Box>
+                        <Typography variant="caption" sx={{ color: '#8A8886', fontSize: '12px', display: 'block', mb: 1.5 }}>
+                          72nd percentile in lane
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '13px' }}>
+                          ▲ Up $4.30 vs. Q3
+                        </Typography>
+                      </Box>
+
+                      {/* Potential Impact Card */}
+                      <Box sx={{
+                        bgcolor: 'white',
+                        p: 3,
+                        borderRadius: '4px',
+                        boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                        borderLeft: '4px solid #107C10',
+                        transition: 'box-shadow 0.3s',
+                        '&:hover': {
+                          boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
+                        }
+                      }}>
+                        <Typography variant="caption" sx={{
+                          color: '#8A8886',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px',
+                          display: 'block',
+                          mb: 1.5
+                        }}>
+                          Potential Monthly Impact
+                        </Typography>
+                        <Typography sx={{
+                          fontSize: '36px',
+                          fontWeight: 600,
+                          color: '#107C10',
+                          lineHeight: 1,
+                          mb: 1
+                        }}>
+                          +$2,458
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 0.5 }}>
+                          Transport + warehouse combined
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#8A8886', fontSize: '12px', display: 'block', mb: 1.5 }}>
+                          $1,923 transport / $535 warehouse
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '13px' }}>
+                          ▲ Revenue opportunity identified
+                        </Typography>
+                      </Box>
+
+                      {/* Total Pallet Lanes Card */}
+                      <Box sx={{
+                        bgcolor: 'white',
+                        p: 3,
+                        borderRadius: '4px',
+                        boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                        borderLeft: '4px solid #8A8886',
+                        transition: 'box-shadow 0.3s',
+                        '&:hover': {
+                          boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
+                        }
+                      }}>
+                        <Typography variant="caption" sx={{
+                          color: '#8A8886',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px',
+                          display: 'block',
+                          mb: 1.5
+                        }}>
+                          Total Pallet Lanes
+                        </Typography>
+                        <Typography sx={{
+                          fontSize: '36px',
+                          fontWeight: 600,
+                          color: '#323130',
+                          lineHeight: 1,
+                          mb: 1
+                        }}>
+                          {selectedCustomerDetail.palletLanes.length}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
+                          Active routes
+                        </Typography>
+                        <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
+                          <Box sx={{ width: '40%', height: '100%', bgcolor: '#8A8886' }}></Box>
+                        </Box>
+                        <Typography variant="caption" sx={{ color: '#8A8886', fontSize: '12px', display: 'block', mb: 1.5 }}>
+                          4 of 10 possible lanes active
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#8A8886', fontWeight: 600, fontSize: '13px' }}>
+                          — Unchanged from Q3
+                        </Typography>
+                      </Box>
+
+                      {/* Warehouse Locations Card */}
+                      <Box sx={{
+                        bgcolor: 'white',
+                        p: 3,
+                        borderRadius: '4px',
+                        boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                        borderLeft: '4px solid #8A8886',
+                        transition: 'box-shadow 0.3s',
+                        '&:hover': {
+                          boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
+                        }
+                      }}>
+                        <Typography variant="caption" sx={{
+                          color: '#8A8886',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px',
+                          display: 'block',
+                          mb: 1.5
+                        }}>
+                          Warehouse Locations
+                        </Typography>
+                        <Typography sx={{
+                          fontSize: '36px',
+                          fontWeight: 600,
+                          color: '#323130',
+                          lineHeight: 1,
+                          mb: 1
+                        }}>
+                          {selectedCustomerDetail.warehouseRates.length}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
+                          Active facilities
+                        </Typography>
+                        <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
+                          <Box sx={{ width: '25%', height: '100%', bgcolor: '#8A8886' }}></Box>
+                        </Box>
+                        <Typography variant="caption" sx={{ color: '#8A8886', fontSize: '12px', display: 'block', mb: 1.5 }}>
+                          2 of 8 regional facilities used
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#8A8886', fontWeight: 600, fontSize: '13px' }}>
+                          — Unchanged from Q3
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Recommendation Bar */}
+                    <Box sx={{
+                      mb: 3,
+                      bgcolor: 'white',
+                      p: 2.5,
+                      borderRadius: '4px',
+                      boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                      borderLeft: '4px solid #FFB900',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: 2
+                    }}>
+                      <LightbulbIcon sx={{ color: '#FFB900', fontSize: 24, mt: 0.25 }} />
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="subtitle2" sx={{
+                          fontWeight: 600,
+                          color: '#323130',
+                          mb: 0.75,
+                          fontSize: '13px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>
+                          Our Recommendation
+                        </Typography>
+                        <Typography variant="body2" sx={{
+                          color: '#323130',
+                          lineHeight: 1.6,
+                          fontSize: '14px'
+                        }}>
+                          {selectedCustomerDetail.suggestion}
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Pallet Lanes Table */}
+                    <Box sx={{
+                      mb: 3,
+                      bgcolor: 'white',
+                      borderRadius: '4px',
+                      boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                      overflow: 'hidden'
+                    }}>
+                      <Box sx={{ p: 2.5, borderBottom: '1px solid #E1E1E1' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: '#323130', fontSize: '16px' }}>
+                          Pallet Lanes Analysis
+                        </Typography>
+                      </Box>
+                      <Box sx={{ overflow: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid #E1E1E1', background: '#FAF9F8' }}>
+                              <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>From</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>To</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pallets</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Current Rate</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Suggested Rate</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Monthly Impact</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {selectedCustomerDetail.palletLanes.map((lane, idx) => (
+                              <tr key={idx} style={{ background: idx % 2 === 0 ? 'white' : '#FAFAFA', borderBottom: '1px solid #EDEBE9' }}>
+                                <td style={{ padding: '14px 16px', color: '#323130' }}>{lane.from}</td>
+                                <td style={{ padding: '14px 16px', color: '#323130' }}>{lane.to}</td>
+                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130', fontWeight: 600 }}>{lane.pallets}</td>
+                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{lane.currentRate}</td>
+                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#0078D4', fontWeight: 600 }}>{lane.suggested}</td>
+                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#D13438', fontWeight: 600 }}>{lane.savings}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </Box>
+                    </Box>
+
+                    {/* Warehouse Rates Table */}
+                    <Box sx={{
+                      mb: 3,
+                      bgcolor: 'white',
+                      borderRadius: '4px',
+                      boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                      overflow: 'hidden'
+                    }}>
+                      <Box sx={{ p: 2.5, borderBottom: '1px solid #E1E1E1' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, color: '#323130', fontSize: '16px' }}>
+                          Warehouse Rates
+                        </Typography>
+                      </Box>
+                      <Box sx={{ overflow: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid #E1E1E1', background: '#FAF9F8' }}>
+                              <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Current Rate</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Suggested Rate</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Current Monthly</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Suggested Monthly</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {selectedCustomerDetail.warehouseRates.map((wh, idx) => (
+                              <tr key={idx} style={{ background: idx % 2 === 0 ? 'white' : '#FAFAFA', borderBottom: '1px solid #EDEBE9' }}>
+                                <td style={{ padding: '14px 16px', color: '#323130' }}>{wh.location}</td>
+                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{wh.currentRate}</td>
+                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#0078D4', fontWeight: 600 }}>{wh.suggested}</td>
+                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{wh.monthlyCost}</td>
+                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{wh.suggestedCost}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </Box>
+                    </Box>
+
+                  </>
+                )}
+              </Box>
+            </Box>
+          )
         ) : (
           // Quick Quote App
           <>
@@ -2518,6 +3100,23 @@ function App() {
         )}
       </Box>
       </Box>
+
+      {/* Customer Context Menu */}
+      <Menu
+        open={contextMenu !== null}
+        onClose={handleContextMenuClose}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          contextMenu !== null
+            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+            : undefined
+        }
+      >
+        <MenuItem onClick={handleViewCustomerDetail}>
+          <PersonIcon sx={{ mr: 1.5, fontSize: 20, color: '#0078D4' }} />
+          View Customer Detail
+        </MenuItem>
+      </Menu>
 
       {/* AI Recommendation Modal */}
       <Dialog
