@@ -320,7 +320,7 @@ function App() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" sx={{ fontSize: '16px', fontWeight: 600, color: '#333' }}>
-            Quick Quote
+            {currentApp === 'insight-analytics' ? 'Insight Analytics' : 'Quick Quote'}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -517,25 +517,27 @@ function App() {
             </IconButton>
           </Box>
 
-          <Button
-            fullWidth
-            variant="contained"
-            startIcon={<ChatIcon />}
-            sx={{
-              bgcolor: '#00446A',
-              textTransform: 'none',
-              mb: 3,
-              py: 1,
-              '&:hover': {
-                bgcolor: '#003350'
-              }
-            }}
-          >
-            NEW CHAT
-          </Button>
+          {currentApp === 'quick-quote' && (
+            <>
+              <Button
+                fullWidth
+                variant="contained"
+                startIcon={<ChatIcon />}
+                sx={{
+                  bgcolor: '#00446A',
+                  textTransform: 'none',
+                  mb: 3,
+                  py: 1,
+                  '&:hover': {
+                    bgcolor: '#003350'
+                  }
+                }}
+              >
+                NEW CHAT
+              </Button>
 
-          <List sx={{ p: 0 }}>
-            {clients.map((client) => (
+              <List sx={{ p: 0 }}>
+                {clients.map((client) => (
               <Box key={client.id}>
                 <ListItem
                   button
@@ -594,6 +596,8 @@ function App() {
               </Box>
             ))}
           </List>
+            </>
+          )}
         </Box>
       </Drawer>
 
