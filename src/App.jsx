@@ -664,7 +664,7 @@ function App() {
                   bgcolor: 'white',
                   p: 3,
                   border: '1px solid #E1E1E1',
-                  borderLeft: '4px solid #0078D4',
+                  borderLeft: '4px solid #107C10',
                   boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                 }}>
                   <Typography variant="caption" sx={{
@@ -748,7 +748,7 @@ function App() {
                   bgcolor: 'white',
                   p: 3,
                   border: '1px solid #E1E1E1',
-                  borderLeft: '4px solid #D13438',
+                  borderLeft: '4px solid #107C10',
                   boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                 }}>
                   <Typography variant="caption" sx={{
