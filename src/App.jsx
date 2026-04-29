@@ -493,7 +493,8 @@ function App() {
       </Drawer>
 
       <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden' }}>
-        {/* Sidebar */}
+        {/* Sidebar - Only show for Quick Quote */}
+        {currentApp === 'quick-quote' && (
         <Drawer
           variant="permanent"
         sx={{
@@ -600,6 +601,7 @@ function App() {
           )}
         </Box>
       </Drawer>
+        )}
 
       {/* Main Content */}
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
