@@ -224,11 +224,11 @@
 
     <div class="tabs">
         <div class="tab active" onclick="showTab('overview')">Overview</div>
-        <div class="tab" onclick="showTab('pricing-factors')">Pricing Factors</div>
         <div class="tab" onclick="showTab('cvs')">CVS</div>
         <div class="tab" onclick="showTab('kehe')">Kehe</div>
         <div class="tab" onclick="showTab('supervalu')">SuperValu</div>
         <div class="tab" onclick="showTab('other')">Other Retailers</div>
+        <div class="tab" onclick="showTab('freight-surcharge')">Freight Surcharge</div>
     </div>
 
     <div class="content">
@@ -253,6 +253,28 @@
                     <h3>Avg Pallets per Shipment</h3>
                     <div class="metric">24</div>
                     <div class="metric-label">Consolidation efficiency</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Warehouse Rates (Per Unit)</h3>
+                <div style="display: grid; gap: 12px; margin-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                        <span style="color: #666;">Case Picking</span>
+                        <span style="font-weight: 600; color: #00446A;">$0.37</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                        <span style="color: #666;">Pallet Handling</span>
+                        <span style="font-weight: 600; color: #00446A;">$9.50</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                        <span style="color: #666;">Storage (per pallet/week)</span>
+                        <span style="font-weight: 600; color: #00446A;">$2.25</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                        <span style="color: #666;">BOL Fee</span>
+                        <span style="font-weight: 600; color: #00446A;">$50.00</span>
+                    </div>
                 </div>
             </div>
 
@@ -1133,87 +1155,103 @@
             </div>
         </div>
 
-        <!-- PRICING FACTORS TAB -->
-        <div id="pricing-factors" class="tab-content">
-            <h2 class="section-title">Pricing Factors & Customer Analysis</h2>
+        <!-- FREIGHT SURCHARGE TAB -->
+        <div id="freight-surcharge" class="tab-content">
+            <h2 class="section-title">Freight Surcharge Schedule</h2>
 
             <div class="card" style="margin-bottom: 24px;">
-                <h3>Auto-Calculated Customer Metrics</h3>
-                <div class="overview-grid">
-                    <div>
-                        <div class="info-label">% CVS Volume</div>
-                        <div class="info-value">41.0%</div>
-                        <div style="font-size: 12px; color: #666; margin-top: 4px;">48 shipments / 117 total</div>
-                    </div>
-                    <div>
-                        <div class="info-label">Avg Pallets Per Order</div>
-                        <div class="info-value">24.0</div>
-                        <div style="font-size: 12px; color: #666; margin-top: 4px;">2,808 pallets / 117 orders</div>
-                    </div>
-                    <div>
-                        <div class="info-label"># of End Retailers</div>
-                        <div class="info-value">4</div>
-                        <div style="font-size: 12px; color: #666; margin-top: 4px;">CVS, Kehe, SuperValu, Other</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card" style="margin-bottom: 24px;">
-                <h3>Key Pricing Factors</h3>
+                <h3>Fuel Surcharge Matrix</h3>
                 <table>
                     <thead>
                         <tr>
-                            <th>Factor</th>
-                            <th>Value</th>
-                            <th>Impact on Pricing</th>
+                            <th>Diesel Price Range (per gallon)</th>
+                            <th class="right">Surcharge %</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Volume Category</td>
-                            <td>High Volume</td>
-                            <td>Tier 1 pricing applied</td>
+                            <td>$3.00 - $3.49</td>
+                            <td class="right">0.0%</td>
                         </tr>
                         <tr>
-                            <td>Pallet Density</td>
-                            <td>Medium (24 pallets/shipment)</td>
-                            <td>Standard handling rates</td>
+                            <td>$3.50 - $3.99</td>
+                            <td class="right">2.5%</td>
                         </tr>
                         <tr>
-                            <td>Geographic Spread</td>
-                            <td>National</td>
-                            <td>Multi-region optimization</td>
+                            <td>$4.00 - $4.49</td>
+                            <td class="right">5.0%</td>
                         </tr>
                         <tr>
-                            <td>Retailer Concentration</td>
-                            <td>CVS-heavy (41%)</td>
-                            <td>Volume discount opportunity</td>
+                            <td>$4.50 - $4.99</td>
+                            <td class="right">7.5%</td>
                         </tr>
                         <tr>
-                            <td>Competitive Pressure</td>
-                            <td>High</td>
-                            <td>Market-rate alignment</td>
+                            <td>$5.00 - $5.49</td>
+                            <td class="right">10.0%</td>
+                        </tr>
+                        <tr>
+                            <td>$5.50+</td>
+                            <td class="right">12.5%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 4px; border-left: 4px solid #00446A;">
+                    <Typography style="font-size: 12px; color: #666;">
+                        <strong>Current Rate:</strong> Fuel surcharge is calculated weekly based on the Department of Energy's U.S. National Average Diesel Price.
+                        Current surcharge: <strong>5.0%</strong> (based on $4.25/gallon)
+                    </Typography>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Additional Surcharges</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Surcharge Type</th>
+                            <th>Rate</th>
+                            <th>Application</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Peak Season (Nov - Dec)</td>
+                            <td>$25 per shipment</td>
+                            <td>Applied to all shipments during peak season</td>
+                        </tr>
+                        <tr>
+                            <td>Residential Delivery</td>
+                            <td>$75 per delivery</td>
+                            <td>Non-commercial delivery addresses</td>
+                        </tr>
+                        <tr>
+                            <td>Liftgate Service</td>
+                            <td>$50 per use</td>
+                            <td>When liftgate required at pickup or delivery</td>
+                        </tr>
+                        <tr>
+                            <td>Inside Delivery</td>
+                            <td>$100 per shipment</td>
+                            <td>Delivery beyond loading dock</td>
+                        </tr>
+                        <tr>
+                            <td>Redelivery</td>
+                            <td>100% of original freight</td>
+                            <td>Failed delivery attempts</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <div class="card">
-                <h3>Customer Analysis Summary</h3>
-                <div style="margin-bottom: 16px;">
-                    <div class="info-label">Shipment Mix Analysis</div>
-                    <div style="color: #333; line-height: 1.6; margin-top: 8px;">
-                        Justin's shipment mix is heavily weighted toward CVS (41% of volume), with consistent pallet counts across lanes.
-                        The geographic spread is national but concentrated in the Midwest and East Coast, with strong presence in Louisville, KY origin point.
-                    </div>
-                </div>
-                <div>
-                    <div class="info-label">Recommended Pricing Approach</div>
-                    <div style="color: #333; line-height: 1.6; margin-top: 8px;">
-                        Tiered pricing by retailer channel with volume incentives for CVS expansion. Consider lane-specific optimization for
-                        high-frequency routes (Louisville to Indianapolis, Fresno to LA). Opportunity for multi-year commitment discounts given volume stability.
-                    </div>
-                </div>
+                <h3>Surcharge Notes</h3>
+                <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                    <li>Fuel surcharge is updated weekly and invoiced separately from base freight rates</li>
+                    <li>Peak season surcharge applies automatically to all shipments between November 1 and December 31</li>
+                    <li>Multiple surcharges may apply to a single shipment</li>
+                    <li>All surcharges are subject to change with 30 days notice</li>
+                    <li>Contracted rates may have different surcharge structures - please consult your contract</li>
+                </ul>
             </div>
         </div>
     </div>

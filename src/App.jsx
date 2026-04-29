@@ -259,7 +259,7 @@ function App() {
     setTimeout(() => {
       setMessages(prev => [...prev, {
         type: 'system',
-        text: 'Quote Preview Is Generating — Review the HTML in the new tab. If you need to make changes, edit the HTML and reupload it here. Otherwise, click "Finalize Quote" below if all details are correct.',
+        text: 'Quote Preview Is Generating — Review the HTML in the new tab. If you need to update prices, tell me the changes here and I will generate a new HTML. Otherwise, click "Finalize Quote" below if all details are correct.',
         timestamp: '03:09 PM',
         isHeadsUp: true,
         showFinalizeButton: true
@@ -1327,6 +1327,28 @@ function App() {
                         </Typography>
                       </Box>
                     </Box>
+
+                  {/* Model Factors Confirmation */}
+                  <Box sx={{
+                    mt: 3,
+                    p: 2.5,
+                    bgcolor: '#fffbf0',
+                    border: '1px solid #ffc107',
+                    borderRadius: 1
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                      <InfoIcon sx={{ color: '#f57c00', mt: 0.5, fontSize: 20 }} />
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#333', mb: 1 }}>
+                          Do you agree with these pricing factors?
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#666', display: 'block', lineHeight: 1.6 }}>
+                          The factors shown above (Volume, Pallet Density, Competition) will determine the pricing in your quote.
+                          If you disagree or need adjustments, changes will impact the final prices generated.
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
 
                   {/* Generate Quote Button */}
                   <Box sx={{ pt: 3, borderTop: '1px solid #e0e0e0' }}>
