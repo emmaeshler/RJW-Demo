@@ -634,7 +634,7 @@ function App() {
                   }
                 }}
               >
-                NEW CHAT
+                NEW QUOTE
               </Button>
 
               <List sx={{ p: 0 }}>
@@ -918,8 +918,8 @@ function App() {
                         <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Margin % (vs avg 15.5%)</th>
                         <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Walmart % (target &lt;23%)</th>
                         <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>LTL Δ</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Insights</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '50px' }}>AI</th>
+                        <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Strategic Insights</th>
+                        <th style={{ padding: '10px 16px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '50px' }}>Pricing Model Context</th>
                       </tr>
                     </thead>
                     <tbody>
