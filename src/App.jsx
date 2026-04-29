@@ -606,7 +606,7 @@ function App() {
       {/* Main Content */}
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         {currentApp === 'insight-analytics' ? (
-          // Insight Analytics - Embedded Power BI
+          // Insight Analytics - Client Scorecard
           <Box sx={{
             flexGrow: 1,
             display: 'flex',
@@ -614,7 +614,7 @@ function App() {
             bgcolor: '#f5f5f5',
             overflow: 'hidden'
           }}>
-            {/* Power BI Header */}
+            {/* Header */}
             <Box sx={{
               p: 2,
               bgcolor: 'white',
@@ -624,7 +624,7 @@ function App() {
               justifyContent: 'space-between'
             }}>
               <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '18px' }}>
-                RJW Logistics Analytics Dashboard
+                Client Scorecard & Opportunities
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <Button
@@ -644,45 +644,347 @@ function App() {
               </Box>
             </Box>
 
-            {/* Power BI Embedded Frame Placeholder */}
-            <Box sx={{
-              flexGrow: 1,
-              bgcolor: 'white',
-              m: 2,
-              borderRadius: 1,
-              border: '1px solid #e0e0e0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative'
-            }}>
-              <Box sx={{ textAlign: 'center', p: 4 }}>
-                <AssessmentIcon sx={{ fontSize: 80, color: '#00446A', mb: 2 }} />
-                <Typography variant="h5" sx={{ fontWeight: 600, color: '#00446A', mb: 1 }}>
-                  Power BI Dashboard
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#666', maxWidth: 400 }}>
-                  Embedded Power BI analytics and reporting dashboard would appear here.
-                  This space is reserved for interactive charts, KPIs, and data visualizations.
-                </Typography>
+            {/* Content */}
+            <Box sx={{ flexGrow: 1, overflow: 'auto', p: 3 }}>
+              {/* Top Opportunity Cards */}
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, mb: 3 }}>
+                <Box sx={{ bgcolor: 'white', p: 2.5, borderRadius: 1, border: '1px solid #e0e0e0', borderLeft: '4px solid #f57c00' }}>
+                  <Typography variant="caption" sx={{ color: '#666', textTransform: 'uppercase', fontSize: '11px', fontWeight: 600 }}>
+                    Margin Improvement
+                  </Typography>
+                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#f57c00', mt: 1, mb: 0.5 }}>
+                    $127K
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
+                    5 clients priced below market average
+                  </Typography>
+                </Box>
+
+                <Box sx={{ bgcolor: 'white', p: 2.5, borderRadius: 1, border: '1px solid #e0e0e0', borderLeft: '4px solid #1976d2' }}>
+                  <Typography variant="caption" sx={{ color: '#666', textTransform: 'uppercase', fontSize: '11px', fontWeight: 600 }}>
+                    Walmart Push
+                  </Typography>
+                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#1976d2', mt: 1, mb: 0.5 }}>
+                    8 Clients
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
+                    Low Walmart % with potential to increase
+                  </Typography>
+                </Box>
+
+                <Box sx={{ bgcolor: 'white', p: 2.5, borderRadius: 1, border: '1px solid #e0e0e0', borderLeft: '4px solid #d32f2f' }}>
+                  <Typography variant="caption" sx={{ color: '#666', textTransform: 'uppercase', fontSize: '11px', fontWeight: 600 }}>
+                    LTL Rate Issues
+                  </Typography>
+                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#d32f2f', mt: 1, mb: 0.5 }}>
+                    3 Clients
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
+                    Priced below LTL benchmark rates
+                  </Typography>
+                </Box>
               </Box>
 
-              {/* Power BI Watermark */}
-              <Box sx={{
-                position: 'absolute',
-                bottom: 16,
-                right: 16,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                opacity: 0.5
-              }}>
-                <Typography variant="caption" sx={{ color: '#666' }}>
-                  Powered by
+              {/* Client Scorecard Table */}
+              <Box sx={{ bgcolor: 'white', borderRadius: 1, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
+                <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0', bgcolor: '#fafafa' }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                    Client Performance & AI Insights
+                  </Typography>
+                </Box>
+                <Box sx={{ overflow: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid #e0e0e0', background: '#fafafa' }}>
+                        <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#666' }}>CLIENT</th>
+                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>ANNUAL REVENUE</th>
+                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>MARGIN %</th>
+                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>WALMART %</th>
+                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>LTL DELTA</th>
+                        <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '12px', fontWeight: 600, color: '#666' }}>AI INSIGHTS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                        <td style={{ padding: '16px', fontWeight: 500 }}>Justin</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>$585,768</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#f57c00', fontWeight: 600 }}>12.3%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#1976d2', fontWeight: 600 }}>8%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#d32f2f', fontWeight: 600 }}>-$42</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'center' }}>
+                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                            <Box
+                              title="Margin 3.2% below similar clients (avg 15.5%). Opportunity: +$18.7K annually"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                bgcolor: '#fff3e0',
+                                border: '2px solid #f57c00',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: '#f57c00'
+                              }}
+                            >
+                              M
+                            </Box>
+                            <Box
+                              title="Walmart volume at 8% vs business avg 23%. Potential to increase shipments by introducing Walmart-specific rates"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                bgcolor: '#e3f2fd',
+                                border: '2px solid #1976d2',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: '#1976d2'
+                              }}
+                            >
+                              W
+                            </Box>
+                            <Box
+                              title="Priced $42/shipment below LTL benchmark. Risk: underpriced service, recommend rate adjustment"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                bgcolor: '#ffebee',
+                                border: '2px solid #d32f2f',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: '#d32f2f'
+                              }}
+                            >
+                              L
+                            </Box>
+                          </Box>
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                        <td style={{ padding: '16px', fontWeight: 500 }}>Bragg Live Food</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>$892,450</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#4caf50', fontWeight: 600 }}>16.8%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#1976d2', fontWeight: 600 }}>12%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$15</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'center' }}>
+                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                            <Box
+                              title="Walmart at 12% but trending down. Suggest proactive outreach to maintain volume"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                bgcolor: '#e3f2fd',
+                                border: '2px solid #1976d2',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: '#1976d2'
+                              }}
+                            >
+                              W
+                            </Box>
+                          </Box>
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                        <td style={{ padding: '16px', fontWeight: 500 }}>Trove Brands LLC</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>$1,245,880</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#f57c00', fontWeight: 600 }}>11.2%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#666', fontWeight: 600 }}>18%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$8</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'center' }}>
+                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                            <Box
+                              title="Margin 4.3% below peer average. High volume client - small rate increase = $53K opportunity"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                bgcolor: '#fff3e0',
+                                border: '2px solid #f57c00',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: '#f57c00'
+                              }}
+                            >
+                              M
+                            </Box>
+                          </Box>
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                        <td style={{ padding: '16px', fontWeight: 500 }}>WHIRLYBIRD GRANOLA</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>$324,560</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#4caf50', fontWeight: 600 }}>17.5%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#1976d2', fontWeight: 600 }}>5%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$22</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'center' }}>
+                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                            <Box
+                              title="Only 5% Walmart volume. Client profile matches high-performing Walmart shippers - expansion opportunity"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                bgcolor: '#e3f2fd',
+                                border: '2px solid #1976d2',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: '#1976d2'
+                              }}
+                            >
+                              W
+                            </Box>
+                          </Box>
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                        <td style={{ padding: '16px', fontWeight: 500 }}>AB WORLD FOODS</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>$1,567,230</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#f57c00', fontWeight: 600 }}>10.8%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#1976d2', fontWeight: 600 }}>6%</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <span style={{ color: '#d32f2f', fontWeight: 600 }}>-$55</span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'center' }}>
+                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                            <Box
+                              title="Margin significantly below benchmark. Large revenue base makes this a priority renegotiation"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                bgcolor: '#fff3e0',
+                                border: '2px solid #f57c00',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: '#f57c00'
+                              }}
+                            >
+                              M
+                            </Box>
+                            <Box
+                              title="Walmart penetration extremely low at 6%. Target for business development team"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                bgcolor: '#e3f2fd',
+                                border: '2px solid #1976d2',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: '#1976d2'
+                              }}
+                            >
+                              W
+                            </Box>
+                            <Box
+                              title="Priced $55/shipment below LTL rates. Highest priority for rate correction"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                bgcolor: '#ffebee',
+                                border: '2px solid #d32f2f',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'help',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: '#d32f2f'
+                              }}
+                            >
+                              L
+                            </Box>
+                          </Box>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Box>
+              </Box>
+
+              {/* AI Insights Legend */}
+              <Box sx={{ mt: 2, p: 2, bgcolor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+                <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1 }}>
+                  AI INSIGHT FLAGS (hover for details)
                 </Typography>
-                <Typography variant="caption" sx={{ fontWeight: 600, color: '#00446A' }}>
-                  Power BI
-                </Typography>
+                <Box sx={{ display: 'flex', gap: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#fff3e0', border: '2px solid #f57c00', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#f57c00' }}>M</Box>
+                    <Typography variant="caption" sx={{ color: '#666' }}>Margin Opportunity</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#e3f2fd', border: '2px solid #1976d2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#1976d2' }}>W</Box>
+                    <Typography variant="caption" sx={{ color: '#666' }}>Walmart Growth Potential</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#ffebee', border: '2px solid #d32f2f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#d32f2f' }}>L</Box>
+                    <Typography variant="caption" sx={{ color: '#666' }}>Below LTL Rates</Typography>
+                  </Box>
+                </Box>
               </Box>
             </Box>
           </Box>
