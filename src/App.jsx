@@ -18,7 +18,11 @@ import {
   Toolbar,
   Divider,
   ListItemIcon,
-  Tooltip
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material'
 import {
   Add as AddIcon,
@@ -40,7 +44,8 @@ import {
   ChevronRight as ChevronRightIcon,
   SupportAgent as SupportAgentIcon,
   Person as PersonIcon,
-  AccountCircle as AccountCircleIcon
+  AccountCircle as AccountCircleIcon,
+  Lightbulb as LightbulbIcon
 } from '@mui/icons-material'
 
 const drawerWidth = 280
@@ -49,7 +54,8 @@ const navDrawerWidth = 240
 function App() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [expandedClients, setExpandedClients] = useState({})
-  const [expandedAIRows, setExpandedAIRows] = useState({})
+  const [aiModalOpen, setAiModalOpen] = useState(false)
+  const [selectedAIClient, setSelectedAIClient] = useState(null)
   const [selectedClient, setSelectedClient] = useState(null)
   const [messages, setMessages] = useState([])
   const [isThinking, setIsThinking] = useState(false)
@@ -59,8 +65,47 @@ function App() {
   const [currentApp, setCurrentApp] = useState('quick-quote')
   const open = Boolean(anchorEl)
 
-  const toggleAIRow = (clientName) => {
-    setExpandedAIRows(prev => ({ ...prev, [clientName]: !prev[clientName] }))
+  const aiRecommendations = {
+    'Justin': {
+      title: 'Strategic Priority: Margin Optimization',
+      recommendation: `AI analysis identifies focused margin improvement as the primary opportunity. Your highest-revenue client ($4.8M) has excellent retailer diversification (Walmart at 8% - well below the 23% concentration risk threshold), which positions you to capture margin gains without single-customer dependency. Phase 1 (immediate): Fix the margin rate issue. At 12.2% vs 15.5% benchmark, this represents $18.7K in annual opportunity and is a straightforward correction. Phase 2 (30-60 days): Correct LTL pricing to prevent future margin erosion as volume scales. Phase 3 (ongoing): Protect current retailer balance - the 8% Walmart mix is strategically sound and reduces business risk. The sequencing matters because margin improvements compound across all channels, and your current diversified base insulates you from retailer-specific volatility.`,
+      potential: '$45K annual margin gain',
+      actions: ['Week 1: Initiate margin rate review with finance', 'Week 2-4: Present revised rate structure to client', 'Week 4-8: Implement LTL benchmark pricing', 'Ongoing: Maintain healthy retailer diversification below 23%']
+    },
+    'Trove Brands LLC': {
+      title: 'Margin Priority with Diversification Watch',
+      recommendation: `Pattern recognition shows Trove Brands LLC is a strong candidate for tiered volume pricing. Current margin of 11.2% vs 15.5% benchmark represents $53K in annual opportunity on your $1.2M base. AI recommendation: introduce a 3-tier volume incentive structure. Their 18% Walmart penetration is approaching the concentration threshold - any pricing incentives should encourage diversification across Target, Kroger, and regional channels rather than deepening Walmart dependency. A multi-retailer tiered approach protects margin while reducing single-customer risk. Benchmark data shows clients with balanced retailer mix (no single channel above 20%) have 40% lower churn and more stable revenue.`,
+      potential: '$53K annual margin improvement',
+      actions: ['Week 1-2: Design 3-tier volume pricing model (13%/14.5%/16% target margins)', 'Week 3: Present tiered structure with multi-retailer incentives', 'Month 2: Track margin improvement and retailer balance', 'Quarter 2: Monitor Walmart % stays below 23% threshold']
+    },
+    'AB WORLD FOODS': {
+      title: 'Critical: Margin + Diversification Risk',
+      recommendation: `This is your #1 intervention priority. AB WORLD FOODS combines margin underperformance with extremely low retailer diversification (Walmart at only 6%). While low Walmart % is normally positive, this client is too concentrated elsewhere - creating different single-retailer dependency. The strategic conversation is about building a balanced multi-retailer model. Executive business review agenda: (1) Immediate LTL rate correction ($28K quick win), (2) 60-day margin improvement plan targeting 14%, (3) 90-day retailer balance strategy - analyze which non-Walmart channel is over-concentrated and develop diversification roadmap across Walmart, Target, and specialty. The goal is no single retailer above 30% to reduce churn risk.`,
+      potential: '$163K margin opportunity + reduced concentration risk',
+      actions: ['Week 1: Schedule executive business review (VP+ level)', 'Week 2: Present 90-day partnership roadmap during EBR', 'Week 2-3: Implement LTL rate correction', 'Month 2-3: Execute margin improvement plan', 'Month 3-6: Develop balanced multi-retailer strategy']
+    },
+    'Simple Mills': {
+      title: 'Protect Margin, Monitor Mix',
+      recommendation: `Your healthiest client relationship - 19.3% margin on $3.9M revenue. The strategic priority here is preservation, not expansion. Current Walmart penetration at 14% is ideal from a diversification standpoint. AI recommendation: resist any Walmart-exclusive programs that would push penetration above 23%. Instead, focus on maintaining this profitable, balanced relationship. If Simple Mills requests Walmart growth, counter-propose a multi-retailer expansion (Target, Whole Foods, Sprouts) that grows total volume while keeping Walmart percentage stable. This protects your margin and reduces concentration risk. The healthiest long-term partnerships have strong margins AND retailer diversity.`,
+      potential: 'Protect $764K annual margin (19.3% on $3.9M)',
+      actions: ['Month 1: Communicate strategic value of current retailer balance to Simple Mills', 'Ongoing: Monitor Walmart % stays below 20%', 'If growth requested: Propose multi-retailer expansion plan', 'Quarterly: Review margin and diversification metrics']
+    },
+    'Partake Foods': {
+      title: 'Fix Foundation, Preserve Balance',
+      recommendation: `AI risk assessment flags operational and pricing issues that must be fixed before any channel expansion. Partake Foods has healthy retailer diversification (Walmart at 10% - well below 23% threshold), which is a strategic asset to protect. Priority sequence: Step 1 (immediate): Correct LTL pricing ($18 below benchmark). As they scale in the allergen-free category, this gap becomes exponentially more expensive. Step 2 (30-60 days): Improve operational margin from 13.5% to 15.5% through warehouse efficiency. Step 3 (ongoing): Maintain current retailer balance. Do NOT pursue aggressive Walmart expansion - their 10% mix is strategically sound. Growing any single retailer above 23% increases business risk and negotiation leverage imbalance. The sequencing is critical: fix operational foundation first, then protect the diversified retailer base that insulates you from concentration risk.`,
+      potential: '$40K+ margin protection through operational fixes',
+      actions: ['Week 1-2: Implement LTL pricing correction', 'Week 3-8: Operational efficiency audit (warehouse, routing)', 'Week 8-10: Implement improvements targeting 15.5% margin', 'Ongoing: Maintain Walmart below 15% to preserve retailer balance']
+    }
+  }
+
+  const handleAIClick = (clientData) => {
+    setSelectedAIClient(clientData)
+    setAiModalOpen(true)
+  }
+
+  const handleAIClose = () => {
+    setAiModalOpen(false)
+    setSelectedAIClient(null)
   }
 
   const handleClick = (event) => {
@@ -688,7 +733,7 @@ function App() {
                   {/* Progress Bar */}
                   <Box sx={{ mb: 1 }}>
                     <Box sx={{ height: 8, bgcolor: '#E1E1E1', borderRadius: 1, overflow: 'hidden' }}>
-                      <Box sx={{ width: '42%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                      <Box sx={{ width: '42%', height: '100%', bgcolor: '#107C10' }}></Box>
                     </Box>
                   </Box>
                   <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block', mb: 2 }}>
@@ -701,7 +746,7 @@ function App() {
                   </Typography>
                 </Box>
 
-                {/* Walmart Opportunities Card */}
+                {/* Walmart Diversification Card */}
                 <Box sx={{
                   bgcolor: 'white',
                   p: 3,
@@ -718,28 +763,28 @@ function App() {
                     display: 'block',
                     mb: 1.5
                   }}>
-                    Walmart Underleveraged Clients
+                    Walmart Over-Concentration Risk
                   </Typography>
                   <Typography variant="h3" sx={{ fontWeight: 700, color: '#323130', mb: 1, fontSize: '48px', lineHeight: 1 }}>
-                    8
+                    9
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5, lineHeight: 1.4 }}>
-                    of 24 clients below category avg penetration
+                    of 24 clients above 23% — diversification needed
                   </Typography>
 
                   {/* Progress Bar */}
                   <Box sx={{ mb: 1 }}>
                     <Box sx={{ height: 8, bgcolor: '#E1E1E1', borderRadius: 1, overflow: 'hidden' }}>
-                      <Box sx={{ width: '67%', height: '100%', bgcolor: '#FFB900' }}></Box>
+                      <Box sx={{ width: '38%', height: '100%', bgcolor: '#F2711C' }}></Box>
                     </Box>
                   </Box>
                   <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block', mb: 2 }}>
-                    67% of portfolio — high exposure
+                    38% of portfolio at concentration risk
                   </Typography>
 
                   {/* Status */}
                   <Typography variant="caption" sx={{ color: '#F2711C', fontSize: '12px', fontWeight: 600 }}>
-                    ▲ Up 3 from Q3 — needs attention
+                    Strategic priority: retailer diversification
                   </Typography>
                 </Box>
 
@@ -772,7 +817,7 @@ function App() {
                   {/* Progress Bar */}
                   <Box sx={{ mb: 1 }}>
                     <Box sx={{ height: 8, bgcolor: '#E1E1E1', borderRadius: 1, overflow: 'hidden' }}>
-                      <Box sx={{ width: '13%', height: '100%', bgcolor: '#D13438' }}></Box>
+                      <Box sx={{ width: '13%', height: '100%', bgcolor: '#107C10' }}></Box>
                     </Box>
                   </Box>
                   <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block', mb: 2 }}>
@@ -798,7 +843,7 @@ function App() {
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Box sx={{ width: 16, height: 16, bgcolor: '#0078D4', borderRadius: '2px' }}></Box>
-                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px' }}>Walmart growth</Typography>
+                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px' }}>Walmart over-concentration</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Box sx={{ width: 16, height: 16, bgcolor: '#D13438', borderRadius: '2px' }}></Box>
@@ -820,8 +865,8 @@ function App() {
                       <tr style={{ borderBottom: '1px solid #E1E1E1', background: '#FAF9F8' }}>
                         <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Client</th>
                         <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Revenue</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Margin %</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Walmart %</th>
+                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Margin % (vs avg 15.5%)</th>
+                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Walmart % (target &lt;23%)</th>
                         <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>LTL Δ</th>
                         <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Insights</th>
                         <th style={{ padding: '10px 16px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '50px' }}>AI</th>
@@ -842,12 +887,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '35%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '35%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>8%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>8%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
@@ -874,7 +916,7 @@ function App() {
                                 M
                               </Box>
                             </Tooltip>
-                            <Tooltip title="Walmart volume at 8% vs business avg 23%. Potential to increase shipments by introducing Walmart-specific rates" arrow>
+                            <Tooltip title="Walmart at 8% - excellent diversification. Well below concentration threshold of 23%" arrow>
                               <Box
                                 sx={{
                                   width: 20,
@@ -917,35 +959,13 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                           <IconButton
                             size="small"
-                            onClick={() => toggleAIRow('Justin')}
+                            onClick={() => handleAIClick(aiRecommendations['Justin'] ? { name: 'Justin', ...aiRecommendations['Justin'] } : null)}
                             sx={{ color: '#FFB900' }}
                           >
-                            {expandedAIRows['Justin'] ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                            <LightbulbIcon fontSize="small" />
                           </IconButton>
                         </td>
                       </tr>
-                      {expandedAIRows['Justin'] && (
-                        <tr style={{ background: '#FFFBF0', borderBottom: '1px solid #EDEBE9' }}>
-                          <td colSpan="7" style={{ padding: '16px 24px' }}>
-                            <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
-                              <LightbulbIcon sx={{ color: '#FFB900', fontSize: 20, mt: 0.5 }} />
-                              <Box>
-                                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
-                                  Strategic Recommendation
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', lineHeight: 1.6 }}>
-                                  <strong>Multi-dimensional opportunity:</strong> Address all three risk areas for maximum impact.
-                                  Start with rate optimization (immediate $18.7K gain), then launch Walmart growth initiative
-                                  while correcting LTL pricing. Combined annual potential: <strong>$45K+ revenue increase</strong>.
-                                  <br/><br/>
-                                  <strong>Action plan:</strong> (1) Q1 margin rate review, (2) Walmart-specific pricing program,
-                                  (3) LTL benchmark alignment by end of Q1.
-                                </Typography>
-                              </Box>
-                            </Box>
-                          </td>
-                        </tr>
-                      )}
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
                         <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Bragg Live Food</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$892,450</td>
@@ -960,12 +980,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '34%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '34%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>12%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>12%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
@@ -973,7 +990,7 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px' }}>
                           <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Walmart at 12% but trending down. Suggest proactive outreach to maintain volume" arrow>
+                            <Tooltip title="Walmart at 12% - good diversification below 23% threshold" arrow>
                               <Box
                                 sx={{
                                   width: 20,
@@ -1009,12 +1026,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '51%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '51%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>18%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>18%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1040,73 +1054,13 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                           <IconButton
                             size="small"
-                            onClick={() => toggleAIRow('Trove Brands LLC')}
+                            onClick={() => handleAIClick(aiRecommendations['Trove Brands LLC'] ? { name: 'Trove Brands LLC', ...aiRecommendations['Trove Brands LLC'] } : null)}
                             sx={{ color: '#FFB900' }}
                           >
-                            {expandedAIRows['Trove Brands LLC'] ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                            <LightbulbIcon fontSize="small" />
                           </IconButton>
                         </td>
                       </tr>
-                      {expandedAIRows['Trove Brands LLC'] && (
-                        <tr style={{ background: '#FFFBF0', borderBottom: '1px solid #EDEBE9' }}>
-                          <td colSpan="7" style={{ padding: '16px 24px' }}>
-                            <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
-                              <LightbulbIcon sx={{ color: '#FFB900', fontSize: 20, mt: 0.5 }} />
-                              <Box>
-                                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
-                                  Strategic Recommendation
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', lineHeight: 1.6 }}>
-                                  <strong>High-value margin opportunity:</strong> <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Trove Brands LLC</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,245,880</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '72%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>11.2%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '51%', height: '100%', bgcolor: '#0078D4' }}></Box>
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>18%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$8</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin 4.3% below peer average. High volume client - small rate increase = $53K opportunity" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                          </Box>
-                        </td>
-                        .2M revenue base with 4.3% margin gap equals $53K annual potential. Recommend implementing tiered volume pricing to improve margin while maintaining competitiveness. Walmart at 18% is solid but could reach 25%+ based on category fit.
-<br/><br/>
-<strong>Action plan:</strong> (1) Q1 pricing review with tiered structure, (2) Walmart account expansion analysis, (3) Target 16% margin by end of Q2.
-                                </Typography>
-                              </Box>
-                            </Box>
-                          </td>
-                        </tr>
-                      )}
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
                         <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>WHIRLYBIRD GRANOLA</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$324,560</td>
@@ -1121,12 +1075,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '14%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '14%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>5%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>5%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1134,7 +1085,7 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px' }}>
                           <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Only 5% Walmart volume. Client profile matches high-performing Walmart shippers - expansion opportunity" arrow><Box sx={{
+                            <Tooltip title="Walmart at 5% - excellent retailer diversification" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#0078D4',
@@ -1164,12 +1115,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '17%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '17%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>6%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>6%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1190,7 +1138,7 @@ function App() {
                                 color: 'white',
                                 borderRadius: '2px'
                               }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart penetration extremely low at 6%. Target for business development team" arrow><Box sx={{
+                            <Tooltip title="Walmart at 6% - strong diversification across retailers" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#0078D4',
@@ -1221,166 +1169,13 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                           <IconButton
                             size="small"
-                            onClick={() => toggleAIRow('AB WORLD FOODS')}
+                            onClick={() => handleAIClick(aiRecommendations['AB WORLD FOODS'] ? { name: 'AB WORLD FOODS', ...aiRecommendations['AB WORLD FOODS'] } : null)}
                             sx={{ color: '#FFB900' }}
                           >
-                            {expandedAIRows['AB WORLD FOODS'] ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                            <LightbulbIcon fontSize="small" />
                           </IconButton>
                         </td>
                       </tr>
-                      {expandedAIRows['AB WORLD FOODS'] && (
-                        <tr style={{ background: '#FFFBF0', borderBottom: '1px solid #EDEBE9' }}>
-                          <td colSpan="7" style={{ padding: '16px 24px' }}>
-                            <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
-                              <LightbulbIcon sx={{ color: '#FFB900', fontSize: 20, mt: 0.5 }} />
-                              <Box>
-                                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
-                                  Strategic Recommendation
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', lineHeight: 1.6 }}>
-                                  <strong>Critical priority account:</strong> Largest revenue client (<td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>AB WORLD FOODS</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,567,230</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '70%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>10.8%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '17%', height: '100%', bgcolor: '#0078D4' }}></Box>
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>6%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$55</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin significantly below benchmark. Large revenue base makes this a priority renegotiation" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart penetration extremely low at 6%. Target for business development team" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                            <Tooltip title="Priced $55/shipment below LTL rates. Highest priority for rate correction" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#D13438',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>L</Box></Tooltip>
-                          </Box>
-                        </td>
-                        .6M) with triple risk exposure requiring immediate executive attention. LTL correction alone provides $28K gain, margin optimization to 14% adds $50K, and Walmart growth to 20% unlocks $85K opportunity.
-<br/><br/>
-<strong>Action plan:</strong> Schedule executive-level strategic account review within 30 days. Total annual potential: <strong><td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>AB WORLD FOODS</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,567,230</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '70%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>10.8%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '17%', height: '100%', bgcolor: '#0078D4' }}></Box>
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>6%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$55</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin significantly below benchmark. Large revenue base makes this a priority renegotiation" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart penetration extremely low at 6%. Target for business development team" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                            <Tooltip title="Priced $55/shipment below LTL rates. Highest priority for rate correction" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#D13438',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>L</Box></Tooltip>
-                          </Box>
-                        </td>
-                        63K</strong>.
-                                </Typography>
-                              </Box>
-                            </Box>
-                          </td>
-                        </tr>
-                      )}
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
                         <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Nature's Path Foods</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$2,145,900</td>
@@ -1395,12 +1190,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '89%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '89%', height: '100%', bgcolor: '#F2711C' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>31%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>31%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1426,12 +1218,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '26%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '26%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>9%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>9%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1452,7 +1241,7 @@ function App() {
                                 color: 'white',
                                 borderRadius: '2px'
                               }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart at only 9%. Fast-growing brand that could benefit from Walmart expansion" arrow><Box sx={{
+                            <Tooltip title="Walmart at 9% - well-diversified portfolio" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#0078D4',
@@ -1482,12 +1271,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '40%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '40%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>14%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>14%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1495,7 +1281,7 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px' }}>
                           <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Strong margin but Walmart at 14% vs potential 25%+. Large revenue = significant opportunity" arrow><Box sx={{
+                            <Tooltip title="Walmart at 14% - healthy diversification below concentration risk" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#0078D4',
@@ -1513,32 +1299,13 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                           <IconButton
                             size="small"
-                            onClick={() => toggleAIRow('Simple Mills')}
+                            onClick={() => handleAIClick(aiRecommendations['Simple Mills'] ? { name: 'Simple Mills', ...aiRecommendations['Simple Mills'] } : null)}
                             sx={{ color: '#FFB900' }}
                           >
-                            {expandedAIRows['Simple Mills'] ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                            <LightbulbIcon fontSize="small" />
                           </IconButton>
                         </td>
                       </tr>
-                      {expandedAIRows['Simple Mills'] && (
-                        <tr style={{ background: '#FFFBF0', borderBottom: '1px solid #EDEBE9' }}>
-                          <td colSpan="7" style={{ padding: '16px 24px' }}>
-                            <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
-                              <LightbulbIcon sx={{ color: '#FFB900', fontSize: 20, mt: 0.5 }} />
-                              <Box>
-                                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
-                                  Strategic Recommendation
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', lineHeight: 1.6 }}>
-                                  <strong>Growth catalyst opportunity:</strong> Strong margin (19.3%) on $3.9M base indicates healthy partnership. Strategic focus should be Walmart expansion from current 14% to category potential of 28%+ for premium snacks.
-<br/><br/>
-<strong>Action plan:</strong> Introduce Walmart-specific programs and packaging to accelerate penetration. Opportunity: <strong>$550K annual revenue</strong> without margin dilution.
-                                </Typography>
-                              </Box>
-                            </Box>
-                          </td>
-                        </tr>
-                      )}
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
                         <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Good Health Brands</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$734,560</td>
@@ -1553,12 +1320,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '63%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '63%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>22%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>22%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1566,7 +1330,7 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px' }}>
                           <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin below peer group despite good Walmart mix. Rate adjustment recommended" arrow><Box sx={{
+                            <Tooltip title="Margin below peer group. Focus on rate optimization while maintaining retailer diversity" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#F2711C',
@@ -1609,12 +1373,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '80%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '80%', height: '100%', bgcolor: '#F2711C' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>28%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>28%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1640,12 +1401,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '20%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '20%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>7%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>7%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1666,7 +1424,7 @@ function App() {
                                 color: 'white',
                                 borderRadius: '2px'
                               }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart at only 7%. High-growth snack brand ideal for Walmart expansion" arrow><Box sx={{
+                            <Tooltip title="Walmart at 7% - strong multi-retailer distribution" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#0078D4',
@@ -1696,12 +1454,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '71%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '71%', height: '100%', bgcolor: '#F2711C' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>25%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>25%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1727,12 +1482,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '11%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '11%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>4%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>4%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1753,7 +1505,7 @@ function App() {
                                 color: 'white',
                                 borderRadius: '2px'
                               }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart penetration critically low at 4%. Major expansion opportunity" arrow><Box sx={{
+                            <Tooltip title="Walmart at 4% - highly diversified across retail partners" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#0078D4',
@@ -1783,12 +1535,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '31%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '31%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>11%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>11%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1796,7 +1545,7 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px' }}>
                           <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Good margin but Walmart at 11% - emerging brand could benefit from focused push" arrow><Box sx={{
+                            <Tooltip title="Good margin and Walmart at 11% - well-balanced retailer mix" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#0078D4',
@@ -1826,12 +1575,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '29%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '29%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>10%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>10%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1852,7 +1598,7 @@ function App() {
                                 color: 'white',
                                 borderRadius: '2px'
                               }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart at 10% but trending. Allergen-free products perform well at Walmart" arrow><Box sx={{
+                            <Tooltip title="Walmart at 10% - strong diversification protecting against single-retailer risk" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#0078D4',
@@ -1883,32 +1629,13 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                           <IconButton
                             size="small"
-                            onClick={() => toggleAIRow('Partake Foods')}
+                            onClick={() => handleAIClick(aiRecommendations['Partake Foods'] ? { name: 'Partake Foods', ...aiRecommendations['Partake Foods'] } : null)}
                             sx={{ color: '#FFB900' }}
                           >
-                            {expandedAIRows['Partake Foods'] ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                            <LightbulbIcon fontSize="small" />
                           </IconButton>
                         </td>
                       </tr>
-                      {expandedAIRows['Partake Foods'] && (
-                        <tr style={{ background: '#FFFBF0', borderBottom: '1px solid #EDEBE9' }}>
-                          <td colSpan="7" style={{ padding: '16px 24px' }}>
-                            <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
-                              <LightbulbIcon sx={{ color: '#FFB900', fontSize: 20, mt: 0.5 }} />
-                              <Box>
-                                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
-                                  Strategic Recommendation
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', lineHeight: 1.6 }}>
-                                  <strong>Emerging high-potential account:</strong> Triple-flagged with strong growth trajectory. Address sequentially: (1) LTL pricing correction to prevent margin erosion, (2) Margin improvement from 13.5% to 15.5% through operational efficiency, (3) Walmart penetration from 10% (allergen-free category excels at Walmart).
-<br/><br/>
-<strong>Potential:</strong> Can become top-tier account with proactive management across all three dimensions.
-                                </Typography>
-                              </Box>
-                            </Box>
-                          </td>
-                        </tr>
-                      )}
                       <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
                         <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Chomps</td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$2,567,800</td>
@@ -1923,12 +1650,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '100%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '100%', height: '100%', bgcolor: '#F2711C' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>35%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>35%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1954,12 +1678,9 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '37%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '37%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
-                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>13%</span>
-                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
-                            </Box>
+                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>13%</span>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1967,7 +1688,7 @@ function App() {
                         </td>
                         <td style={{ padding: '12px 16px' }}>
                           <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Walmart at 13% with room to grow. Granola category performs well at Walmart" arrow><Box sx={{
+                            <Tooltip title="Walmart at 13% - healthy balance across retail channels" arrow><Box sx={{
                                 width: 20,
                                 height: 20,
                                 bgcolor: '#0078D4',
@@ -2797,6 +2518,63 @@ function App() {
         )}
       </Box>
       </Box>
+
+      {/* AI Recommendation Modal */}
+      <Dialog
+        open={aiModalOpen}
+        onClose={handleAIClose}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ bgcolor: '#FFFBF0', borderBottom: '1px solid #E1E1E1', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <LightbulbIcon sx={{ color: '#FFB900', fontSize: 28 }} />
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#323130' }}>
+              AI Strategic Recommendation
+            </Typography>
+            {selectedAIClient && (
+              <Typography variant="caption" sx={{ color: '#605E5C' }}>
+                {selectedAIClient.name}
+              </Typography>
+            )}
+          </Box>
+        </DialogTitle>
+        <DialogContent sx={{ mt: 2 }}>
+          {selectedAIClient && (
+            <>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#323130', mb: 1 }}>
+                {selectedAIClient.title}
+              </Typography>
+              <Typography variant="body1" sx={{ color: '#605E5C', mb: 2, lineHeight: 1.6 }}>
+                {selectedAIClient.recommendation}
+              </Typography>
+              <Box sx={{ bgcolor: '#F3F2F1', p: 2, borderRadius: 1, mb: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
+                  Potential Impact
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#107C10', fontWeight: 600 }}>
+                  {selectedAIClient.potential}
+                </Typography>
+              </Box>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#323130', mb: 1 }}>
+                Recommended Actions
+              </Typography>
+              <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
+                {selectedAIClient.actions.map((action, idx) => (
+                  <Typography component="li" key={idx} variant="body2" sx={{ color: '#605E5C', mb: 0.5 }}>
+                    {action}
+                  </Typography>
+                ))}
+              </Box>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ p: 2, borderTop: '1px solid #E1E1E1' }}>
+          <Button onClick={handleAIClose} variant="contained" sx={{ bgcolor: '#0078D4', textTransform: 'none' }}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
