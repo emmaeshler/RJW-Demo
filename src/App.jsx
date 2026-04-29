@@ -646,115 +646,124 @@ function App() {
 
             {/* Content */}
             <Box sx={{ flexGrow: 1, overflow: 'auto', p: 3 }}>
-              {/* Top Opportunity Cards */}
+              {/* Top Metrics Cards - PBI Style */}
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, mb: 3 }}>
-                <Box sx={{ bgcolor: 'white', p: 2.5, borderRadius: 1, border: '1px solid #e0e0e0', borderLeft: '4px solid #f57c00' }}>
-                  <Typography variant="caption" sx={{ color: '#666', textTransform: 'uppercase', fontSize: '11px', fontWeight: 600 }}>
-                    Margin Improvement
+                <Box sx={{ bgcolor: 'white', p: 3, border: '1px solid #E1E1E1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px', fontWeight: 400, display: 'block', mb: 1 }}>
+                    Margin improvement
                   </Typography>
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#f57c00', mt: 1, mb: 0.5 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
                     $127K
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
-                    5 clients priced below market average
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px' }}>
+                    5 clients below average
                   </Typography>
                 </Box>
 
-                <Box sx={{ bgcolor: 'white', p: 2.5, borderRadius: 1, border: '1px solid #e0e0e0', borderLeft: '4px solid #1976d2' }}>
-                  <Typography variant="caption" sx={{ color: '#666', textTransform: 'uppercase', fontSize: '11px', fontWeight: 600 }}>
-                    Walmart Push
+                <Box sx={{ bgcolor: 'white', p: 3, border: '1px solid #E1E1E1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px', fontWeight: 400, display: 'block', mb: 1 }}>
+                    Walmart opportunities
                   </Typography>
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#1976d2', mt: 1, mb: 0.5 }}>
-                    8 Clients
+                  <Typography variant="h4" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
+                    8
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
-                    Low Walmart % with potential to increase
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px' }}>
+                    Clients with low penetration
                   </Typography>
                 </Box>
 
-                <Box sx={{ bgcolor: 'white', p: 2.5, borderRadius: 1, border: '1px solid #e0e0e0', borderLeft: '4px solid #d32f2f' }}>
-                  <Typography variant="caption" sx={{ color: '#666', textTransform: 'uppercase', fontSize: '11px', fontWeight: 600 }}>
-                    LTL Rate Issues
+                <Box sx={{ bgcolor: 'white', p: 3, border: '1px solid #E1E1E1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px', fontWeight: 400, display: 'block', mb: 1 }}>
+                    Rate adjustments
                   </Typography>
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#d32f2f', mt: 1, mb: 0.5 }}>
-                    3 Clients
+                  <Typography variant="h4" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
+                    3
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
-                    Priced below LTL benchmark rates
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px' }}>
+                    Clients below LTL benchmark
                   </Typography>
                 </Box>
               </Box>
 
-              {/* AI Insights Legend */}
-              <Box sx={{ mb: 2, p: 2, bgcolor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
-                <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1 }}>
-                  AI INSIGHT FLAGS (hover for details)
+              {/* AI Insights Legend - PBI Style */}
+              <Box sx={{ mb: 2, p: 2.5, bgcolor: 'white', border: '1px solid #E1E1E1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                <Typography variant="caption" sx={{ fontWeight: 600, color: '#323130', display: 'block', mb: 1.5, fontSize: '12px' }}>
+                  AI INSIGHTS
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 3 }}>
+                <Box sx={{ display: 'flex', gap: 4 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#fff3e0', border: '2px solid #f57c00', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#f57c00' }}>M</Box>
-                    <Typography variant="caption" sx={{ color: '#666' }}>Margin Opportunity</Typography>
+                    <Box sx={{ width: 16, height: 16, bgcolor: '#F2711C', borderRadius: '2px' }}></Box>
+                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px' }}>Margin opportunity</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#e3f2fd', border: '2px solid #1976d2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#1976d2' }}>W</Box>
-                    <Typography variant="caption" sx={{ color: '#666' }}>Walmart Growth Potential</Typography>
+                    <Box sx={{ width: 16, height: 16, bgcolor: '#0078D4', borderRadius: '2px' }}></Box>
+                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px' }}>Walmart growth</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#ffebee', border: '2px solid #d32f2f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#d32f2f' }}>L</Box>
-                    <Typography variant="caption" sx={{ color: '#666' }}>Below LTL Rates</Typography>
+                    <Box sx={{ width: 16, height: 16, bgcolor: '#D13438', borderRadius: '2px' }}></Box>
+                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px' }}>Below LTL rates</Typography>
                   </Box>
                 </Box>
               </Box>
 
-              {/* Client Scorecard Table */}
-              <Box sx={{ bgcolor: 'white', borderRadius: 1, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
-                <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0', bgcolor: '#fafafa' }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    Client Performance & AI Insights
+              {/* Client Scorecard Table - PBI Style */}
+              <Box sx={{ bgcolor: 'white', border: '1px solid #E1E1E1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                <Box sx={{ p: 2.5, borderBottom: '1px solid #E1E1E1' }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#323130', fontSize: '14px' }}>
+                    Client performance
                   </Typography>
                 </Box>
                 <Box sx={{ overflow: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                     <thead>
-                      <tr style={{ borderBottom: '2px solid #e0e0e0', background: '#fafafa' }}>
-                        <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#666' }}>CLIENT</th>
-                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>ANNUAL REVENUE</th>
-                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>MARGIN %</th>
-                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>WALMART %</th>
-                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>LTL DELTA</th>
-                        <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '12px', fontWeight: 600, color: '#666' }}>AI INSIGHTS</th>
+                      <tr style={{ borderBottom: '1px solid #E1E1E1', background: '#FAF9F8' }}>
+                        <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Client</th>
+                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Revenue</th>
+                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Margin %</th>
+                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Walmart %</th>
+                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>LTL Δ</th>
+                        <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Insights</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Justin</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$585,768</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#f57c00', fontWeight: 600 }}>12.3%</span>
+                      <tr style={{ background: 'white', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Justin</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$585,768</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
+                              <Box sx={{ width: '79%', height: '100%', bgcolor: '#F2711C' }}></Box>
+                            </Box>
+                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>12.3%</span>
+                          </Box>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>8%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
+                              <Box sx={{ width: '23%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                            </Box>
+                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>8%</span>
+                          </Box>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#d32f2f', fontWeight: 600 }}>-$42</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$42</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Margin 3.2% below similar clients (avg 15.5%). Opportunity: +$18.7K annually"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#fff3e0',
-                                border: '2px solid #f57c00',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#F2711C',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#f57c00'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               M
@@ -762,18 +771,17 @@ function App() {
                             <Box
                               title="Walmart volume at 8% vs business avg 23%. Potential to increase shipments by introducing Walmart-specific rates"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -781,18 +789,17 @@ function App() {
                             <Box
                               title="Priced $42/shipment below LTL benchmark. Risk: underpriced service, recommend rate adjustment"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#ffebee',
-                                border: '2px solid #d32f2f',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#D13438',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#d32f2f'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               L
@@ -800,35 +807,34 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Bragg Live Food</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$892,450</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>16.8%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Bragg Live Food</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$892,450</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>16.8%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>12%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>12%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$15</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$15</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Walmart at 12% but trending down. Suggest proactive outreach to maintain volume"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -836,35 +842,34 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Trove Brands LLC</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$1,245,880</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#f57c00', fontWeight: 600 }}>11.2%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Trove Brands LLC</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,245,880</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#F2711C', fontWeight: 600 }}>11.2%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
                           <span style={{ color: '#666', fontWeight: 600 }}>18%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$8</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$8</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Margin 4.3% below peer average. High volume client - small rate increase = $53K opportunity"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#fff3e0',
-                                border: '2px solid #f57c00',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#F2711C',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#f57c00'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               M
@@ -872,35 +877,34 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>WHIRLYBIRD GRANOLA</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$324,560</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>17.5%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>WHIRLYBIRD GRANOLA</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$324,560</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>17.5%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>5%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>5%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$22</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$22</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Only 5% Walmart volume. Client profile matches high-performing Walmart shippers - expansion opportunity"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -908,35 +912,34 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>AB WORLD FOODS</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$1,567,230</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#f57c00', fontWeight: 600 }}>10.8%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>AB WORLD FOODS</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,567,230</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#F2711C', fontWeight: 600 }}>10.8%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>6%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>6%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#d32f2f', fontWeight: 600 }}>-$55</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$55</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Margin significantly below benchmark. Large revenue base makes this a priority renegotiation"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#fff3e0',
-                                border: '2px solid #f57c00',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#F2711C',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#f57c00'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               M
@@ -944,18 +947,17 @@ function App() {
                             <Box
                               title="Walmart penetration extremely low at 6%. Target for business development team"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -963,18 +965,17 @@ function App() {
                             <Box
                               title="Priced $55/shipment below LTL rates. Highest priority for rate correction"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#ffebee',
-                                border: '2px solid #d32f2f',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#D13438',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#d32f2f'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               L
@@ -982,53 +983,52 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Nature's Path Foods</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$2,145,900</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>18.2%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Nature's Path Foods</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$2,145,900</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>18.2%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
                           <span style={{ color: '#666', fontWeight: 600 }}>31%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$35</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$35</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
-                            <Typography variant="caption" sx={{ color: '#4caf50', fontWeight: 600 }}>✓ Healthy</Typography>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
+                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '11px' }}>✓ On target</Typography>
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>KULI KULI FOODS</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$456,280</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#f57c00', fontWeight: 600 }}>13.1%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>KULI KULI FOODS</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$456,280</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#F2711C', fontWeight: 600 }}>13.1%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>9%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>9%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$12</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$12</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Margin at 13.1% is below 15.5% average. Growing client with room for optimization"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#fff3e0',
-                                border: '2px solid #f57c00',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#F2711C',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#f57c00'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               M
@@ -1036,18 +1036,17 @@ function App() {
                             <Box
                               title="Walmart at only 9%. Fast-growing brand that could benefit from Walmart expansion"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -1055,35 +1054,34 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Simple Mills</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$3,892,400</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>19.3%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Simple Mills</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$3,892,400</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>19.3%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>14%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>14%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$42</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$42</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Strong margin but Walmart at 14% vs potential 25%+. Large revenue = significant opportunity"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -1091,35 +1089,34 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Good Health Brands</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$734,560</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#f57c00', fontWeight: 600 }}>11.7%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Good Health Brands</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$734,560</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#F2711C', fontWeight: 600 }}>11.7%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
                           <span style={{ color: '#666', fontWeight: 600 }}>22%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#d32f2f', fontWeight: 600 }}>-$28</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$28</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Margin below peer group despite good Walmart mix. Rate adjustment recommended"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#fff3e0',
-                                border: '2px solid #f57c00',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#F2711C',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#f57c00'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               M
@@ -1127,18 +1124,17 @@ function App() {
                             <Box
                               title="Priced $28/shipment below LTL benchmark despite healthy volume"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#ffebee',
-                                border: '2px solid #d32f2f',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#D13438',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#d32f2f'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               L
@@ -1146,53 +1142,52 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>LESSER EVIL</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$1,678,200</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>17.1%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>LESSER EVIL</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,678,200</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>17.1%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
                           <span style={{ color: '#666', fontWeight: 600 }}>28%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$18</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$18</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
-                            <Typography variant="caption" sx={{ color: '#4caf50', fontWeight: 600 }}>✓ Healthy</Typography>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
+                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '11px' }}>✓ On target</Typography>
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Hippeas</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$542,890</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#f57c00', fontWeight: 600 }}>12.8%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Hippeas</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$542,890</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#F2711C', fontWeight: 600 }}>12.8%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>7%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>7%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
                           <span style={{ color: '#666', fontWeight: 600 }}>-$3</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Margin 2.7% below average. Medium revenue client with upside potential"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#fff3e0',
-                                border: '2px solid #f57c00',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#F2711C',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#f57c00'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               M
@@ -1200,18 +1195,17 @@ function App() {
                             <Box
                               title="Walmart at only 7%. High-growth snack brand ideal for Walmart expansion"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -1219,53 +1213,52 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Made Good Foods</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$1,923,450</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>16.4%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Made Good Foods</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,923,450</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>16.4%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
                           <span style={{ color: '#666', fontWeight: 600 }}>25%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$28</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$28</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
-                            <Typography variant="caption" sx={{ color: '#4caf50', fontWeight: 600 }}>✓ Healthy</Typography>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
+                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '11px' }}>✓ On target</Typography>
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Hu Kitchen</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$687,340</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#f57c00', fontWeight: 600 }}>10.2%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Hu Kitchen</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$687,340</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#F2711C', fontWeight: 600 }}>10.2%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>4%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>4%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
                           <span style={{ color: '#666', fontWeight: 600 }}>+$5</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Lowest margin in portfolio at 10.2%. Premium brand should support higher pricing"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#fff3e0',
-                                border: '2px solid #f57c00',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#F2711C',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#f57c00'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               M
@@ -1273,18 +1266,17 @@ function App() {
                             <Box
                               title="Walmart penetration critically low at 4%. Major expansion opportunity"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -1292,35 +1284,34 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Tia Lupita Foods</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$298,750</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>18.9%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Tia Lupita Foods</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$298,750</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>18.9%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>11%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>11%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$31</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$31</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Good margin but Walmart at 11% - emerging brand could benefit from focused push"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -1328,35 +1319,34 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Partake Foods</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$823,190</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#f57c00', fontWeight: 600 }}>13.5%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Partake Foods</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$823,190</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#F2711C', fontWeight: 600 }}>13.5%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>10%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>10%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#d32f2f', fontWeight: 600 }}>-$18</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$18</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Margin 2% below average for allergen-free category. Rate review needed"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#fff3e0',
-                                border: '2px solid #f57c00',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#F2711C',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#f57c00'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               M
@@ -1364,18 +1354,17 @@ function App() {
                             <Box
                               title="Walmart at 10% but trending. Allergen-free products perform well at Walmart"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
@@ -1383,18 +1372,17 @@ function App() {
                             <Box
                               title="LTL pricing $18 below benchmark. Correct before volume scales"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#ffebee',
-                                border: '2px solid #d32f2f',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#D13438',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#d32f2f'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               L
@@ -1402,53 +1390,52 @@ function App() {
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Chomps</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$2,567,800</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>20.1%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Chomps</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$2,567,800</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>20.1%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
                           <span style={{ color: '#666', fontWeight: 600 }}>35%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$48</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$48</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
-                            <Typography variant="caption" sx={{ color: '#4caf50', fontWeight: 600 }}>✓ Healthy</Typography>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
+                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '11px' }}>✓ On target</Typography>
                           </Box>
                         </td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <td style={{ padding: '16px', fontWeight: 500 }}>Purely Elizabeth</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>$1,234,670</td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>15.8%</span>
+                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
+                        <td style={{ padding: '12px 16px', color: '#323130', fontWeight: 400 }}>Purely Elizabeth</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,234,670</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>15.8%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#1976d2', fontWeight: 600 }}>13%</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#605E5C', fontWeight: 600 }}>13%</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'right' }}>
-                          <span style={{ color: '#4caf50', fontWeight: 600 }}>+$21</span>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
+                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$21</span>
                         </td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Box sx={{ display: 'flex', gap: 0.75 }}>
                             <Box
                               title="Walmart at 13% with room to grow. Granola category performs well at Walmart"
                               sx={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                bgcolor: '#e3f2fd',
-                                border: '2px solid #1976d2',
+                                width: 20,
+                                height: 20,
+                                bgcolor: '#0078D4',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'help',
-                                fontSize: '12px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: '#1976d2'
+                                color: 'white',
+                                borderRadius: '2px'
                               }}
                             >
                               W
