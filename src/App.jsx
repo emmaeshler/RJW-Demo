@@ -836,9 +836,12 @@ function App() {
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '23%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: '35%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>8%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>8%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
@@ -922,7 +925,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '34%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>12%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>12%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right' }}>
@@ -968,7 +974,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '51%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>18%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>18%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1008,7 +1017,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '14%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>5%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>5%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1048,7 +1060,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '17%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>6%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>6%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1114,7 +1129,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '89%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>31%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>31%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1142,7 +1160,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '26%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>9%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>9%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1195,7 +1216,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '40%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>14%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>14%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1235,7 +1259,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '63%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>22%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>22%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1288,7 +1315,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '80%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>28%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>28%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1316,7 +1346,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '20%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>7%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>7%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1369,7 +1402,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '71%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>25%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>25%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1397,7 +1433,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '11%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>4%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>4%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1450,7 +1489,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '31%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>11%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>11%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1490,7 +1532,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '29%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>10%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>10%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1556,7 +1601,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '100%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>35%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>35%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
@@ -1584,7 +1632,10 @@ function App() {
                             <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
                               <Box sx={{ width: '37%', height: '100%', bgcolor: '#0078D4' }}></Box>
                             </Box>
-                            <span style={{ color: '#605E5C', fontWeight: 600, minWidth: 35 }}>13%</span>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: 65 }}>
+                              <span style={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>13%</span>
+                              <span style={{ color: '#8A8886', fontSize: '10px' }}>of 23%</span>
+                            </Box>
                           </Box>
                         </td>
                         <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
