@@ -22,7 +22,10 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  Select,
+  FormControl,
+  InputLabel
 } from '@mui/material'
 import {
   Add as AddIcon,
@@ -66,6 +69,38 @@ function App() {
   const [insightView, setInsightView] = useState('scorecard') // 'scorecard' or 'customer-detail'
   const [selectedCustomerDetail, setSelectedCustomerDetail] = useState(null)
   const [contextMenu, setContextMenu] = useState(null)
+  const [ratesAccordionOpen, setRatesAccordionOpen] = useState(false)
+  const [adjustRatesModalOpen, setAdjustRatesModalOpen] = useState(false)
+  const [ratesChanged, setRatesChanged] = useState(false)
+  const [quoteGenerated, setQuoteGenerated] = useState(false)
+  const [quoteDetailLevel, setQuoteDetailLevel] = useState('standard')
+  const [chatInput, setChatInput] = useState('')
+  const [entryPoint, setEntryPoint] = useState(null) // 'traditional' or 'chat'
+  const [isChatFocused, setIsChatFocused] = useState(false)
+  const [editableRates, setEditableRates] = useState({
+    warehouseRates: [
+      { location: 'Chicago, IL - Primary', rate: 3.25 },
+      { location: 'Dallas, TX - Secondary', rate: 2.95 }
+    ],
+    channelRates: [
+      { channel: 'CVS', ratePerPallet: 42.00 },
+      { channel: 'Walgreens', ratePerPallet: 45.50 },
+      { channel: 'Target', ratePerPallet: 43.75 },
+      { channel: 'Kroger', ratePerPallet: 41.25 }
+    ]
+  })
+  const [originalRates, setOriginalRates] = useState({
+    warehouseRates: [
+      { location: 'Chicago, IL - Primary', rate: 3.25 },
+      { location: 'Dallas, TX - Secondary', rate: 2.95 }
+    ],
+    channelRates: [
+      { channel: 'CVS', ratePerPallet: 42.00 },
+      { channel: 'Walgreens', ratePerPallet: 45.50 },
+      { channel: 'Target', ratePerPallet: 43.75 },
+      { channel: 'Kroger', ratePerPallet: 41.25 }
+    ]
+  })
   const open = Boolean(anchorEl)
 
   // Customer detail data for drill-in
@@ -259,6 +294,43 @@ function App() {
     }))
   }
 
+  const handleChatEntryPoint = () => {
+    // Set entry point and client
+    setEntryPoint('chat')
+    setSelectedClient('Justins')
+
+    // Add user's chat message
+    setMessages([{
+      type: 'user',
+      text: chatInput,
+      timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+    }])
+
+    // Clear input
+    setChatInput('')
+
+    // Show thinking state after a short delay
+    setTimeout(() => {
+      setIsThinking(true)
+    }, 500)
+
+    // Mock AI pulls CRM data and responds
+    setTimeout(() => {
+      setIsThinking(false)
+      setMessages(prev => [...prev, {
+        type: 'system',
+        text: 'Perfect! I\'ve pulled the relevant details from your CRM for Justin\'s IL Consolidation Program. I found their account history, current rates, and shipping patterns with 117 shipments across 4 retailers. Let me validate the data before we proceed.',
+        timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+      }])
+
+      // After brief pause, show the weight decision question
+      setTimeout(() => {
+        // Move to step 3 which shows the weight decision card
+        setCurrentStep(3)
+      }, 2000)
+    }, 3000)
+  }
+
   const handleDecisionButton1 = () => {
     // Archive the decision with summary
     setCurrentStep(2)
@@ -291,6 +363,35 @@ function App() {
   const handleDecisionButton2 = () => {
     // User chooses "Exclude This Data And Continue"
     setCurrentStep(2)
+  }
+
+  const handleDecisionButton3 = () => {
+    // User chooses "Use default logic to calculate"
+    setCurrentStep(2)
+    setMessages(prev => [...prev, {
+      type: 'system',
+      text: 'User was informed that weight data was missing in rows 122 and 129, and had several options to choose from.',
+      timestamp: '03:06 PM',
+      isArchive: true
+    }])
+
+    setTimeout(() => {
+      // User's response
+      setMessages(prev => [...prev, {
+        type: 'user',
+        text: 'Use default logic to calculate',
+        timestamp: '03:06 PM'
+      }])
+
+      // System acknowledgment
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          type: 'system',
+          text: 'Understood. I\'ll apply default weight calculations for missing data based on historical averages.',
+          timestamp: '03:06 PM'
+        }])
+      }, 500)
+    }, 300)
   }
 
   const handleDecision2Button1 = () => {
@@ -340,18 +441,86 @@ function App() {
   const handleDecision2Button2 = () => {
     // User chooses "Keep As Is (1.14 LBS)"
     setCurrentStep(4)
-  }
-
-  const handleGenerateQuote = () => {
-    // User clicks "Generate Quote"
     setMessages(prev => [...prev, {
-      type: 'user',
-      text: 'Generate quote',
-      timestamp: '03:09 PM'
+      type: 'system',
+      text: 'User was informed that row 125 had a weight unit ambiguity and had several options to choose from.',
+      timestamp: '03:07 PM',
+      isArchive: true
     }])
 
-    // Update status to Pending Review
-    setQuoteStatus('Pending Review')
+    setTimeout(() => {
+      setMessages(prev => [...prev, {
+        type: 'user',
+        text: 'Keep as is (1.14 LBS)',
+        timestamp: '03:07 PM'
+      }])
+
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          type: 'system',
+          text: 'Perfect. I\'ve noted that.',
+          timestamp: '03:07 PM'
+        }])
+
+        // Show thinking indicator
+        setTimeout(() => {
+          setIsThinking(true)
+
+          // After thinking, show final preview with pricing factors
+          setTimeout(() => {
+            setIsThinking(false)
+            setMessages(prev => [...prev, {
+              type: 'system',
+              text: 'Your file processed successfully — 117 shipments across 4 retailers. Before I build the quote, let me explain the pricing factors and customer analysis.',
+              timestamp: '03:08 PM'
+            }])
+            setCurrentStep(7) // Show preview card with generate buttons
+          }, 2000)
+        }, 800)
+      }, 500)
+    }, 300)
+  }
+
+  const handleRateChange = (type, idx, value) => {
+    const newRates = { ...editableRates }
+    if (type === 'warehouse') {
+      newRates.warehouseRates = [...editableRates.warehouseRates]
+      newRates.warehouseRates[idx] = { ...newRates.warehouseRates[idx], rate: parseFloat(value) || 0 }
+    } else {
+      newRates.channelRates = [...editableRates.channelRates]
+      newRates.channelRates[idx] = { ...newRates.channelRates[idx], ratePerPallet: parseFloat(value) || 0 }
+    }
+    setEditableRates(newRates)
+
+    // Check if rates changed by comparing newRates with originalRates
+    const warehouseChanged = newRates.warehouseRates.some((rate, i) =>
+      rate.rate !== originalRates.warehouseRates[i].rate
+    )
+    const channelChanged = newRates.channelRates.some((rate, i) =>
+      rate.ratePerPallet !== originalRates.channelRates[i].ratePerPallet
+    )
+    setRatesChanged(warehouseChanged || channelChanged)
+  }
+
+  const handleOpenAdjustRates = () => {
+    setAdjustRatesModalOpen(true)
+  }
+
+  const handleCloseAdjustRates = () => {
+    setAdjustRatesModalOpen(false)
+  }
+
+  const handleRegenerateQuote = () => {
+    // Apply updated rates and regenerate
+    setOriginalRates(JSON.parse(JSON.stringify(editableRates)))
+    setRatesChanged(false)
+    setAdjustRatesModalOpen(false)
+
+    setMessages(prev => [...prev, {
+      type: 'user',
+      text: 'Regenerate quote with updated rates',
+      timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+    }])
 
     // Open the HTML quote in a new tab
     window.open('/quote-preview.html', '_blank')
@@ -359,9 +528,46 @@ function App() {
     setTimeout(() => {
       setMessages(prev => [...prev, {
         type: 'system',
-        text: 'Quote Preview Is Generating — Review the HTML in the new tab. If you need to update prices, tell me the changes here and I will generate a new HTML. Otherwise, click "Finalize Quote" below if all details are correct.',
+        text: 'Quote regenerated with your updated rates.',
+        timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+        isHeadsUp: true,
+        showRatesPreview: true,
+        showFinalizeButton: true
+      }])
+    }, 500)
+  }
+
+  const handleFinalizeFromModal = () => {
+    setAdjustRatesModalOpen(false)
+    handleFinalizeQuote()
+  }
+
+  const handleGenerateQuote = () => {
+    // User clicks "Generate Quote"
+    const quoteType = quoteDetailLevel === 'detailed' ? 'Detailed' : 'Standard'
+    setMessages(prev => [...prev, {
+      type: 'user',
+      text: `Generate ${quoteType.toLowerCase()} quote`,
+      timestamp: '03:09 PM'
+    }])
+
+    // Mark that quote has been generated
+    setQuoteGenerated(true)
+
+    // Update status to Pending Review
+    setQuoteStatus('Pending Review')
+
+    // Open both HTML quotes in separate tabs for demo purposes
+    window.open('/quote-preview.html', '_blank')
+    window.open('/quote-preview-detailed.html', '_blank')
+
+    setTimeout(() => {
+      setMessages(prev => [...prev, {
+        type: 'system',
+        text: `${quoteType} Quote Preview Is Generating — Review the HTML in the new tab.`,
         timestamp: '03:09 PM',
         isHeadsUp: true,
+        showRatesPreview: true,
         showFinalizeButton: true
       }])
       setCurrentStep(8)
@@ -624,6 +830,13 @@ function App() {
                 fullWidth
                 variant="contained"
                 startIcon={<ChatIcon />}
+                onClick={() => {
+                  setEntryPoint('traditional')
+                  setMessages([])
+                  setCurrentStep(0)
+                  setSelectedClient(null)
+                  setChatInput('')
+                }}
                 sx={{
                   bgcolor: '#00446A',
                   textTransform: 'none',
@@ -2308,11 +2521,13 @@ function App() {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              Justin's IL Consolidation Program
+              {messages.length === 0 ? 'New Quote' : "Justin's IL Consolidation Program"}
             </Typography>
-            <IconButton size="small" sx={{ color: '#666' }}>
-              <EditIcon sx={{ fontSize: 18 }} />
-            </IconButton>
+            {messages.length > 0 && (
+              <IconButton size="small" sx={{ color: '#666' }}>
+                <EditIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            )}
             <Chip
               label={quoteStatus}
               size="small"
@@ -2327,16 +2542,28 @@ function App() {
           <Button
             variant="contained"
             onClick={() => setSelectedClient(selectedClient ? null : 'Justins')}
-            startIcon={currentStep === 0 && !selectedClient ? (
+            startIcon={messages.length === 0 ? (
               <Box
                 sx={{
-                  width: 8,
-                  height: 8,
+                  width: 24,
+                  height: 24,
                   borderRadius: '50%',
                   bgcolor: '#ffc107',
-                  animation: 'pulse 2s infinite'
+                  color: '#333',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  animation: 'pulse 2s infinite',
+                  '@keyframes pulse': {
+                    '0%, 100%': { opacity: 1 },
+                    '50%': { opacity: 0.5 }
+                  }
                 }}
-              />
+              >
+                1
+              </Box>
             ) : null}
             endIcon={selectedClient ? <EditIcon /> : null}
             sx={{
@@ -2344,14 +2571,6 @@ function App() {
               textTransform: 'none',
               '&:hover': {
                 bgcolor: '#003350'
-              },
-              '@keyframes pulse': {
-                '0%, 100%': {
-                  opacity: 1
-                },
-                '50%': {
-                  opacity: 0.5
-                }
               }
             }}
           >
@@ -2400,6 +2619,10 @@ function App() {
                 <Button
                   variant="outlined"
                   startIcon={<ChatIcon />}
+                  onClick={() => {
+                    setEntryPoint('traditional')
+                    setSelectedClient('Justins')
+                  }}
                   sx={{
                     textTransform: 'none',
                     borderColor: '#e0e0e0',
@@ -2521,9 +2744,53 @@ function App() {
                           <Typography variant="overline" sx={{ fontWeight: 600, color: '#ff9800', display: 'block', mb: 0.5 }}>
                             HEADS UP
                           </Typography>
-                          <Typography variant="body2" sx={{ color: '#333', mb: message.showFinalizeButton ? 2 : 0 }}>
+                          <Typography variant="body2" sx={{ color: '#333', mb: message.showRatesPreview ? 2 : (message.showFinalizeButton ? 2 : 0) }}>
                             {message.text}
                           </Typography>
+                          {message.showRatesPreview && (
+                            <Box sx={{ mb: 2, p: 3, bgcolor: '#f5f5f5', borderRadius: 1, border: '1px solid #e0e0e0', width: 'calc(100% + 24px)', ml: '-12px', mr: '-12px' }}>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2.5, color: '#333', fontSize: '15px' }}>
+                                Current Rates
+                              </Typography>
+                              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, mb: 2.5 }}>
+                                <Box>
+                                  <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1.5, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                    Warehouse Rates
+                                  </Typography>
+                                  {editableRates.warehouseRates.map((rate, idx) => (
+                                    <Typography key={idx} variant="body2" sx={{ fontSize: '14px', color: '#333', mb: 0.75, lineHeight: 1.6 }}>
+                                      {rate.location}: ${rate.rate.toFixed(2)}/pallet/day
+                                    </Typography>
+                                  ))}
+                                </Box>
+                                <Box>
+                                  <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1.5, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                    Channel Rates
+                                  </Typography>
+                                  {editableRates.channelRates.map((rate, idx) => (
+                                    <Typography key={idx} variant="body2" sx={{ fontSize: '14px', color: '#333', mb: 0.75, lineHeight: 1.6 }}>
+                                      {rate.channel}: ${rate.ratePerPallet.toFixed(2)}/pallet
+                                    </Typography>
+                                  ))}
+                                </Box>
+                              </Box>
+                              <Button
+                                variant="outlined"
+                                onClick={handleOpenAdjustRates}
+                                sx={{
+                                  textTransform: 'none',
+                                  borderColor: '#F57C00',
+                                  color: '#F57C00',
+                                  '&:hover': {
+                                    borderColor: '#E65100',
+                                    bgcolor: '#FFF3E0'
+                                  }
+                                }}
+                              >
+                                Adjust Rates
+                              </Button>
+                            </Box>
+                          )}
                           {message.showFinalizeButton && (
                             <Button
                               variant="contained"
@@ -2702,7 +2969,7 @@ function App() {
                     Rows 122 and 129 have no weight value — we can't estimate pallets or calculate a rate without it. These shipments will be excluded from the quote until resolved.
                   </Typography>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction="row" spacing={2} flexWrap="wrap">
                     <Button
                       variant="contained"
                       onClick={handleDecisionButton1}
@@ -2747,6 +3014,21 @@ function App() {
                       }}
                     >
                       2. Exclude This Data And Continue
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={handleDecisionButton3}
+                      sx={{
+                        bgcolor: '#00446A',
+                        textTransform: 'none',
+                        borderRadius: '4px',
+                        padding: '10px 20px',
+                        '&:hover': {
+                          bgcolor: '#003350'
+                        }
+                      }}
+                    >
+                      3. Use Default Logic To Calculate
                     </Button>
                   </Stack>
                 </Box>
@@ -2940,6 +3222,35 @@ function App() {
                       </Box>
                     </Box>
 
+                  {/* Current Rates Preview */}
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: '#00446A' }}>
+                      Current Rates
+                    </Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
+                      <Box sx={{ bgcolor: '#f5f5f5', p: 2, borderRadius: 1, border: '1px solid #e0e0e0' }}>
+                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1 }}>
+                          Warehouse Rates
+                        </Typography>
+                        {editableRates.warehouseRates.map((rate, idx) => (
+                          <Typography key={idx} variant="body2" sx={{ fontSize: '13px', color: '#333', mb: 0.5 }}>
+                            {rate.location}: ${rate.rate.toFixed(2)}/pallet/day
+                          </Typography>
+                        ))}
+                      </Box>
+                      <Box sx={{ bgcolor: '#f5f5f5', p: 2, borderRadius: 1, border: '1px solid #e0e0e0' }}>
+                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1 }}>
+                          Channel Rates
+                        </Typography>
+                        {editableRates.channelRates.map((rate, idx) => (
+                          <Typography key={idx} variant="body2" sx={{ fontSize: '13px', color: '#333', mb: 0.5 }}>
+                            {rate.channel}: ${rate.ratePerPallet.toFixed(2)}/pallet
+                          </Typography>
+                        ))}
+                      </Box>
+                    </Box>
+                  </Box>
+
                   {/* Model Factors Confirmation */}
                   <Box sx={{
                     mt: 3,
@@ -2952,38 +3263,44 @@ function App() {
                       <InfoIcon sx={{ color: '#f57c00', mt: 0.5, fontSize: 20 }} />
                       <Box sx={{ flex: 1 }}>
                         <Typography variant="body2" sx={{ fontWeight: 600, color: '#333', mb: 1 }}>
-                          Do you agree with these pricing factors?
+                          Do you agree with these pricing factors and rates?
                         </Typography>
                         <Typography variant="caption" sx={{ color: '#666', display: 'block', lineHeight: 1.6 }}>
-                          The factors shown above (Volume, Pallet Density, Competition) will determine the pricing in your quote.
-                          If you disagree or need adjustments, changes will impact the final prices generated.
+                          The factors and rates shown above will determine the pricing in your quote.
+                          If you need adjustments, use the Adjust Rates button below.
                         </Typography>
                       </Box>
                     </Box>
                   </Box>
 
-                  {/* Generate Quote Button */}
-                  <Box sx={{ pt: 3, borderTop: '1px solid #e0e0e0' }}>
+                  {/* Action Buttons */}
+                  <Box sx={{ pt: 3, borderTop: '1px solid #e0e0e0', display: 'flex', gap: 2 }}>
+                    <Button
+                      variant="outlined"
+                      onClick={handleOpenAdjustRates}
+                      sx={{
+                        textTransform: 'none',
+                        borderColor: '#F57C00',
+                        color: '#F57C00',
+                        padding: '12px 20px',
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        '&:hover': {
+                          borderColor: '#E65100',
+                          bgcolor: '#FFF3E0'
+                        }
+                      }}
+                    >
+                      Adjust Rates
+                    </Button>
                     <Button
                       variant="contained"
-                      fullWidth
-                      onClick={handleGenerateQuote}
-                      startIcon={
-                        <Box
-                          sx={{
-                            width: 8,
-                            height: 8,
-                            borderRadius: '50%',
-                            bgcolor: '#ffc107',
-                            animation: 'pulse 2s infinite',
-                            '@keyframes pulse': {
-                              '0%, 100%': { opacity: 1 },
-                              '50%': { opacity: 0.5 }
-                            }
-                          }}
-                        />
-                      }
+                      onClick={() => {
+                        setQuoteDetailLevel('standard')
+                        handleGenerateQuote()
+                      }}
                       sx={{
+                        flex: 1,
                         bgcolor: '#00446A',
                         textTransform: 'none',
                         borderRadius: '4px',
@@ -2995,7 +3312,28 @@ function App() {
                         }
                       }}
                     >
-                      Generate Quote
+                      Generate Standard Quote
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setQuoteDetailLevel('detailed')
+                        handleGenerateQuote()
+                      }}
+                      sx={{
+                        flex: 1,
+                        bgcolor: '#00446A',
+                        textTransform: 'none',
+                        borderRadius: '4px',
+                        padding: '12px 20px',
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        '&:hover': {
+                          bgcolor: '#003350'
+                        }
+                      }}
+                    >
+                      Generate Detailed Quote
                     </Button>
                   </Box>
                 </Box>
@@ -3024,7 +3362,7 @@ function App() {
               }}
             >
               <AddIcon />
-              {((currentStep === 0 && selectedClient) || currentStep === 2 || currentStep === 8) && (
+              {((currentStep === 0 && selectedClient) || currentStep === 2) && !quoteGenerated && (
                 <Box
                   sx={{
                     position: 'absolute',
@@ -3067,24 +3405,77 @@ function App() {
               </MenuItem>
             </Menu>
 
-            <TextField
-              fullWidth
-              placeholder="Begin describing your quote here."
-              variant="outlined"
-              size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  bgcolor: 'white'
-                }
-              }}
-            />
+            <Box sx={{ position: 'relative', flex: 1 }}>
+              {messages.length === 0 && !selectedClient && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    left: 10,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: 24,
+                    height: 24,
+                    borderRadius: '50%',
+                    bgcolor: '#ffc107',
+                    color: '#333',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    zIndex: 1,
+                    animation: 'pulse 2s infinite',
+                    '@keyframes pulse': {
+                      '0%, 100%': { opacity: 1 },
+                      '50%': { opacity: 0.5 }
+                    }
+                  }}
+                >
+                  2
+                </Box>
+              )}
+              <TextField
+                fullWidth
+                placeholder="Begin describing your quote here."
+                variant="outlined"
+                size="small"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onFocus={() => {
+                  if (!chatInput && messages.length === 0) {
+                    setChatInput("I need to put together a quote for Justin's IL Consolidation Program — can you pull the details from the CRM?")
+                  }
+                }}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && chatInput.trim() && messages.length === 0) {
+                    handleChatEntryPoint()
+                  }
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    bgcolor: 'white',
+                    paddingLeft: messages.length === 0 && !selectedClient ? '42px' : undefined
+                  }
+                }}
+              />
+            </Box>
 
             <IconButton
+              onClick={() => {
+                if (chatInput.trim() && messages.length === 0) {
+                  handleChatEntryPoint()
+                }
+              }}
+              disabled={!chatInput.trim() || messages.length > 0}
               sx={{
-                bgcolor: '#e0e0e0',
+                bgcolor: chatInput.trim() && messages.length === 0 ? '#00446A' : '#e0e0e0',
+                color: chatInput.trim() && messages.length === 0 ? 'white' : 'inherit',
                 '&:hover': {
-                  bgcolor: '#d0d0d0'
+                  bgcolor: chatInput.trim() && messages.length === 0 ? '#003350' : '#d0d0d0'
+                },
+                '&.Mui-disabled': {
+                  bgcolor: '#e0e0e0'
                 }
               }}
             >
@@ -3172,6 +3563,153 @@ function App() {
           <Button onClick={handleAIClose} variant="contained" sx={{ bgcolor: '#0078D4', textTransform: 'none' }}>
             Close
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Adjust Rates Modal */}
+      <Dialog
+        open={adjustRatesModalOpen}
+        onClose={handleCloseAdjustRates}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ bgcolor: '#f5f5f5', borderBottom: '1px solid #e0e0e0' }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, color: '#333' }}>
+            Adjust Rates
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ p: 3, mt: 2 }}>
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#555' }}>
+              Warehouse Rates ($/pallet/day)
+            </Typography>
+            <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 1, overflow: 'hidden', bgcolor: 'white' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ background: '#FAFAFA', borderBottom: '1px solid #e0e0e0' }}>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#666' }}>Location</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>Rate ($/pallet/day)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {editableRates.warehouseRates.map((item, idx) => (
+                    <tr key={idx} style={{ borderBottom: idx < editableRates.warehouseRates.length - 1 ? '1px solid #e0e0e0' : 'none' }}>
+                      <td style={{ padding: '10px 16px', fontSize: '13px' }}>{item.location}</td>
+                      <td style={{ padding: '10px 16px', textAlign: 'right' }}>
+                        <TextField
+                          type="number"
+                          value={item.rate}
+                          onChange={(e) => handleRateChange('warehouse', idx, e.target.value)}
+                          size="small"
+                          sx={{
+                            width: 100,
+                            '& input': { textAlign: 'right', fontSize: '13px', padding: '6px 10px' },
+                            '& .MuiOutlinedInput-root': { height: 32 }
+                          }}
+                          InputProps={{
+                            startAdornment: <Typography sx={{ mr: 0.5, color: '#666', fontSize: '13px' }}>$</Typography>
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Box>
+          </Box>
+
+          <Box>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#555' }}>
+              Channel-Specific Lane Rates
+            </Typography>
+            <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 1, overflow: 'hidden', bgcolor: 'white' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ background: '#FAFAFA', borderBottom: '1px solid #e0e0e0' }}>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#666' }}>Channel</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>Rate per Pallet</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {editableRates.channelRates.map((item, idx) => (
+                    <tr key={idx} style={{ borderBottom: idx < editableRates.channelRates.length - 1 ? '1px solid #e0e0e0' : 'none' }}>
+                      <td style={{ padding: '10px 16px', fontSize: '13px' }}>{item.channel}</td>
+                      <td style={{ padding: '10px 16px', textAlign: 'right' }}>
+                        <TextField
+                          type="number"
+                          value={item.ratePerPallet}
+                          onChange={(e) => handleRateChange('channel', idx, e.target.value)}
+                          size="small"
+                          sx={{
+                            width: 100,
+                            '& input': { textAlign: 'right', fontSize: '13px', padding: '6px 10px' },
+                            '& .MuiOutlinedInput-root': { height: 32 }
+                          }}
+                          InputProps={{
+                            startAdornment: <Typography sx={{ mr: 0.5, color: '#666', fontSize: '13px' }}>$</Typography>
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, borderTop: '1px solid #e0e0e0', gap: 1 }}>
+          <Button
+            onClick={handleCloseAdjustRates}
+            sx={{ textTransform: 'none', color: '#666' }}
+          >
+            Cancel
+          </Button>
+          {quoteGenerated && ratesChanged ? (
+            <Button
+              variant="contained"
+              onClick={handleRegenerateQuote}
+              sx={{
+                bgcolor: '#F57C00',
+                textTransform: 'none',
+                '&:hover': {
+                  bgcolor: '#E65100'
+                }
+              }}
+            >
+              Regenerate Quote
+            </Button>
+          ) : quoteGenerated ? (
+            <Button
+              variant="contained"
+              onClick={handleFinalizeFromModal}
+              sx={{
+                bgcolor: '#F57C00',
+                textTransform: 'none',
+                '&:hover': {
+                  bgcolor: '#E65100'
+                }
+              }}
+            >
+              Regenerate Quote
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={() => {
+                setAdjustRatesModalOpen(false)
+                handleGenerateQuote()
+              }}
+              sx={{
+                bgcolor: '#00446A',
+                textTransform: 'none',
+                '&:hover': {
+                  bgcolor: '#003350'
+                }
+              }}
+            >
+              Generate Quote
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </Box>
