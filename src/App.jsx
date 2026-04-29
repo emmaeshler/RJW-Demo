@@ -685,6 +685,27 @@ function App() {
                 </Box>
               </Box>
 
+              {/* AI Insights Legend */}
+              <Box sx={{ mb: 2, p: 2, bgcolor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
+                <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1 }}>
+                  AI INSIGHT FLAGS (hover for details)
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#fff3e0', border: '2px solid #f57c00', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#f57c00' }}>M</Box>
+                    <Typography variant="caption" sx={{ color: '#666' }}>Margin Opportunity</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#e3f2fd', border: '2px solid #1976d2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#1976d2' }}>W</Box>
+                    <Typography variant="caption" sx={{ color: '#666' }}>Walmart Growth Potential</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#ffebee', border: '2px solid #d32f2f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#d32f2f' }}>L</Box>
+                    <Typography variant="caption" sx={{ color: '#666' }}>Below LTL Rates</Typography>
+                  </Box>
+                </Box>
+              </Box>
+
               {/* Client Scorecard Table */}
               <Box sx={{ bgcolor: 'white', borderRadius: 1, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
                 <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0', bgcolor: '#fafafa' }}>
@@ -1437,27 +1458,6 @@ function App() {
                       </tr>
                     </tbody>
                   </table>
-                </Box>
-              </Box>
-
-              {/* AI Insights Legend */}
-              <Box sx={{ mt: 2, p: 2, bgcolor: 'white', borderRadius: 1, border: '1px solid #e0e0e0' }}>
-                <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1 }}>
-                  AI INSIGHT FLAGS (hover for details)
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#fff3e0', border: '2px solid #f57c00', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#f57c00' }}>M</Box>
-                    <Typography variant="caption" sx={{ color: '#666' }}>Margin Opportunity</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#e3f2fd', border: '2px solid #1976d2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#1976d2' }}>W</Box>
-                    <Typography variant="caption" sx={{ color: '#666' }}>Walmart Growth Potential</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#ffebee', border: '2px solid #d32f2f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#d32f2f' }}>L</Box>
-                    <Typography variant="caption" sx={{ color: '#666' }}>Below LTL Rates</Typography>
-                  </Box>
                 </Box>
               </Box>
             </Box>
