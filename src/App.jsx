@@ -652,50 +652,131 @@ function App() {
 
             {/* Content */}
             <Box sx={{ flexGrow: 1, overflow: 'auto', p: 3 }}>
-              {/* Top Metrics Cards - PBI Style */}
+              {/* Top Metrics Cards - Enhanced PBI Style */}
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, mb: 3 }}>
-                <Box sx={{ bgcolor: 'white', p: 3, border: '1px solid #E1E1E1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px', fontWeight: 400, display: 'block', mb: 1 }}>
-                    Margin improvement
+                {/* Margin Improvement Card */}
+                <Box sx={{
+                  bgcolor: 'white',
+                  p: 3,
+                  border: '1px solid #E1E1E1',
+                  borderLeft: '4px solid #0078D4',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                }}>
+                  <Typography variant="caption" sx={{
+                    color: '#8A8886',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
+                    display: 'block',
+                    mb: 1.5
+                  }}>
+                    Margin Improvement Opportunity
                   </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
+                  <Typography variant="h3" sx={{ fontWeight: 700, color: '#323130', mb: 1, fontSize: '48px', lineHeight: 1 }}>
                     $127K
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block' }}>
-                    5 clients below average
+                  <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5, lineHeight: 1.4 }}>
+                    Across 5 of 24 clients priced below market
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#107C10', fontSize: '11px', fontWeight: 600, mt: 0.5, display: 'block' }}>
-                    ▲ Up $23K from Q3
+
+                  {/* Progress Bar */}
+                  <Box sx={{ mb: 1 }}>
+                    <Box sx={{ height: 8, bgcolor: '#E1E1E1', borderRadius: 1, overflow: 'hidden' }}>
+                      <Box sx={{ width: '42%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                    </Box>
+                  </Box>
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block', mb: 2 }}>
+                    42% of $300K annual target
+                  </Typography>
+
+                  {/* Status */}
+                  <Typography variant="caption" sx={{ color: '#107C10', fontSize: '12px', fontWeight: 600 }}>
+                    ▲ Up $23K vs. Q3 — on track
                   </Typography>
                 </Box>
 
-                <Box sx={{ bgcolor: 'white', p: 3, border: '1px solid #E1E1E1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px', fontWeight: 400, display: 'block', mb: 1 }}>
-                    Walmart opportunities
+                {/* Walmart Opportunities Card */}
+                <Box sx={{
+                  bgcolor: 'white',
+                  p: 3,
+                  border: '1px solid #E1E1E1',
+                  borderLeft: '4px solid #FFB900',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                }}>
+                  <Typography variant="caption" sx={{
+                    color: '#8A8886',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
+                    display: 'block',
+                    mb: 1.5
+                  }}>
+                    Walmart Underleveraged Clients
                   </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
+                  <Typography variant="h3" sx={{ fontWeight: 700, color: '#323130', mb: 1, fontSize: '48px', lineHeight: 1 }}>
                     8
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block' }}>
-                    Clients with low penetration
+                  <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5, lineHeight: 1.4 }}>
+                    of 24 clients below category avg penetration
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#F2711C', fontSize: '11px', fontWeight: 600, mt: 0.5, display: 'block' }}>
-                    ▲ Up 3 clients from Q3
+
+                  {/* Progress Bar */}
+                  <Box sx={{ mb: 1 }}>
+                    <Box sx={{ height: 8, bgcolor: '#E1E1E1', borderRadius: 1, overflow: 'hidden' }}>
+                      <Box sx={{ width: '67%', height: '100%', bgcolor: '#FFB900' }}></Box>
+                    </Box>
+                  </Box>
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block', mb: 2 }}>
+                    67% of portfolio — high exposure
+                  </Typography>
+
+                  {/* Status */}
+                  <Typography variant="caption" sx={{ color: '#F2711C', fontSize: '12px', fontWeight: 600 }}>
+                    ▲ Up 3 from Q3 — needs attention
                   </Typography>
                 </Box>
 
-                <Box sx={{ bgcolor: 'white', p: 3, border: '1px solid #E1E1E1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px', fontWeight: 400, display: 'block', mb: 1 }}>
-                    Rate adjustments
+                {/* At-Risk Card */}
+                <Box sx={{
+                  bgcolor: 'white',
+                  p: 3,
+                  border: '1px solid #E1E1E1',
+                  borderLeft: '4px solid #D13438',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                }}>
+                  <Typography variant="caption" sx={{
+                    color: '#8A8886',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
+                    display: 'block',
+                    mb: 1.5
+                  }}>
+                    At-Risk: Below LTL Benchmark
                   </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 600, color: '#323130', mb: 0.5 }}>
+                  <Typography variant="h3" sx={{ fontWeight: 700, color: '#323130', mb: 1, fontSize: '48px', lineHeight: 1 }}>
                     3
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block' }}>
-                    Clients below LTL benchmark
+                  <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5, lineHeight: 1.4 }}>
+                    of 24 clients — margin risk on freight
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#D13438', fontSize: '11px', fontWeight: 600, mt: 0.5, display: 'block' }}>
-                    ▼ Down 1 from Q3
+
+                  {/* Progress Bar */}
+                  <Box sx={{ mb: 1 }}>
+                    <Box sx={{ height: 8, bgcolor: '#E1E1E1', borderRadius: 1, overflow: 'hidden' }}>
+                      <Box sx={{ width: '13%', height: '100%', bgcolor: '#D13438' }}></Box>
+                    </Box>
+                  </Box>
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block', mb: 2 }}>
+                    13% of portfolio — 1 resolved since Q3
+                  </Typography>
+
+                  {/* Status */}
+                  <Typography variant="caption" sx={{ color: '#107C10', fontSize: '12px', fontWeight: 600 }}>
+                    ▼ Down 1 from Q3 — improving
                   </Typography>
                 </Box>
               </Box>
