@@ -1338,8 +1338,8 @@ function App() {
                           </Tooltip>
                         </th>
                         <th style={{ padding: '10px 12px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '8%' }}>
-                          <Tooltip title="AI-powered pricing recommendations and context" arrow placement="top">
-                            <span>AI Context</span>
+                          <Tooltip title="AI-powered pricing model analysis and recommendations" arrow placement="top">
+                            <span>Pricing Model Overview</span>
                           </Tooltip>
                         </th>
                       </tr>
@@ -3094,7 +3094,7 @@ function App() {
           <LightbulbIcon sx={{ color: '#FFB900', fontSize: 28 }} />
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#323130' }}>
-              AI Strategic Recommendation
+              Pricing Model Overview
             </Typography>
             {selectedAIClient && (
               <Typography variant="caption" sx={{ color: '#605E5C' }}>
