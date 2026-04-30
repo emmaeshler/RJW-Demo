@@ -157,6 +157,12 @@ function App() {
   }
 
   const aiRecommendations = {
+    'Our Home': {
+      title: 'Strategic Priority: Revenue Optimization on High-Volume Account',
+      recommendation: `AI analysis identifies Our Home as your premier strategic account - $21.2M in revenue with exceptional operational metrics (39.2% margin, 33.3% logistics margin). With 20,300 annual pallets and strong retailer diversification (Walmart at 11% - well below risk threshold), this relationship is positioned for sustainable revenue growth. The AI recommends a consultative pricing review across 8 high-volume lanes where current rates lag market benchmarks by 3-4%. These targeted adjustments could generate +$52,775 in monthly transportation revenue without disrupting service quality. Complementary warehouse rate optimization adds another +$7,270/month. Total opportunity: +$60K monthly (+$720K annually). The strategic approach: frame this as a partnership investment in continued service excellence and market-rate alignment, not as price increases. Given the account's scale and health, this positions you as a value-driven partner focused on long-term collaboration.`,
+      potential: '$720K annual revenue optimization',
+      actions: ['Week 1-2: Prepare executive rate review with detailed market benchmarking', 'Week 3-4: Present strategic pricing proposal to Our Home leadership', 'Week 5-8: Phase implementation across 8 priority lanes', 'Month 3+: Monitor service levels and relationship health during transition']
+    },
     'Justin': {
       title: 'Strategic Priority: Margin Optimization',
       recommendation: `AI analysis identifies focused margin improvement as the primary opportunity. Your highest-revenue client ($4.8M) has excellent retailer diversification (Walmart at 8% - well below the 23% concentration risk threshold), which positions you to capture margin gains without single-customer dependency. Phase 1 (immediate): Fix the margin rate issue. At 12.2% vs 15.5% benchmark, this represents $18.7K in annual opportunity and is a straightforward correction. Phase 2 (30-60 days): Correct LTL pricing to prevent future margin erosion as volume scales. Phase 3 (ongoing): Protect current retailer balance - the 8% Walmart mix is strategically sound and reduces business risk. The sequencing matters because margin improvements compound across all channels, and your current diversified base insulates you from retailer-specific volatility.`,
@@ -191,9 +197,9 @@ function App() {
 
   // Customers data array for table rendering
   const customersData = [
-    { name: 'Our Home', revenue: '$21.2M', marginPerPallet: '$409', logisticsMarginPercent: '33.3', marginPercent: '39.2', walmartPercent: '11', ltlVariance: '+$18', strategicInsights: ['W'], hasAIRecommendation: false },
-    { name: 'Trove Brands', revenue: '$3.9M', marginPerPallet: '$159', logisticsMarginPercent: '32.4', marginPercent: '41.0', walmartPercent: '15', ltlVariance: '+$12', strategicInsights: ['M'], hasAIRecommendation: true },
-    { name: 'Whirlybird Granola', revenue: '$2.7M', marginPerPallet: '$279', logisticsMarginPercent: '38.0', marginPercent: '39.8', walmartPercent: '7', ltlVariance: '+$25', strategicInsights: ['M', 'W'], hasAIRecommendation: true },
+    { name: 'Our Home', revenue: '$21.2M', marginPerPallet: '$409', logisticsMarginPercent: '33.3', marginPercent: '39.2', walmartPercent: '11', ltlVariance: '+$18', strategicInsights: ['W'], hasAIRecommendation: true },
+    { name: 'Trove Brands', revenue: '$3.9M', marginPerPallet: '$159', logisticsMarginPercent: '32.4', marginPercent: '41.0', walmartPercent: '15', ltlVariance: '+$12', strategicInsights: ['M'], hasAIRecommendation: false },
+    { name: 'Whirlybird Granola', revenue: '$2.7M', marginPerPallet: '$279', logisticsMarginPercent: '38.0', marginPercent: '39.8', walmartPercent: '7', ltlVariance: '+$25', strategicInsights: ['M', 'W'], hasAIRecommendation: false },
     { name: 'Lipton', revenue: '$1.1M', marginPerPallet: '$235', logisticsMarginPercent: '28.6', marginPercent: '35.8', walmartPercent: '19', ltlVariance: '-$8', strategicInsights: ['L'], hasAIRecommendation: false },
     { name: 'Milky Way', revenue: '$900K', marginPerPallet: '$454', logisticsMarginPercent: '47.0', marginPercent: '42.9', walmartPercent: '8', ltlVariance: '+$22', strategicInsights: ['!'], hasAIRecommendation: false },
     { name: 'Justin', revenue: '$585,768', marginPerPallet: '$402', logisticsMarginPercent: '35.1', marginPercent: '12.3', walmartPercent: '8', ltlVariance: '-$42', strategicInsights: ['M', 'W', 'L'], hasAIRecommendation: true },
