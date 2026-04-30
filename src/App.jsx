@@ -73,6 +73,7 @@ function App() {
   const [contextMenu, setContextMenu] = useState(null)
   const [recommendationExpanded, setRecommendationExpanded] = useState(false)
   const [clientFilter, setClientFilter] = useState('all') // 'all', 'needs-attention', 'watch', 'healthy'
+  const [badgeFilter, setBadgeFilter] = useState(null) // null or badge type ('W', 'M', 'L', '!', '✓')
   const [sortColumn, setSortColumn] = useState(null)
   const [sortDirection, setSortDirection] = useState('asc') // 'asc' or 'desc'
   const [ratesAccordionOpen, setRatesAccordionOpen] = useState(false)
@@ -197,18 +198,18 @@ function App() {
 
   // Customers data array for table rendering
   const customersData = [
-    { name: 'Our Home', revenue: '$21.2M', marginPerPallet: '$409', logisticsMarginPercent: '33.3', marginPercent: '39.2', walmartPercent: '11', ltlVariance: '+$18', strategicInsights: ['W'], hasAIRecommendation: true },
+    { name: 'Our Home', revenue: '$21.2M', marginPerPallet: '$409', logisticsMarginPercent: '33.3', marginPercent: '39.2', walmartPercent: '11', ltlVariance: '+$18', strategicInsights: [], hasAIRecommendation: true },
     { name: 'Trove Brands', revenue: '$3.9M', marginPerPallet: '$159', logisticsMarginPercent: '32.4', marginPercent: '41.0', walmartPercent: '15', ltlVariance: '+$12', strategicInsights: ['M'], hasAIRecommendation: false },
-    { name: 'Whirlybird Granola', revenue: '$2.7M', marginPerPallet: '$279', logisticsMarginPercent: '38.0', marginPercent: '39.8', walmartPercent: '7', ltlVariance: '+$25', strategicInsights: ['M', 'W'], hasAIRecommendation: false },
+    { name: 'Whirlybird Granola', revenue: '$2.7M', marginPerPallet: '$279', logisticsMarginPercent: '38.0', marginPercent: '39.8', walmartPercent: '7', ltlVariance: '+$25', strategicInsights: ['M'], hasAIRecommendation: false },
     { name: 'Lipton', revenue: '$1.1M', marginPerPallet: '$235', logisticsMarginPercent: '28.6', marginPercent: '35.8', walmartPercent: '19', ltlVariance: '-$8', strategicInsights: ['L'], hasAIRecommendation: false },
     { name: 'Milky Way', revenue: '$900K', marginPerPallet: '$454', logisticsMarginPercent: '47.0', marginPercent: '42.9', walmartPercent: '8', ltlVariance: '+$22', strategicInsights: ['!'], hasAIRecommendation: false },
-    { name: 'Justin', revenue: '$585,768', marginPerPallet: '$402', logisticsMarginPercent: '35.1', marginPercent: '12.3', walmartPercent: '8', ltlVariance: '-$42', strategicInsights: ['M', 'W', 'L'], hasAIRecommendation: true },
-    { name: 'Bragg Live Food', revenue: '$892,450', marginPerPallet: '$230', logisticsMarginPercent: '31.1', marginPercent: '16.8', walmartPercent: '12', ltlVariance: '+$15', strategicInsights: ['W'], hasAIRecommendation: false },
+    { name: 'Justin', revenue: '$585,768', marginPerPallet: '$402', logisticsMarginPercent: '35.1', marginPercent: '12.3', walmartPercent: '8', ltlVariance: '-$42', strategicInsights: ['M', 'L'], hasAIRecommendation: true },
+    { name: 'Bragg Live Food', revenue: '$892,450', marginPerPallet: '$230', logisticsMarginPercent: '31.1', marginPercent: '16.8', walmartPercent: '12', ltlVariance: '+$15', strategicInsights: [], hasAIRecommendation: false },
     { name: 'Trove Brands LLC', revenue: '$1,245,880', marginPerPallet: '$290', logisticsMarginPercent: '38.4', marginPercent: '11.2', walmartPercent: '18', ltlVariance: '+$8', strategicInsights: ['M'], hasAIRecommendation: true },
-    { name: 'WHIRLYBIRD GRANOLA', revenue: '$324,560', marginPerPallet: '$390', logisticsMarginPercent: '30.6', marginPercent: '17.5', walmartPercent: '5', ltlVariance: '+$22', strategicInsights: ['W'], hasAIRecommendation: false },
-    { name: 'AB WORLD FOODS', revenue: '$1,567,230', marginPerPallet: '$345', logisticsMarginPercent: '29.0', marginPercent: '10.8', walmartPercent: '6', ltlVariance: '-$55', strategicInsights: ['M', 'W', 'L'], hasAIRecommendation: true },
-    { name: "Nature's Path Foods", revenue: '$2,145,900', marginPerPallet: '$211', logisticsMarginPercent: '32.6', marginPercent: '18.2', walmartPercent: '31', ltlVariance: '+$35', strategicInsights: ['✓'], hasAIRecommendation: false },
-    { name: 'KULI KULI FOODS', revenue: '$456,280', marginPerPallet: '$340', logisticsMarginPercent: '34.0', marginPercent: '13.1', walmartPercent: '9', ltlVariance: '+$12', strategicInsights: ['M', 'W'], hasAIRecommendation: false }
+    { name: 'WHIRLYBIRD GRANOLA', revenue: '$324,560', marginPerPallet: '$390', logisticsMarginPercent: '30.6', marginPercent: '17.5', walmartPercent: '5', ltlVariance: '+$22', strategicInsights: [], hasAIRecommendation: false },
+    { name: 'AB WORLD FOODS', revenue: '$1,567,230', marginPerPallet: '$345', logisticsMarginPercent: '29.0', marginPercent: '10.8', walmartPercent: '6', ltlVariance: '-$55', strategicInsights: ['M', 'L'], hasAIRecommendation: true },
+    { name: "Nature's Path Foods", revenue: '$2,145,900', marginPerPallet: '$211', logisticsMarginPercent: '32.6', marginPercent: '18.2', walmartPercent: '31', ltlVariance: '+$35', strategicInsights: ['W'], hasAIRecommendation: false },
+    { name: 'KULI KULI FOODS', revenue: '$456,280', marginPerPallet: '$340', logisticsMarginPercent: '34.0', marginPercent: '13.1', walmartPercent: '9', ltlVariance: '+$12', strategicInsights: ['M'], hasAIRecommendation: false }
   ]
 
   const handleAIClick = (clientData) => {
@@ -282,6 +283,11 @@ function App() {
       setSortColumn(column)
       setSortDirection('asc')
     }
+  }
+
+  const handleBadgeClick = (badge) => {
+    // Toggle badge filter - click same badge to clear
+    setBadgeFilter(badgeFilter === badge ? null : badge)
   }
 
   const handleClick = (event) => {
@@ -1192,17 +1198,65 @@ function App() {
                   AI INSIGHTS
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 4 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box
+                    onClick={() => handleBadgeClick('M')}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      cursor: 'pointer',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      border: badgeFilter === 'M' ? '2px solid #F2711C' : '2px solid transparent',
+                      bgcolor: badgeFilter === 'M' ? '#FEF6F0' : 'transparent',
+                      transition: 'all 0.2s',
+                      '&:hover': {
+                        bgcolor: badgeFilter === 'M' ? '#FEF6F0' : '#FAF9F8'
+                      }
+                    }}
+                  >
                     <Box sx={{ width: 16, height: 16, bgcolor: '#F2711C', borderRadius: '2px' }}></Box>
-                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px' }}>Margin opportunity</Typography>
+                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px', fontWeight: badgeFilter === 'M' ? 600 : 400 }}>Margin opportunity</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box
+                    onClick={() => handleBadgeClick('W')}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      cursor: 'pointer',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      border: badgeFilter === 'W' ? '2px solid #0078D4' : '2px solid transparent',
+                      bgcolor: badgeFilter === 'W' ? '#F0F6FF' : 'transparent',
+                      transition: 'all 0.2s',
+                      '&:hover': {
+                        bgcolor: badgeFilter === 'W' ? '#F0F6FF' : '#FAF9F8'
+                      }
+                    }}
+                  >
                     <Box sx={{ width: 16, height: 16, bgcolor: '#0078D4', borderRadius: '2px' }}></Box>
-                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px' }}>Walmart over-concentration</Typography>
+                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px', fontWeight: badgeFilter === 'W' ? 600 : 400 }}>Walmart over-concentration</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box
+                    onClick={() => handleBadgeClick('L')}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      cursor: 'pointer',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      border: badgeFilter === 'L' ? '2px solid #D13438' : '2px solid transparent',
+                      bgcolor: badgeFilter === 'L' ? '#FEF0F0' : 'transparent',
+                      transition: 'all 0.2s',
+                      '&:hover': {
+                        bgcolor: badgeFilter === 'L' ? '#FEF0F0' : '#FAF9F8'
+                      }
+                    }}
+                  >
                     <Box sx={{ width: 16, height: 16, bgcolor: '#D13438', borderRadius: '2px' }}></Box>
-                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px' }}>Below LTL rates</Typography>
+                    <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '12px', fontWeight: badgeFilter === 'L' ? 600 : 400 }}>Below LTL rates</Typography>
                   </Box>
                 </Box>
               </Box>
@@ -1245,6 +1299,32 @@ function App() {
                       </Box>
                     ))}
                   </Box>
+
+                  {/* Badge Filter Indicator */}
+                  {badgeFilter && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1.5, pt: 1.5, borderTop: '1px solid #E1E1E1' }}>
+                      <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', fontWeight: 600 }}>
+                        FILTERED BY:
+                      </Typography>
+                      <Chip
+                        label={`Badge: ${badgeFilter}`}
+                        onDelete={() => setBadgeFilter(null)}
+                        size="small"
+                        sx={{
+                          height: '24px',
+                          fontSize: '12px',
+                          bgcolor: '#F3F2F1',
+                          '& .MuiChip-deleteIcon': {
+                            fontSize: '16px',
+                            color: '#605E5C',
+                            '&:hover': {
+                              color: '#323130'
+                            }
+                          }
+                        }}
+                      />
+                    </Box>
+                  )}
                 </Box>
                 <Box sx={{ overflow: 'auto', maxHeight: '600px', width: '100%' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
@@ -1387,9 +1467,18 @@ function App() {
                           }
                         })
                         .filter(customer => {
-                          if (clientFilter === 'all') return true
-                          const healthStatus = getClientHealthStatus(customer.marginPercent, customer.walmartPercent, customer.ltlVariance)
-                          return healthStatus.status === clientFilter
+                          // Health status filter
+                          if (clientFilter !== 'all') {
+                            const healthStatus = getClientHealthStatus(customer.marginPercent, customer.walmartPercent, customer.ltlVariance)
+                            if (healthStatus.status !== clientFilter) return false
+                          }
+
+                          // Badge filter
+                          if (badgeFilter !== null) {
+                            if (!customer.strategicInsights.includes(badgeFilter)) return false
+                          }
+
+                          return true
                         })
                         .map((customer, idx) => {
                         const healthStatus = getClientHealthStatus(customer.marginPercent, customer.walmartPercent, customer.ltlVariance)
@@ -1408,7 +1497,7 @@ function App() {
                         const getBadgeDetails = (badge) => {
                           switch(badge) {
                             case 'W':
-                              return { color: '#0078D4', tooltip: `Walmart at ${customer.walmartPercent}% - ${walmartValue < 10 ? 'excellent' : 'good'} diversification` }
+                              return { color: '#0078D4', tooltip: `Walmart concentration risk at ${customer.walmartPercent}% - target below 23% for healthy diversification` }
                             case 'M':
                               return { color: '#F2711C', tooltip: 'Margin opportunity identified - potential improvement available' }
                             case 'L':
