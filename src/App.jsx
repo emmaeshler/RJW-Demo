@@ -48,7 +48,9 @@ import {
   SupportAgent as SupportAgentIcon,
   Person as PersonIcon,
   AccountCircle as AccountCircleIcon,
-  Lightbulb as LightbulbIcon
+  Lightbulb as LightbulbIcon,
+  ArrowUpward as ArrowUpwardIcon,
+  ArrowDownward as ArrowDownwardIcon
 } from '@mui/icons-material'
 
 const drawerWidth = 280
@@ -69,6 +71,10 @@ function App() {
   const [insightView, setInsightView] = useState('scorecard') // 'scorecard' or 'customer-detail'
   const [selectedCustomerDetail, setSelectedCustomerDetail] = useState(null)
   const [contextMenu, setContextMenu] = useState(null)
+  const [recommendationExpanded, setRecommendationExpanded] = useState(false)
+  const [clientFilter, setClientFilter] = useState('all') // 'all', 'needs-attention', 'watch', 'healthy'
+  const [sortColumn, setSortColumn] = useState(null)
+  const [sortDirection, setSortDirection] = useState('asc') // 'asc' or 'desc'
   const [ratesAccordionOpen, setRatesAccordionOpen] = useState(false)
   const [adjustRatesModalOpen, setAdjustRatesModalOpen] = useState(false)
   const [ratesChanged, setRatesChanged] = useState(false)
@@ -105,6 +111,33 @@ function App() {
 
   // Customer detail data for drill-in
   const customerDetails = {
+    'Our Home': {
+      name: 'Our Home',
+      type: 'summary', // Flag to indicate this uses summary KPIs
+      marginPerPallet: '$409',
+      marginPercent: '39.2%',
+      numPallets: '20,300',
+      potentialMonthlyImpact: '+$127,000',
+      currentPalletRate: '$68.75',
+      palletLanes: [
+        { from: 'Los Angeles, CA', to: 'Target - Northeast DC', pallets: 3450, currentRate: '$72.50', suggested: '$75.00', additionalRevenue: '+$8,625' },
+        { from: 'Los Angeles, CA', to: 'Walmart - Southeast DC', pallets: 2890, currentRate: '$68.00', suggested: '$70.50', additionalRevenue: '+$7,225' },
+        { from: 'Los Angeles, CA', to: 'Home Depot - Midwest DC', pallets: 2150, currentRate: '$65.25', suggested: '$67.75', additionalRevenue: '+$5,375' },
+        { from: 'Phoenix, AZ', to: 'Lowe\'s - Texas DC', pallets: 3280, currentRate: '$58.50', suggested: '$61.00', additionalRevenue: '+$8,200' },
+        { from: 'Phoenix, AZ', to: 'Bed Bath & Beyond - Mountain DC', pallets: 1820, currentRate: '$62.75', suggested: '$65.25', additionalRevenue: '+$4,550' },
+        { from: 'Seattle, WA', to: 'Costco - Northwest DC', pallets: 2980, currentRate: '$71.25', suggested: '$74.00', additionalRevenue: '+$8,195' },
+        { from: 'Seattle, WA', to: 'Amazon - California FC', pallets: 2450, currentRate: '$69.50', suggested: '$72.00', additionalRevenue: '+$6,125' },
+        { from: 'Dallas, TX', to: 'Wayfair - East Coast DC', pallets: 1280, currentRate: '$75.00', suggested: '$78.50', additionalRevenue: '+$4,480' }
+      ],
+      warehouseRates: [
+        { location: 'Los Angeles, CA - Primary', currentRate: '$4.15/pallet/day', suggested: '$4.45/pallet/day', monthlyCost: '$32,850', suggestedCost: '$35,225', additionalRevenue: '+$2,375' },
+        { location: 'Phoenix, AZ - Regional', currentRate: '$3.85/pallet/day', suggested: '$4.10/pallet/day', monthlyCost: '$24,780', suggestedCost: '$26,390', additionalRevenue: '+$1,610' },
+        { location: 'Seattle, WA - Pacific Northwest Hub', currentRate: '$4.25/pallet/day', suggested: '$4.55/pallet/day', monthlyCost: '$28,950', suggestedCost: '$30,985', additionalRevenue: '+$2,035' },
+        { location: 'Dallas, TX - Secondary', currentRate: '$3.75/pallet/day', suggested: '$4.00/pallet/day', monthlyCost: '$18,750', suggestedCost: '$20,000', additionalRevenue: '+$1,250' }
+      ],
+      suggestion: 'Our Home is a strong strategic account with high volume and healthy margins. The account is currently delivering $409 margin per pallet across 20,300 annual pallets. We recommend targeted rate increases across 8 key lanes to better align pricing with current market conditions and service value. These lane updates could generate approximately +$52,775 in additional monthly transportation revenue. Recommended warehouse rate adjustments could add another +$7,270 per month. Total estimated opportunity: +$60,045 per month (+$720K annually). This approach helps improve pricing while maintaining competitive service levels and supporting a strong long-term partnership.',
+      potentialImpact: '+$60,045/month rate optimization opportunity'
+    },
     'Justin': {
       name: 'Justin',
       currentPalletRate: '$42.50',
@@ -156,6 +189,22 @@ function App() {
     }
   }
 
+  // Customers data array for table rendering
+  const customersData = [
+    { name: 'Our Home', revenue: '$21.2M', marginPerPallet: '$409', logisticsMarginPercent: '33.3', marginPercent: '39.2', walmartPercent: '11', ltlVariance: '+$18', strategicInsights: ['W'], hasAIRecommendation: false },
+    { name: 'Trove Brands', revenue: '$3.9M', marginPerPallet: '$159', logisticsMarginPercent: '32.4', marginPercent: '41.0', walmartPercent: '15', ltlVariance: '+$12', strategicInsights: ['M'], hasAIRecommendation: true },
+    { name: 'Whirlybird Granola', revenue: '$2.7M', marginPerPallet: '$279', logisticsMarginPercent: '38.0', marginPercent: '39.8', walmartPercent: '7', ltlVariance: '+$25', strategicInsights: ['M', 'W'], hasAIRecommendation: true },
+    { name: 'Lipton', revenue: '$1.1M', marginPerPallet: '$235', logisticsMarginPercent: '28.6', marginPercent: '35.8', walmartPercent: '19', ltlVariance: '-$8', strategicInsights: ['L'], hasAIRecommendation: false },
+    { name: 'Milky Way', revenue: '$900K', marginPerPallet: '$454', logisticsMarginPercent: '47.0', marginPercent: '42.9', walmartPercent: '8', ltlVariance: '+$22', strategicInsights: ['!'], hasAIRecommendation: false },
+    { name: 'Justin', revenue: '$585,768', marginPerPallet: '$402', logisticsMarginPercent: '35.1', marginPercent: '12.3', walmartPercent: '8', ltlVariance: '-$42', strategicInsights: ['M', 'W', 'L'], hasAIRecommendation: true },
+    { name: 'Bragg Live Food', revenue: '$892,450', marginPerPallet: '$230', logisticsMarginPercent: '31.1', marginPercent: '16.8', walmartPercent: '12', ltlVariance: '+$15', strategicInsights: ['W'], hasAIRecommendation: false },
+    { name: 'Trove Brands LLC', revenue: '$1,245,880', marginPerPallet: '$290', logisticsMarginPercent: '38.4', marginPercent: '11.2', walmartPercent: '18', ltlVariance: '+$8', strategicInsights: ['M'], hasAIRecommendation: true },
+    { name: 'WHIRLYBIRD GRANOLA', revenue: '$324,560', marginPerPallet: '$390', logisticsMarginPercent: '30.6', marginPercent: '17.5', walmartPercent: '5', ltlVariance: '+$22', strategicInsights: ['W'], hasAIRecommendation: false },
+    { name: 'AB WORLD FOODS', revenue: '$1,567,230', marginPerPallet: '$345', logisticsMarginPercent: '29.0', marginPercent: '10.8', walmartPercent: '6', ltlVariance: '-$55', strategicInsights: ['M', 'W', 'L'], hasAIRecommendation: true },
+    { name: "Nature's Path Foods", revenue: '$2,145,900', marginPerPallet: '$211', logisticsMarginPercent: '32.6', marginPercent: '18.2', walmartPercent: '31', ltlVariance: '+$35', strategicInsights: ['✓'], hasAIRecommendation: false },
+    { name: 'KULI KULI FOODS', revenue: '$456,280', marginPerPallet: '$340', logisticsMarginPercent: '34.0', marginPercent: '13.1', walmartPercent: '9', ltlVariance: '+$12', strategicInsights: ['M', 'W'], hasAIRecommendation: false }
+  ]
+
   const handleAIClick = (clientData) => {
     setSelectedAIClient(clientData)
     setAiModalOpen(true)
@@ -190,6 +239,43 @@ function App() {
   const handleBackToScorecard = () => {
     setInsightView('scorecard')
     setSelectedCustomerDetail(null)
+  }
+
+  // Helper function to determine client health status
+  const getClientHealthStatus = (marginPercent, walmartPercent, ltlVariance) => {
+    const margin = parseFloat(marginPercent)
+    const walmart = parseFloat(walmartPercent)
+    const ltl = parseFloat(ltlVariance?.replace(/[^0-9.-]/g, '') || '0')
+
+    let issueCount = 0
+
+    // Check margin (below 12% is red flag)
+    if (margin < 12) issueCount += 2  // Major issue
+    else if (margin < 15.5) issueCount += 1  // Minor issue
+
+    // Check Walmart concentration (above 23% is red flag)
+    if (walmart > 23) issueCount += 2  // Major issue
+    else if (walmart > 20) issueCount += 1  // Minor issue
+
+    // Check LTL variance (negative is issue)
+    if (ltl < -40) issueCount += 2  // Major issue
+    else if (ltl < 0) issueCount += 1  // Minor issue
+
+    // Determine status
+    if (issueCount >= 3) return { status: 'needs-attention', color: '#D13438', label: 'Needs Attention' }
+    if (issueCount >= 1) return { status: 'watch', color: '#F2711C', label: 'Watch' }
+    return { status: 'healthy', color: '#107C10', label: 'Healthy' }
+  }
+
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      // Toggle direction if same column
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      // New column, default to ascending
+      setSortColumn(column)
+      setSortDirection('asc')
+    }
   }
 
   const handleClick = (event) => {
@@ -1118,1042 +1204,301 @@ function App() {
               {/* Client Scorecard Table - PBI Style */}
               <Box sx={{ bgcolor: 'white', border: '1px solid #E1E1E1', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
                 <Box sx={{ p: 2.5, borderBottom: '1px solid #E1E1E1' }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#323130', fontSize: '14px' }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#323130', fontSize: '14px', mb: 2 }}>
                     Client performance
                   </Typography>
+
+                  {/* Filter Tabs */}
+                  <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+                    {[
+                      { value: 'all', label: 'All', count: customersData.length },
+                      { value: 'needs-attention', label: 'Needs attention', count: customersData.filter(c => getClientHealthStatus(c.marginPercent, c.walmartPercent, c.ltlVariance).status === 'needs-attention').length },
+                      { value: 'watch', label: 'Watch', count: customersData.filter(c => getClientHealthStatus(c.marginPercent, c.walmartPercent, c.ltlVariance).status === 'watch').length },
+                      { value: 'healthy', label: 'Healthy', count: customersData.filter(c => getClientHealthStatus(c.marginPercent, c.walmartPercent, c.ltlVariance).status === 'healthy').length }
+                    ].map(tab => (
+                      <Box
+                        key={tab.value}
+                        onClick={() => setClientFilter(tab.value)}
+                        sx={{
+                          px: 2,
+                          py: 1,
+                          cursor: 'pointer',
+                          borderRadius: '4px',
+                          fontSize: '13px',
+                          fontWeight: clientFilter === tab.value ? 600 : 400,
+                          color: clientFilter === tab.value ? '#0078D4' : '#605E5C',
+                          bgcolor: clientFilter === tab.value ? '#F3F2F1' : 'transparent',
+                          border: clientFilter === tab.value ? '1px solid #0078D4' : '1px solid transparent',
+                          transition: 'all 0.2s',
+                          '&:hover': {
+                            bgcolor: clientFilter === tab.value ? '#F3F2F1' : '#FAF9F8'
+                          }
+                        }}
+                      >
+                        {tab.label} ({tab.count})
+                      </Box>
+                    ))}
+                  </Box>
                 </Box>
-                <Box sx={{ overflow: 'auto' }}>
+                <Box sx={{ overflow: 'auto', maxHeight: '600px', width: '100%' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid #E1E1E1', background: '#FAF9F8' }}>
-                        <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Client</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Revenue</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Margin % (vs avg 15.5%)</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Walmart % (target &lt;23%)</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>LTL Δ</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Strategic Insights</th>
-                        <th style={{ padding: '10px 16px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '50px' }}>Pricing Model Context</th>
+                        <th
+                          onClick={() => handleSort('client')}
+                          style={{ padding: '10px 12px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '12%', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          <Tooltip title="Client name and total revenue" arrow placement="top">
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                              <span>Client</span>
+                              {sortColumn === 'client' && (
+                                sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
+                              )}
+                            </Box>
+                          </Tooltip>
+                        </th>
+                        <th
+                          onClick={() => handleSort('marginPerPallet')}
+                          style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '12%', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          <Tooltip title="Gross margin per pallet - higher is better for profitability" arrow placement="top">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
+                              <span>Margin $/Pallet</span>
+                              {sortColumn === 'marginPerPallet' && (
+                                sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
+                              )}
+                            </Box>
+                          </Tooltip>
+                        </th>
+                        <th
+                          onClick={() => handleSort('logisticsMargin')}
+                          style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '13%', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          <Tooltip title="Logistics margin percentage - measures efficiency of transportation operations" arrow placement="top">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
+                              <span>Logistics Margin %</span>
+                              {sortColumn === 'logisticsMargin' && (
+                                sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
+                              )}
+                            </Box>
+                          </Tooltip>
+                        </th>
+                        <th
+                          onClick={() => handleSort('margin')}
+                          style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '12%', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          <Tooltip title="Overall margin percentage compared to average of 15.5% - key profitability indicator" arrow placement="top">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
+                              <span>Margin %</span>
+                              {sortColumn === 'margin' && (
+                                sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
+                              )}
+                            </Box>
+                          </Tooltip>
+                        </th>
+                        <th
+                          onClick={() => handleSort('walmart')}
+                          style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '11%', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          <Tooltip title="Walmart concentration - target is below 23% for healthy diversification" arrow placement="top">
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
+                              <span>Walmart %</span>
+                              {sortColumn === 'walmart' && (
+                                sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
+                              )}
+                            </Box>
+                          </Tooltip>
+                        </th>
+                        <th
+                          onClick={() => handleSort('ltl')}
+                          style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '11%', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          <Tooltip
+                            title="Shows how far this client is above or below the LTL freight benchmark on a per-pallet basis. Positive values indicate favorable freight performance; negative values indicate the account is below benchmark and may be eroding margin."
+                            arrow
+                            placement="top"
+                          >
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
+                              <span>LTL Variance</span>
+                              {sortColumn === 'ltl' && (
+                                sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
+                              )}
+                            </Box>
+                          </Tooltip>
+                        </th>
+                        <th style={{ padding: '10px 12px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '13%' }}>
+                          <Tooltip title="Key strategic insights and alerts for this client" arrow placement="top">
+                            <span>Strategic Insights</span>
+                          </Tooltip>
+                        </th>
+                        <th style={{ padding: '10px 12px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '8%' }}>
+                          <Tooltip title="AI-powered pricing recommendations and context" arrow placement="top">
+                            <span>AI Context</span>
+                          </Tooltip>
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr style={{ background: 'white', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e, 'Justin')}
-                        >
-                          Justin
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$585,768</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '79%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>12.3%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '35%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>8%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$42</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin 3.2% below similar clients (avg 15.5%). Opportunity: +$18.7K annually" arrow>
-                              <Box
-                                sx={{
-                                  width: 20,
-                                  height: 20,
-                                  bgcolor: '#F2711C',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  cursor: 'help',
-                                  fontSize: '10px',
-                                  fontWeight: 700,
-                                  color: 'white',
-                                  borderRadius: '2px'
-                                }}
-                              >
-                                M
+                      {customersData
+                        .sort((a, b) => {
+                          if (!sortColumn) return 0
+
+                          let aVal, bVal
+
+                          switch(sortColumn) {
+                            case 'client':
+                              aVal = a.name.toLowerCase()
+                              bVal = b.name.toLowerCase()
+                              break
+                            case 'marginPerPallet':
+                              aVal = parseFloat(a.marginPerPallet.replace(/[^0-9.-]/g, ''))
+                              bVal = parseFloat(b.marginPerPallet.replace(/[^0-9.-]/g, ''))
+                              break
+                            case 'logisticsMargin':
+                              aVal = parseFloat(a.logisticsMarginPercent)
+                              bVal = parseFloat(b.logisticsMarginPercent)
+                              break
+                            case 'margin':
+                              aVal = parseFloat(a.marginPercent)
+                              bVal = parseFloat(b.marginPercent)
+                              break
+                            case 'walmart':
+                              aVal = parseFloat(a.walmartPercent)
+                              bVal = parseFloat(b.walmartPercent)
+                              break
+                            case 'ltl':
+                              aVal = parseFloat(a.ltlVariance.replace(/[^0-9.-]/g, ''))
+                              bVal = parseFloat(b.ltlVariance.replace(/[^0-9.-]/g, ''))
+                              break
+                            default:
+                              return 0
+                          }
+
+                          if (typeof aVal === 'string') {
+                            return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
+                          } else {
+                            return sortDirection === 'asc' ? aVal - bVal : bVal - aVal
+                          }
+                        })
+                        .filter(customer => {
+                          if (clientFilter === 'all') return true
+                          const healthStatus = getClientHealthStatus(customer.marginPercent, customer.walmartPercent, customer.ltlVariance)
+                          return healthStatus.status === clientFilter
+                        })
+                        .map((customer, idx) => {
+                        const healthStatus = getClientHealthStatus(customer.marginPercent, customer.walmartPercent, customer.ltlVariance)
+                        const marginValue = parseFloat(customer.marginPercent)
+                        const marginColor = marginValue >= 15.5 ? '#107C10' : marginValue >= 12 ? '#F2711C' : '#D13438'
+                        const marginBarWidth = `${(marginValue / 15.5) * 100}%`
+
+                        const walmartValue = parseFloat(customer.walmartPercent)
+                        const walmartColor = walmartValue <= 20 ? '#107C10' : walmartValue <= 23 ? '#F2711C' : '#D13438'
+                        const walmartBarWidth = `${(walmartValue / 23) * 100}%`
+
+                        const ltlVariance = customer.ltlVariance
+                        const ltlColor = ltlVariance.startsWith('+') ? '#107C10' : ltlVariance.startsWith('-') ? '#D13438' : '#323130'
+
+                        // Helper function to get badge details
+                        const getBadgeDetails = (badge) => {
+                          switch(badge) {
+                            case 'W':
+                              return { color: '#0078D4', tooltip: `Walmart at ${customer.walmartPercent}% - ${walmartValue < 10 ? 'excellent' : 'good'} diversification` }
+                            case 'M':
+                              return { color: '#F2711C', tooltip: 'Margin opportunity identified - potential improvement available' }
+                            case 'L':
+                              return { color: '#D13438', tooltip: `LTL freight issue - ${ltlVariance} vs benchmark` }
+                            case '!':
+                              return { color: '#D13438', tooltip: 'NPO Risk - monitor payment terms and credit exposure' }
+                            case '✓':
+                              return { color: '#107C10', tooltip: 'On target - all KPIs within healthy range' }
+                            default:
+                              return { color: '#8A8886', tooltip: 'Strategic insight' }
+                          }
+                        }
+
+                        return (
+                          <tr key={idx} style={{
+                            background: idx % 2 === 0 ? 'white' : '#FAF9F8',
+                            borderBottom: '1px solid #EDEBE9',
+                            borderLeft: `4px solid ${healthStatus.color}`
+                          }}>
+                            <td
+                              style={{
+                                padding: '12px 12px',
+                                cursor: 'context-menu'
+                              }}
+                              onContextMenu={(e) => handleCustomerRightClick(e, customer.name)}
+                            >
+                              <div style={{ color: '#0078D4', fontWeight: 500, textDecoration: 'underline' }}>{customer.name}</div>
+                              <div style={{ fontSize: '12px', color: '#605E5C', fontWeight: 400 }}>{customer.revenue}</div>
+                            </td>
+                            <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130', fontWeight: 600 }}>{customer.marginPerPallet}</td>
+                            <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130', fontWeight: 600 }}>{customer.logisticsMarginPercent}%</td>
+                            <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                                <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
+                                  <Box sx={{ width: marginBarWidth, height: '100%', bgcolor: marginColor }}></Box>
+                                </Box>
+                                <span style={{ color: marginColor, fontWeight: 600, minWidth: 45 }}>{customer.marginPercent}%</span>
                               </Box>
-                            </Tooltip>
-                            <Tooltip title="Walmart at 8% - excellent diversification. Well below concentration threshold of 23%" arrow>
-                              <Box
-                                sx={{
-                                  width: 20,
-                                  height: 20,
-                                  bgcolor: '#0078D4',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  cursor: 'help',
-                                  fontSize: '10px',
-                                  fontWeight: 700,
-                                  color: 'white',
-                                  borderRadius: '2px'
-                                }}
-                              >
-                                W
+                            </td>
+                            <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                                <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
+                                  <Box sx={{ width: walmartBarWidth, height: '100%', bgcolor: walmartColor }}></Box>
+                                </Box>
+                                <span style={{ color: walmartColor, fontWeight: 600, minWidth: 45 }}>{customer.walmartPercent}%</span>
                               </Box>
-                            </Tooltip>
-                            <Tooltip title="Priced $42/shipment below LTL benchmark. Risk: underpriced service, recommend rate adjustment" arrow>
-                              <Box
-                                sx={{
-                                  width: 20,
-                                  height: 20,
-                                  bgcolor: '#D13438',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  cursor: 'help',
-                                  fontSize: '10px',
-                                  fontWeight: 700,
-                                  color: 'white',
-                                  borderRadius: '2px'
-                                }}
-                              >
-                                L
+                            </td>
+                            <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                              <span style={{ color: ltlColor, fontWeight: 600 }}>{ltlVariance}</span>
+                            </td>
+                            <td style={{ padding: '12px 16px' }}>
+                              <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center' }}>
+                                {healthStatus.status === 'healthy' && customer.strategicInsights.includes('✓') ? (
+                                  <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '11px' }}>
+                                    ✓ On target
+                                  </Typography>
+                                ) : (
+                                  customer.strategicInsights.map((badge, badgeIdx) => {
+                                    const badgeDetails = getBadgeDetails(badge)
+                                    return (
+                                      <Tooltip key={badgeIdx} title={badgeDetails.tooltip} arrow>
+                                        <Box sx={{
+                                          width: 20,
+                                          height: 20,
+                                          bgcolor: badgeDetails.color,
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          cursor: 'help',
+                                          fontSize: '10px',
+                                          fontWeight: 700,
+                                          color: 'white',
+                                          borderRadius: '2px'
+                                        }}>
+                                          {badge}
+                                        </Box>
+                                      </Tooltip>
+                                    )
+                                  })
+                                )}
                               </Box>
-                            </Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleAIClick(aiRecommendations['Justin'] ? { name: 'Justin', ...aiRecommendations['Justin'] } : null)}
-                            sx={{ color: '#FFB900' }}
-                          >
-                            <LightbulbIcon fontSize="small" />
-                          </IconButton>
-                        </td>
-                      </tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Bragg Live Food')}
-                        >
-                          Bragg Live Food
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$892,450</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '108%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>16.8%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '34%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>12%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$15</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Walmart at 12% - good diversification below 23% threshold" arrow>
-                              <Box
-                                sx={{
-                                  width: 20,
-                                  height: 20,
-                                  bgcolor: '#0078D4',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  cursor: 'help',
-                                  fontSize: '10px',
-                                  fontWeight: 700,
-                                  color: 'white',
-                                  borderRadius: '2px'
-                                }}
-                              >
-                                W
-                              </Box>
-                            </Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Trove Brands LLC')}
-                        >
-                          Trove Brands LLC
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,245,880</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '72%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>11.2%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '51%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>18%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$8</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin 4.3% below peer average. High volume client - small rate increase = $53K opportunity" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleAIClick(aiRecommendations['Trove Brands LLC'] ? { name: 'Trove Brands LLC', ...aiRecommendations['Trove Brands LLC'] } : null)}
-                            sx={{ color: '#FFB900' }}
-                          >
-                            <LightbulbIcon fontSize="small" />
-                          </IconButton>
-                        </td>
-                      </tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'WHIRLYBIRD GRANOLA')}
-                        >
-                          WHIRLYBIRD GRANOLA
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$324,560</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '113%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>17.5%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '14%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>5%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$22</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Walmart at 5% - excellent retailer diversification" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'AB WORLD FOODS')}
-                        >
-                          AB WORLD FOODS
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,567,230</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '70%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>10.8%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '17%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>6%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$55</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin significantly below benchmark. Large revenue base makes this a priority renegotiation" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart at 6% - strong diversification across retailers" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                            <Tooltip title="Priced $55/shipment below LTL rates. Highest priority for rate correction" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#D13438',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>L</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleAIClick(aiRecommendations['AB WORLD FOODS'] ? { name: 'AB WORLD FOODS', ...aiRecommendations['AB WORLD FOODS'] } : null)}
-                            sx={{ color: '#FFB900' }}
-                          >
-                            <LightbulbIcon fontSize="small" />
-                          </IconButton>
-                        </td>
-                      </tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,"Nature's Path Foods")}
-                        >
-                          Nature's Path Foods
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$2,145,900</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '117%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>18.2%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '89%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>31%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$35</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '11px' }}>✓ On target</Typography>
-                          </Box>
-                        </td>
-                      </tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'KULI KULI FOODS')}
-                        >
-                          KULI KULI FOODS
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$456,280</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '85%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>13.1%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '26%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>9%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$12</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin at 13.1% is below 15.5% average. Growing client with room for optimization" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart at 9% - well-diversified portfolio" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Simple Mills')}
-                        >
-                          Simple Mills
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$3,892,400</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '124%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>19.3%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '40%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>14%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$42</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Walmart at 14% - healthy diversification below concentration risk" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleAIClick(aiRecommendations['Simple Mills'] ? { name: 'Simple Mills', ...aiRecommendations['Simple Mills'] } : null)}
-                            sx={{ color: '#FFB900' }}
-                          >
-                            <LightbulbIcon fontSize="small" />
-                          </IconButton>
-                        </td>
-                      </tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Good Health Brands')}
-                        >
-                          Good Health Brands
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$734,560</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '75%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>11.7%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '63%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>22%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$28</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin below peer group. Focus on rate optimization while maintaining retailer diversity" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                            <Tooltip title="Priced $28/shipment below LTL benchmark despite healthy volume" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#D13438',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>L</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'LESSER EVIL')}
-                        >
-                          LESSER EVIL
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,678,200</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '110%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>17.1%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '80%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>28%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$18</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '11px' }}>✓ On target</Typography>
-                          </Box>
-                        </td>
-                      </tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Hippeas')}
-                        >
-                          Hippeas
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$542,890</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '83%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>12.8%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '20%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>7%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#666', fontWeight: 600 }}>-$3</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin 2.7% below average. Medium revenue client with upside potential" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart at 7% - strong multi-retailer distribution" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Made Good Foods')}
-                        >
-                          Made Good Foods
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,923,450</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '106%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>16.4%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '71%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>25%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$28</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '11px' }}>✓ On target</Typography>
-                          </Box>
-                        </td>
-                      </tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Hu Kitchen')}
-                        >
-                          Hu Kitchen
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$687,340</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '66%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>10.2%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '11%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>4%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#666', fontWeight: 600 }}>+$5</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Lowest margin in portfolio at 10.2%. Premium brand should support higher pricing" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart at 4% - highly diversified across retail partners" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Tia Lupita Foods')}
-                        >
-                          Tia Lupita Foods
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$298,750</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '122%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>18.9%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '31%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>11%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$31</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Good margin and Walmart at 11% - well-balanced retailer mix" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Partake Foods')}
-                        >
-                          Partake Foods
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$823,190</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '87%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>13.5%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '29%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>10%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#D13438', fontWeight: 600 }}>-$18</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Margin 2% below average for allergen-free category. Rate review needed" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#F2711C',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>M</Box></Tooltip>
-                            <Tooltip title="Walmart at 10% - strong diversification protecting against single-retailer risk" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                            <Tooltip title="LTL pricing $18 below benchmark. Correct before volume scales" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#D13438',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>L</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleAIClick(aiRecommendations['Partake Foods'] ? { name: 'Partake Foods', ...aiRecommendations['Partake Foods'] } : null)}
-                            sx={{ color: '#FFB900' }}
-                          >
-                            <LightbulbIcon fontSize="small" />
-                          </IconButton>
-                        </td>
-                      </tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Chomps')}
-                        >
-                          Chomps
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$2,567,800</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '130%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>20.1%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '100%', height: '100%', bgcolor: '#F2711C' }}></Box>
-                            </Box>
-                            <span style={{ color: '#F2711C', fontWeight: 600, minWidth: 45 }}>35%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$48</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '11px' }}>✓ On target</Typography>
-                          </Box>
-                        </td>
-                      </tr>
-                      <tr style={{ background: '#FAF9F8', borderBottom: '1px solid #EDEBE9' }}>
-                        <td
-                          style={{
-                            padding: '12px 16px',
-                            color: '#0078D4',
-                            fontWeight: 500,
-                            cursor: 'context-menu',
-                            textDecoration: 'underline'
-                          }}
-                          onContextMenu={(e) => handleCustomerRightClick(e,'Purely Elizabeth')}
-                        >
-                          Purely Elizabeth
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>$1,234,670</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '102%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>15.8%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                            <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                              <Box sx={{ width: '37%', height: '100%', bgcolor: '#107C10' }}></Box>
-                            </Box>
-                            <span style={{ color: '#107C10', fontWeight: 600, minWidth: 45 }}>13%</span>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130' }}>
-                          <span style={{ color: '#107C10', fontWeight: 600 }}>+$21</span>
-                        </td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <Box sx={{ display: 'flex', gap: 0.75 }}>
-                            <Tooltip title="Walmart at 13% - healthy balance across retail channels" arrow><Box sx={{
-                                width: 20,
-                                height: 20,
-                                bgcolor: '#0078D4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'help',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: 'white',
-                                borderRadius: '2px'
-                              }}>W</Box></Tooltip>
-                          </Box>
-                        </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'center' }}></td></tr>
+                            </td>
+                            <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                              {customer.hasAIRecommendation && (
+                                <IconButton
+                                  size="small"
+                                  onClick={() => handleAIClick(aiRecommendations[customer.name] ? { name: customer.name, ...aiRecommendations[customer.name] } : null)}
+                                  sx={{ color: '#FFB900' }}
+                                >
+                                  <LightbulbIcon fontSize="small" />
+                                </IconButton>
+                              )}
+                            </td>
+                          </tr>
+                        )
+                      })}
                     </tbody>
                   </table>
                 </Box>
@@ -2204,7 +1549,185 @@ function App() {
                   <>
                     {/* KPI Cards - Power BI Style */}
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2.5, mb: 3 }}>
-                      {/* Avg Pallet Rate Card */}
+
+                      {/* Conditional KPI Cards based on customer type */}
+                      {selectedCustomerDetail.type === 'summary' ? (
+                        <>
+                          {/* Margin / Pallet Card */}
+                          <Box sx={{
+                            bgcolor: 'white',
+                            p: 3,
+                            borderRadius: '4px',
+                            boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                            borderLeft: '4px solid #0078D4',
+                            transition: 'box-shadow 0.3s',
+                            '&:hover': {
+                              boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
+                            }
+                          }}>
+                            <Typography variant="caption" sx={{
+                              color: '#8A8886',
+                              fontSize: '11px',
+                              fontWeight: 600,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              display: 'block',
+                              mb: 1.5
+                            }}>
+                              Margin / Pallet
+                            </Typography>
+                            <Typography sx={{
+                              fontSize: '36px',
+                              fontWeight: 600,
+                              color: '#323130',
+                              lineHeight: 1,
+                              mb: 1
+                            }}>
+                              {selectedCustomerDetail.marginPerPallet}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
+                              Above industry benchmark
+                            </Typography>
+                            <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
+                              <Box sx={{ width: '85%', height: '100%', bgcolor: '#107C10' }}></Box>
+                            </Box>
+                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '13px' }}>
+                              ▲ Strong margin performance
+                            </Typography>
+                          </Box>
+
+                          {/* Margin % Card */}
+                          <Box sx={{
+                            bgcolor: 'white',
+                            p: 3,
+                            borderRadius: '4px',
+                            boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                            borderLeft: '4px solid #107C10',
+                            transition: 'box-shadow 0.3s',
+                            '&:hover': {
+                              boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
+                            }
+                          }}>
+                            <Typography variant="caption" sx={{
+                              color: '#8A8886',
+                              fontSize: '11px',
+                              fontWeight: 600,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              display: 'block',
+                              mb: 1.5
+                            }}>
+                              Margin %
+                            </Typography>
+                            <Typography sx={{
+                              fontSize: '36px',
+                              fontWeight: 600,
+                              color: '#107C10',
+                              lineHeight: 1,
+                              mb: 1
+                            }}>
+                              {selectedCustomerDetail.marginPercent}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
+                              vs. 15.5% avg benchmark
+                            </Typography>
+                            <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
+                              <Box sx={{ width: '100%', height: '100%', bgcolor: '#107C10' }}></Box>
+                            </Box>
+                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '13px' }}>
+                              ▲ Significantly above average
+                            </Typography>
+                          </Box>
+
+                          {/* # of Pallets Card */}
+                          <Box sx={{
+                            bgcolor: 'white',
+                            p: 3,
+                            borderRadius: '4px',
+                            boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                            borderLeft: '4px solid #8A8886',
+                            transition: 'box-shadow 0.3s',
+                            '&:hover': {
+                              boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
+                            }
+                          }}>
+                            <Typography variant="caption" sx={{
+                              color: '#8A8886',
+                              fontSize: '11px',
+                              fontWeight: 600,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              display: 'block',
+                              mb: 1.5
+                            }}>
+                              # of Pallets
+                            </Typography>
+                            <Typography sx={{
+                              fontSize: '36px',
+                              fontWeight: 600,
+                              color: '#323130',
+                              lineHeight: 1,
+                              mb: 1
+                            }}>
+                              {selectedCustomerDetail.numPallets}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
+                              Annual volume
+                            </Typography>
+                            <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
+                              <Box sx={{ width: '90%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                            </Box>
+                            <Typography variant="caption" sx={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>
+                              High-volume strategic account
+                            </Typography>
+                          </Box>
+
+                          {/* Potential Monthly Impact Card */}
+                          <Box sx={{
+                            bgcolor: 'white',
+                            p: 3,
+                            borderRadius: '4px',
+                            boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
+                            borderLeft: '4px solid #FFB900',
+                            transition: 'box-shadow 0.3s',
+                            '&:hover': {
+                              boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
+                            }
+                          }}>
+                            <Typography variant="caption" sx={{
+                              color: '#8A8886',
+                              fontSize: '11px',
+                              fontWeight: 600,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              display: 'block',
+                              mb: 1.5
+                            }}>
+                              Potential Monthly Impact
+                            </Typography>
+                            <Typography sx={{
+                              fontSize: '36px',
+                              fontWeight: 600,
+                              color: '#FFB900',
+                              lineHeight: 1,
+                              mb: 1
+                            }}>
+                              {selectedCustomerDetail.potentialMonthlyImpact}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
+                              Expansion opportunity
+                            </Typography>
+                            <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
+                              <Box sx={{ width: '70%', height: '100%', bgcolor: '#FFB900' }}></Box>
+                            </Box>
+                            <Typography variant="caption" sx={{ color: '#FFB900', fontWeight: 600, fontSize: '13px' }}>
+                              ⬆ Growth potential identified
+                            </Typography>
+                          </Box>
+                        </>
+                      ) : (
+                        <>
+                      {/* Avg Pallet Rate Card (for non-summary customers) */}
                       <Box sx={{
                         bgcolor: 'white',
                         p: 3,
@@ -2384,6 +1907,8 @@ function App() {
                           — Unchanged from Q3
                         </Typography>
                       </Box>
+                        </>
+                      )}
                     </Box>
 
                     {/* Recommendation Bar */}
@@ -2400,22 +1925,51 @@ function App() {
                     }}>
                       <LightbulbIcon sx={{ color: '#FFB900', fontSize: 24, mt: 0.25 }} />
                       <Box sx={{ flex: 1 }}>
-                        <Typography variant="subtitle2" sx={{
-                          fontWeight: 600,
-                          color: '#323130',
-                          mb: 0.75,
-                          fontSize: '13px',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.5px'
-                        }}>
-                          Our Recommendation
-                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.75 }}>
+                          <Typography variant="subtitle2" sx={{
+                            fontWeight: 600,
+                            color: '#323130',
+                            fontSize: '13px',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px'
+                          }}>
+                            Our Recommendation
+                          </Typography>
+                          <IconButton
+                            size="small"
+                            onClick={() => setRecommendationExpanded(!recommendationExpanded)}
+                            sx={{ color: '#605E5C' }}
+                          >
+                            {recommendationExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                          </IconButton>
+                        </Box>
                         <Typography variant="body2" sx={{
                           color: '#323130',
                           lineHeight: 1.6,
                           fontSize: '14px'
                         }}>
-                          {selectedCustomerDetail.suggestion}
+                          {recommendationExpanded
+                            ? selectedCustomerDetail.suggestion
+                            : (
+                              <>
+                                {selectedCustomerDetail.suggestion.split('.')[0] + '... '}
+                                <Box
+                                  component="span"
+                                  onClick={() => setRecommendationExpanded(true)}
+                                  sx={{
+                                    color: '#0078D4',
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                      textDecoration: 'underline'
+                                    }
+                                  }}
+                                >
+                                  See more
+                                </Box>
+                              </>
+                            )
+                          }
                         </Typography>
                       </Box>
                     </Box>
@@ -2446,16 +2000,23 @@ function App() {
                             </tr>
                           </thead>
                           <tbody>
-                            {selectedCustomerDetail.palletLanes.map((lane, idx) => (
-                              <tr key={idx} style={{ background: idx % 2 === 0 ? 'white' : '#FAFAFA', borderBottom: '1px solid #EDEBE9' }}>
-                                <td style={{ padding: '14px 16px', color: '#323130' }}>{lane.from}</td>
-                                <td style={{ padding: '14px 16px', color: '#323130' }}>{lane.to}</td>
-                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130', fontWeight: 600 }}>{lane.pallets}</td>
-                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{lane.currentRate}</td>
-                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#0078D4', fontWeight: 600 }}>{lane.suggested}</td>
-                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#D13438', fontWeight: 600 }}>{lane.savings}</td>
-                              </tr>
-                            ))}
+                            {selectedCustomerDetail.palletLanes.map((lane, idx) => {
+                              const impact = lane.additionalRevenue || lane.savings;
+                              const isPositive = impact && impact.startsWith('+');
+                              const isNegative = impact && impact.startsWith('-');
+                              const impactColor = isPositive ? '#107C10' : isNegative ? '#D13438' : '#323130';
+
+                              return (
+                                <tr key={idx} style={{ background: idx % 2 === 0 ? 'white' : '#FAFAFA', borderBottom: '1px solid #EDEBE9' }}>
+                                  <td style={{ padding: '14px 16px', color: '#323130' }}>{lane.from}</td>
+                                  <td style={{ padding: '14px 16px', color: '#323130' }}>{lane.to}</td>
+                                  <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130', fontWeight: 600 }}>{lane.pallets}</td>
+                                  <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{lane.currentRate}</td>
+                                  <td style={{ padding: '14px 16px', textAlign: 'right', color: '#0078D4', fontWeight: 600 }}>{lane.suggested}</td>
+                                  <td style={{ padding: '14px 16px', textAlign: 'right', color: impactColor, fontWeight: 600 }}>{impact}</td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </Box>
@@ -2483,18 +2044,25 @@ function App() {
                               <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Suggested Rate</th>
                               <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Current Monthly</th>
                               <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Suggested Monthly</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Monthly Impact</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {selectedCustomerDetail.warehouseRates.map((wh, idx) => (
-                              <tr key={idx} style={{ background: idx % 2 === 0 ? 'white' : '#FAFAFA', borderBottom: '1px solid #EDEBE9' }}>
-                                <td style={{ padding: '14px 16px', color: '#323130' }}>{wh.location}</td>
-                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{wh.currentRate}</td>
-                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#0078D4', fontWeight: 600 }}>{wh.suggested}</td>
-                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{wh.monthlyCost}</td>
-                                <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{wh.suggestedCost}</td>
-                              </tr>
-                            ))}
+                            {selectedCustomerDetail.warehouseRates.map((wh, idx) => {
+                              const impact = wh.additionalRevenue;
+                              const impactColor = impact && impact.startsWith('+') ? '#107C10' : '#323130';
+
+                              return (
+                                <tr key={idx} style={{ background: idx % 2 === 0 ? 'white' : '#FAFAFA', borderBottom: '1px solid #EDEBE9' }}>
+                                  <td style={{ padding: '14px 16px', color: '#323130' }}>{wh.location}</td>
+                                  <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{wh.currentRate}</td>
+                                  <td style={{ padding: '14px 16px', textAlign: 'right', color: '#0078D4', fontWeight: 600 }}>{wh.suggested}</td>
+                                  <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{wh.monthlyCost}</td>
+                                  <td style={{ padding: '14px 16px', textAlign: 'right', color: '#323130' }}>{wh.suggestedCost}</td>
+                                  {impact && <td style={{ padding: '14px 16px', textAlign: 'right', color: impactColor, fontWeight: 600 }}>{impact}</td>}
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </Box>
