@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Calculator - Justin's IL Consolidation Program</title>
+    <style>
+        :root {
+            --color-background-primary: #FFFFFF;
+            --color-background-secondary: #F5F5F5;
+            --color-background-tertiary: #FAFAFA;
+            --color-border-primary: #D9D9D9;
+            --color-border-secondary: #E8E8E8;
+            --color-border-tertiary: #EEEEEE;
+            --color-text-primary: #1A1A1A;
+            --color-text-secondary: #666666;
+            --color-text-tertiary: #999999;
+            --border-radius-sm: 4px;
+            --border-radius-md: 6px;
+            --border-radius-lg: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0;
+        }
+
+        .top-bar {
+            background: #00446A;
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar-left .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .top-bar-center {
+            font-size: 18px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .top-bar-right {
+            font-size: 14px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+            padding: 0 40px;
+            gap: 8px;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            background: #f9f9f9;
+            color: #00446A;
+        }
+
+        .tab.active {
+            color: #00446A;
+            border-bottom-color: #00446A;
+        }
+
+        .tab-content {
+            display: none;
+            background: #f5f5f5;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            padding: 40px 40px;
+            border-bottom: 0.5px solid var(--color-border-tertiary);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Business Filter */
+        .business-filter {
+            background: white;
+            padding: 16px 40px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .business-filter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .business-filter-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .business-filter-btn {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .business-filter-btn:hover {
+            background: white;
+            border-color: #00446A;
+            color: #00446A;
+        }
+
+        .business-filter-btn.active {
+            background: #00446A;
+            color: white;
+            border-color: #00446A;
+        }
+
+        /* Hero Section */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .hero-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .hero-card.savings {
+            background: #EAF3DE;
+        }
+
+        .hero-card .label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .hero-card.savings .label {
+            color: #3B6D11;
+        }
+
+        .hero-card .amount {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .hero-card.provider .amount {
+            color: #A32D2D;
+        }
+
+        .hero-card.rjw .amount {
+            color: #00446A;
+        }
+
+        .hero-card.savings .amount {
+            color: #27500A;
+        }
+
+        .hero-card .subtext {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .hero-card.savings .subtext {
+            color: #3B6D11;
+        }
+
+        /* Cost at a Glance */
+        .cost-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .bar-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .bar-row .label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            width: 110px;
+            flex-shrink: 0;
+        }
+
+        .bar-row.savings .label {
+            font-weight: 500;
+            color: #27500A;
+        }
+
+        .bar-row .track {
+            flex: 1;
+            height: 24px;
+            background: var(--color-background-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-row .fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .bar-row.provider .fill {
+            background: #A32D2D;
+        }
+
+        .bar-row.rjw .fill {
+            background: #0d3352;
+        }
+
+        .bar-row.savings .fill {
+            background: #639922;
+            min-width: 68px;
+        }
+
+        /* Revenue Driver Banner */
+        .revenue-banner {
+            background: #EAF3DE;
+            border-radius: 8px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .revenue-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .revenue-icon {
+            width: 32px;
+            height: 32px;
+            background: #C0DD97;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .revenue-text .subtitle {
+            font-size: 11px;
+            color: #3B6D11;
+        }
+
+        .revenue-text .name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #173404;
+            margin-top: 2px;
+        }
+
+        .revenue-text .description {
+            font-size: 12px;
+            color: #3B6D11;
+            margin-top: 2px;
+        }
+
+        .revenue-banner-right {
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .revenue-banner-right .amount {
+            font-size: 24px;
+            font-weight: 500;
+            color: #27500A;
+        }
+
+        .revenue-banner-right .subtext {
+            font-size: 11px;
+            color: #3B6D11;
+            margin-top: 2px;
+        }
+
+        /* Paired Metric/Driver Cards */
+        .paired-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .paired-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .paired-card-top {
+            background: var(--color-background-secondary);
+            padding: 11px 13px;
+            border-bottom: 0.5px solid var(--color-border-tertiary);
+        }
+
+        .paired-card-top .metric-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-tertiary);
+            margin-bottom: 7px;
+        }
+
+        .comparison-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 5px;
+        }
+
+        .comparison-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .comparison-row .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .comparison-row.rjw .dot {
+            background: #639922;
+        }
+
+        .comparison-row.industry .dot {
+            background: #999999;
+        }
+
+        .comparison-row .row-label {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            width: 58px;
+        }
+
+        .comparison-row .bar-track {
+            flex: 1;
+            height: 4px;
+            background: #E8E8E8;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .comparison-row .bar-fill {
+            height: 100%;
+            border-radius: 2px;
+        }
+
+        .comparison-row.rjw .bar-fill {
+            background: #639922;
+        }
+
+        .comparison-row.industry .bar-fill {
+            background: #999999;
+        }
+
+        .comparison-row .value {
+            font-size: 11px;
+            font-weight: 500;
+            min-width: 36px;
+            text-align: right;
+        }
+
+        .comparison-row.rjw .value {
+            color: #27500A;
+        }
+
+        .comparison-row .badge {
+            font-size: 10px;
+            background: #EAF3DE;
+            color: #27500A;
+            padding: 1px 5px;
+            border-radius: 7px;
+            margin-left: 4px;
+        }
+
+        .paired-card-bottom {
+            padding: 11px 13px;
+        }
+
+        .paired-card-bottom .driver-label {
+            font-size: 11px;
+            color: var(--color-text-tertiary);
+            margin-bottom: 3px;
+        }
+
+        .paired-card-bottom .driver-amount {
+            font-size: 18px;
+            font-weight: 500;
+            color: #27500A;
+        }
+
+        .paired-card-bottom .driver-percent {
+            font-size: 11px;
+            color: var(--color-text-tertiary);
+            margin-top: 2px;
+        }
+
+        .paired-card-bottom .driver-description {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+            margin-top: 5px;
+            padding-top: 6px;
+            border-top: 0.5px solid var(--color-border-tertiary);
+        }
+
+        /* Totals Row */
+        .totals-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .totals-left .totals-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .totals-chips {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .totals-chip {
+            font-size: 11px;
+            color: var(--color-text-tertiary);
+            background: var(--color-background-secondary);
+            padding: 3px 8px;
+            border-radius: 8px;
+        }
+
+        .totals-separator {
+            font-size: 11px;
+            color: var(--color-text-tertiary);
+        }
+
+        .totals-amount {
+            font-size: 22px;
+            font-weight: 500;
+            color: #27500A;
+            flex-shrink: 0;
+        }
+
+        /* Retailer Cards */
+        .retailer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .retailer-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .retailer-card .retailer-name {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .retailer-card .retailer-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #27500A;
+            margin-bottom: 8px;
+        }
+
+        .retailer-card .retailer-percent {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Rates Table */
+        .rates-wrapper {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .rates-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            table-layout: fixed;
+        }
+
+        .rates-table th {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #666;
+            padding: 16px;
+            border-bottom: 2px solid #e0e0e0;
+            background: #f9f9f9;
+            text-align: left;
+        }
+
+        .rates-table th.align-right {
+            text-align: right;
+        }
+
+        .rates-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .rates-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .rates-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rates-table .col-retailer {
+            width: 13%;
+        }
+
+        .rates-table .col-location {
+            width: 19%;
+        }
+
+        .rates-table .col-delivery {
+            width: 21%;
+        }
+
+        .rates-table .col-transit {
+            width: 13%;
+        }
+
+        .rates-table .col-plt {
+            width: 12%;
+            text-align: right;
+        }
+
+        .rates-table .col-tl {
+            width: 12%;
+            text-align: right;
+            color: var(--color-text-secondary);
+        }
+
+        .rates-table .retailer-bold {
+            font-weight: 500;
+        }
+
+        .rates-table .muted {
+            color: var(--color-text-secondary);
+        }
+
+        @media (max-width: 1024px) {
+            .top-bar {
+                padding: 24px 20px;
+            }
+            .tabs {
+                padding: 0 20px;
+            }
+            .section {
+                padding: 32px 20px;
+            }
+            .hero-grid,
+            .paired-grid,
+            .retailer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .tabs {
+                display: none;
+            }
+            .tab-content {
+                display: block !important;
+                page-break-before: always;
+            }
+            .tab-content:first-child {
+                page-break-before: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <div class="title">RJW LOGISTICS GROUP</div>
+            </div>
+            <div class="top-bar-center">Value Calculator</div>
+            <div class="top-bar-right">Justin's IL Consolidation Program</div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('overview')">Overview</div>
+            <div class="tab" onclick="switchTab('communication')">Client communication</div>
+        </div>
+
+        <div class="business-filter">
+            <div class="business-filter-label">Compare against:</div>
+            <div class="business-filter-buttons">
+                <button class="business-filter-btn active" onclick="filterBusiness('all')">All Businesses</button>
+                <button class="business-filter-btn" onclick="filterBusiness('cvs')">CVS</button>
+                <button class="business-filter-btn" onclick="filterBusiness('target')">Target</button>
+                <button class="business-filter-btn" onclick="filterBusiness('kroger')">Kroger</button>
+                <button class="business-filter-btn" onclick="filterBusiness('walgreens')">Walgreens</button>
+            </div>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <!-- Section 1: Hero -->
+            <div class="section">
+                <div class="hero-grid">
+                    <div class="hero-card provider">
+                        <div class="label competitor-name-label">Current provider</div>
+                        <div class="amount" id="provider-cost">$285,357</div>
+                        <div class="subtext">Annual cost today</div>
+                    </div>
+                    <div class="hero-card rjw">
+                        <div class="label">RJW Logistics</div>
+                        <div class="amount" id="rjw-cost">$249,469</div>
+                        <div class="subtext">Annual cost with us</div>
+                    </div>
+                    <div class="hero-card savings">
+                        <div class="label">Your annual savings</div>
+                        <div class="amount" id="savings-amount">$35,888</div>
+                        <div class="subtext" id="savings-percent">12.6% cost reduction</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Cost at a Glance -->
+            <div class="section">
+                <div class="section-label">Cost at a glance</div>
+                <div class="cost-card">
+                    <div class="bar-row provider">
+                        <div class="label competitor-name-label">Current provider</div>
+                        <div class="track">
+                            <div class="fill" id="bar-provider" style="width: 100%;">$285,357</div>
+                        </div>
+                    </div>
+                    <div class="bar-row rjw">
+                        <div class="label">RJW Logistics</div>
+                        <div class="track">
+                            <div class="fill" id="bar-rjw" style="width: 87.4%;">$249,469</div>
+                        </div>
+                    </div>
+                    <div class="bar-row savings">
+                        <div class="label">You save</div>
+                        <div class="track">
+                            <div class="fill" id="bar-savings" style="width: 12.6%;">$35,888</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Why We Cost Less -->
+            <div class="section">
+                <div class="section-label">Why we cost less — performance & value drivers</div>
+
+                <!-- 3a. Revenue Driver Banner -->
+                <div class="revenue-banner">
+                    <div class="revenue-banner-left">
+                        <div class="revenue-icon">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 1v14M1 8h14M8 1C4.686 1 2 3.686 2 7h12c0-3.314-2.686-6-6-6zM2 9c0 3.314 2.686 6 6 6s6-2.686 6-6" stroke="#27500A" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="revenue-text">
+                            <div class="subtitle">Biggest value driver</div>
+                            <div class="name">Higher in-stock rate → better sales</div>
+                            <div class="description">1.0% revenue lift from improved on-shelf availability</div>
+                        </div>
+                    </div>
+                    <div class="revenue-banner-right">
+                        <div class="amount">$21,581</div>
+                        <div class="subtext">60% of total value</div>
+                    </div>
+                </div>
+
+                <!-- 3b. Paired Metric/Driver Cards -->
+                <div class="paired-grid">
+                    <!-- Card 1: On-time Delivery -->
+                    <div class="paired-card">
+                        <div class="paired-card-top">
+                            <div class="metric-name">On-time delivery</div>
+                            <div class="comparison-row rjw">
+                                <div class="dot"></div>
+                                <div class="row-label">RJW</div>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: 86.3%;"></div>
+                                </div>
+                                <div class="value">86.3%</div>
+                                <div class="badge">+11%</div>
+                            </div>
+                            <div class="comparison-row industry">
+                                <div class="dot"></div>
+                                <div class="row-label competitor-label">Industry</div>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: 75%;"></div>
+                                </div>
+                                <div class="value">75.0%</div>
+                            </div>
+                        </div>
+                        <div class="paired-card-bottom">
+                            <div class="driver-label">OT penalties avoided</div>
+                            <div class="driver-amount">$2,540</div>
+                            <div class="driver-percent">7% of total value</div>
+                            <div class="driver-description">Fewer retailer chargebacks from late deliveries</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Damaged Pallet Rate -->
+                    <div class="paired-card">
+                        <div class="paired-card-top">
+                            <div class="metric-name">Damaged pallet rate</div>
+                            <div class="comparison-row rjw">
+                                <div class="dot"></div>
+                                <div class="row-label">RJW</div>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: 2%; min-width: 3px;"></div>
+                                </div>
+                                <div class="value">0.2%</div>
+                                <div class="badge">−1.8%</div>
+                            </div>
+                            <div class="comparison-row industry">
+                                <div class="dot"></div>
+                                <div class="row-label competitor-label">Industry</div>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: 20%;"></div>
+                                </div>
+                                <div class="value">2.0%</div>
+                            </div>
+                        </div>
+                        <div class="paired-card-bottom">
+                            <div class="driver-label">Damaged pallet savings</div>
+                            <div class="driver-amount">$5,168</div>
+                            <div class="driver-percent">14% of total value</div>
+                            <div class="driver-description">Fewer write-offs from product lost in transit</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: ASN/EDI Fine Frequency -->
+                    <div class="paired-card">
+                        <div class="paired-card-top">
+                            <div class="metric-name">ASN / EDI fine frequency</div>
+                            <div class="comparison-row rjw">
+                                <div class="dot"></div>
+                                <div class="row-label">RJW</div>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: 10%;"></div>
+                                </div>
+                                <div class="value">1%</div>
+                                <div class="badge">−1%</div>
+                            </div>
+                            <div class="comparison-row industry">
+                                <div class="dot"></div>
+                                <div class="row-label competitor-label">Industry</div>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: 20%;"></div>
+                                </div>
+                                <div class="value">2%</div>
+                            </div>
+                        </div>
+                        <div class="paired-card-bottom">
+                            <div class="driver-label">ASN / EDI savings</div>
+                            <div class="driver-amount">$644</div>
+                            <div class="driver-percent">2% of total value</div>
+                            <div class="driver-description">Fewer compliance fines from accurate EDI transmissions</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3c. Totals Row -->
+                <div class="totals-card">
+                    <div class="totals-left">
+                        <div class="totals-label">Total annual value</div>
+                        <div class="totals-chips">
+                            <div class="totals-chip">$21,581 in-stock</div>
+                            <div class="totals-separator">+</div>
+                            <div class="totals-chip">$5,168 damage</div>
+                            <div class="totals-separator">+</div>
+                            <div class="totals-chip">$2,540 OT</div>
+                            <div class="totals-separator">+</div>
+                            <div class="totals-chip">$644 EDI</div>
+                        </div>
+                    </div>
+                    <div class="totals-amount">$35,888 / yr</div>
+                </div>
+            </div>
+
+            <!-- Section 4: Savings by Retailer -->
+            <div class="section">
+                <div class="section-label">Savings by retailer</div>
+                <div class="retailer-grid">
+                    <div class="retailer-card">
+                        <div class="retailer-name">CVS</div>
+                        <div class="retailer-amount">$20,388</div>
+                        <div class="retailer-percent">56.8% of savings</div>
+                    </div>
+                    <div class="retailer-card">
+                        <div class="retailer-name">Target</div>
+                        <div class="retailer-amount">$8,324</div>
+                        <div class="retailer-percent">23.2% of savings</div>
+                    </div>
+                    <div class="retailer-card">
+                        <div class="retailer-name">Kroger</div>
+                        <div class="retailer-amount">$4,725</div>
+                        <div class="retailer-percent">13.2% of savings</div>
+                    </div>
+                    <div class="retailer-card">
+                        <div class="retailer-name">Walgreens</div>
+                        <div class="retailer-amount">$2,451</div>
+                        <div class="retailer-percent">6.8% of savings</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Formal Consolidation Rates -->
+            <div class="section">
+                <div class="section-label">Formal consolidation rates</div>
+                <div class="rates-wrapper">
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th class="col-retailer">Retailer</th>
+                                <th class="col-location">Location</th>
+                                <th class="col-delivery">Delivery window</th>
+                                <th class="col-transit">Transit</th>
+                                <th class="col-plt align-right">PLT rate</th>
+                                <th class="col-tl align-right">TL cap</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="col-retailer">HEB</td>
+                                <td class="col-location muted">San Marcos, TX</td>
+                                <td class="col-delivery muted">Mon – Wed</td>
+                                <td class="col-transit muted">9 days</td>
+                                <td class="col-plt">$165</td>
+                                <td class="col-tl">$2,950</td>
+                            </tr>
+                            <tr>
+                                <td class="col-retailer">HEB</td>
+                                <td class="col-location muted">San Antonio, TX</td>
+                                <td class="col-delivery muted">Mon – Wed</td>
+                                <td class="col-transit muted">9 days</td>
+                                <td class="col-plt">$165</td>
+                                <td class="col-tl">$2,900</td>
+                            </tr>
+                            <tr>
+                                <td class="col-retailer">Hyvee</td>
+                                <td class="col-location muted">Cumming, IA</td>
+                                <td class="col-delivery muted">Friday</td>
+                                <td class="col-transit muted">7 days</td>
+                                <td class="col-plt">$110</td>
+                                <td class="col-tl">$1,275</td>
+                            </tr>
+                            <tr>
+                                <td class="col-retailer retailer-bold">Kroger</td>
+                                <td class="col-location muted">Puyallup, WA</td>
+                                <td class="col-delivery muted">Thu – Mon</td>
+                                <td class="col-transit muted">11 days</td>
+                                <td class="col-plt">$220</td>
+                                <td class="col-tl">$4,725</td>
+                            </tr>
+                            <tr>
+                                <td class="col-retailer retailer-bold">Kroger</td>
+                                <td class="col-location muted">Fountain, CO</td>
+                                <td class="col-delivery muted">Tue – Fri</td>
+                                <td class="col-transit muted">10 days</td>
+                                <td class="col-plt">$175</td>
+                                <td class="col-tl">$3,450</td>
+                            </tr>
+                            <tr>
+                                <td class="col-retailer retailer-bold">Kroger</td>
+                                <td class="col-location muted">Riverside, CA</td>
+                                <td class="col-delivery muted">Mon – Fri</td>
+                                <td class="col-transit muted">11 days</td>
+                                <td class="col-plt">$180</td>
+                                <td class="col-tl">$3,575</td>
+                            </tr>
+                            <tr>
+                                <td class="col-retailer retailer-bold">Kroger</td>
+                                <td class="col-location muted">Cleveland, TN</td>
+                                <td class="col-delivery muted">Wed – Thu</td>
+                                <td class="col-transit muted">8 days</td>
+                                <td class="col-plt">$130</td>
+                                <td class="col-tl">$1,850</td>
+                            </tr>
+                            <tr>
+                                <td class="col-retailer retailer-bold">Kroger</td>
+                                <td class="col-location muted">Bluffton, IN</td>
+                                <td class="col-delivery muted">Thursday</td>
+                                <td class="col-transit muted">7 days</td>
+                                <td class="col-plt">$75</td>
+                                <td class="col-tl">$1,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="communication" class="tab-content">
+            <!-- Annual Savings Hero -->
+            <div class="section">
+                <div class="section-label">Annual Savings</div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 32px; font-weight: 700; color: #00446A; margin-bottom: 8px;">$35,888</div>
+                        <div style="font-size: 14px; color: #666;">12.6% cost reduction</div>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Payback</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #00446A; margin-bottom: 4px;">Immediate</div>
+                        <div style="font-size: 14px; color: #666;">Savings start day 1</div>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">3-Year Value</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #00446A; margin-bottom: 4px;">$107,664</div>
+                        <div style="font-size: 14px; color: #666;">Consistent volume assumed</div>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Upside</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #00446A; margin-bottom: 4px;">$45,000+</div>
+                        <div style="font-size: 14px; color: #666;">If CVS volume +15%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opening Statement -->
+            <div class="section">
+                <div class="section-label">Opening Statement</div>
+                <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                        <div>
+                            <div style="font-size: 14px; font-weight: 600; color: #00446A; margin-bottom: 12px;">Start with impact</div>
+                            <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">Lead with the annual savings number and percentage reduction immediately.</p>
+                        </div>
+                        <div>
+                            <div style="font-size: 14px; font-weight: 600; color: #00446A; margin-bottom: 12px;">Frame context</div>
+                            <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">Establish you've done a comprehensive comparison across all 8 retailer locations and delivery windows.</p>
+                        </div>
+                        <div>
+                            <div style="font-size: 14px; font-weight: 600; color: #00446A; margin-bottom: 12px;">Build confidence</div>
+                            <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">Ground the analysis in real shipment data, not projections.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Value Propositions -->
+            <div class="section">
+                <div class="section-label">Key Value Propositions</div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 16px; font-weight: 600; color: #00446A; margin-bottom: 16px;">Consolidated efficiency</div>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #666; line-height: 1.8;">
+                            <li>Shipment mix heavily weighted toward CVS (68% of volume)</li>
+                            <li>Consolidating to multiple retailers reduces average per-pallet costs by 14.4%</li>
+                            <li>Current paying $42/pallet — RJW consolidated rate averages $36.60/pallet</li>
+                        </ul>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 16px; font-weight: 600; color: #00446A; margin-bottom: 16px;">Geographic optimization</div>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #666; line-height: 1.8;">
+                            <li>Distribution concentrated in Midwest and East Coast — our primary strength zones</li>
+                            <li>Strategic partnerships secure capacity even during peak seasons without premium pricing</li>
+                            <li>Average transit time 8.9 days vs. industry standard 11+ days</li>
+                        </ul>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 16px; font-weight: 600; color: #00446A; margin-bottom: 16px;">Transparent, predictable pricing</div>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #666; line-height: 1.8;">
+                            <li>No hidden fees or fuel surcharges — quoted rates include all costs</li>
+                            <li>Rate lock guarantee for 12 months with cap on annual increases tied to CPI</li>
+                            <li>Detailed monthly reporting on cost-per-pallet, on-time performance, savings tracking</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Retailer-Specific Savings -->
+            <div class="section">
+                <div class="section-label">Retailer-Specific Savings</div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+                            <div style="font-size: 16px; font-weight: 600; color: #333;">CVS</div>
+                            <div style="font-size: 14px; color: #27500A;">56.8% of savings</div>
+                        </div>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Largest opportunity</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #00446A; margin-bottom: 16px;">$20,388 / yr</div>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">$42 pallet → $35.20 consolidated</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 12px 0 0;">"CVS represents 68% of your volume. Our dedicated CVS consolidation program allows us to pass significant economies of scale directly to you. We can offer weekly pickups with guaranteed delivery windows, reducing your inventory holding costs by an estimated 8–12%."</p>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+                            <div style="font-size: 16px; font-weight: 600; color: #333;">Target</div>
+                            <div style="font-size: 14px; color: #27500A;">23.2% of savings</div>
+                        </div>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Second largest</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #00446A; margin-bottom: 16px;">$8,324 / yr</div>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">$43.75 pallet → $38.50 consolidated</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 12px 0 0;">"Target's strict delivery windows require precision timing. Our consolidation model gives you more frequent shipping opportunities, reducing rush charges and improving compliance scores."</p>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+                            <div style="font-size: 16px; font-weight: 600; color: #333;">Kroger</div>
+                            <div style="font-size: 14px; color: #27500A;">13.2% of savings</div>
+                        </div>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Multi-location consolidation</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #00446A; margin-bottom: 16px;">$4,725 / yr</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 12px 0 0;">"Our multi-retailer consolidation strategy means you're not paying premium rates for lower-volume lanes. As your business grows with these retailers, our pricing structure scales efficiently—no renegotiation needed."</p>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+                            <div style="font-size: 16px; font-weight: 600; color: #333;">Walgreens</div>
+                            <div style="font-size: 14px; color: #27500A;">6.8% of savings</div>
+                        </div>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Combined with Kroger: $7,176/yr</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #00446A; margin-bottom: 16px;">$2,451 / yr</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 12px 0 0;">"While these represent smaller volumes, our multi-retailer consolidation strategy means you're not paying premium rates for lower-volume lanes."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Addressing Common Concerns -->
+            <div class="section">
+                <div class="section-label">Addressing Common Concerns</div>
+                <div style="display: flex; flex-direction: column; gap: 24px;">
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Concern</div>
+                        <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 16px;">"Our current provider has worked well for us"</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #00446A; margin-bottom: 8px;">Acknowledge the relationship, then reframe:</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">This is about market conditions evolving — our specialized focus on retail consolidation has allowed us to build efficiencies that general logistics providers simply can't match. The data shows a 12.6% cost difference; that's not about service quality, it's about our business model being specifically designed for programs like yours.</p>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Concern</div>
+                        <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 16px;">"We're worried about transition risk"</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #00446A; margin-bottom: 8px;">Lead with the parallel operations guarantee:</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0 0 12px;">Transition planning is built into our onboarding. We run parallel operations for the first 30 days at no additional cost — you maintain your current provider while we prove our capabilities. Only after you're 100% confident do we fully transition. Plus, we offer a 90-day satisfaction guarantee.</p>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;"><strong>Evidence:</strong> We've successfully transitioned 23 similar programs in the past 18 months with zero service disruptions. Our average transition timeline is 45 days from contract to full operational handoff.</p>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Concern</div>
+                        <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 16px;">"The savings seem too good to be true"</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #00446A; margin-bottom: 8px;">Walk through the three mechanical reasons:</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0 0 12px;">Consolidation, pre-negotiated carrier contracts (18% below spot), and routing automation that reduces deadhead miles by 22%. None of this is magic — it's specialization and scale.</p>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;"><strong>Proof point:</strong> These rates are contractually guaranteed for 12 months. We're not playing pricing games — if our costs increase, we absorb it during the contract period. That's our commitment to transparency.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommended Next Steps -->
+            <div class="section">
+                <div class="section-label">Recommended Next Steps</div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="width: 32px; height: 32px; background: #00446A; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 16px;">1</div>
+                        <div style="font-size: 16px; font-weight: 600; color: #00446A; margin-bottom: 12px;">Trial program</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">"Let's start with your highest-volume lane — CVS shipments from your Chicago facility. We'll run a 60-day pilot at these rates. If we don't deliver the promised savings and service levels, you can walk away with no penalties."</p>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="width: 32px; height: 32px; background: #00446A; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 16px;">2</div>
+                        <div style="font-size: 16px; font-weight: 600; color: #00446A; margin-bottom: 12px;">Implementation plan</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">"I'll send you a comprehensive transition roadmap within 48 hours, including timeline, milestones, and success metrics. We'll schedule a follow-up call next week to address any questions your team has."</p>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="width: 32px; height: 32px; background: #00446A; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 16px;">3</div>
+                        <div style="font-size: 16px; font-weight: 600; color: #00446A; margin-bottom: 12px;">Financial guarantee</div>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">"We're so confident in these numbers that we'll put a performance guarantee in the contract: if we don't deliver at least 10% savings in the first year, we'll refund the difference. You literally have nothing to lose."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Business data
+        const businessData = {
+            all: {
+                providerCost: 285357,
+                rjwCost: 249469,
+                savings: 35888,
+                savingsPercent: 12.6
+            },
+            cvs: {
+                providerCost: 194118,
+                rjwCost: 173730,
+                savings: 20388,
+                savingsPercent: 10.5
+            },
+            target: {
+                providerCost: 54890,
+                rjwCost: 46566,
+                savings: 8324,
+                savingsPercent: 15.2
+            },
+            kroger: {
+                providerCost: 28349,
+                rjwCost: 23624,
+                savings: 4725,
+                savingsPercent: 16.7
+            },
+            walgreens: {
+                providerCost: 8000,
+                rjwCost: 5549,
+                savings: 2451,
+                savingsPercent: 30.6
+            }
+        };
+
+        function formatCurrency(amount) {
+            return '$' + amount.toLocaleString();
+        }
+
+        function filterBusiness(business) {
+            // Update active button
+            document.querySelectorAll('.business-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Get data for selected business
+            const data = businessData[business];
+
+            // Determine competitor names
+            const competitorName = business === 'all' ? 'Industry' :
+                                  business === 'cvs' ? 'CVS' :
+                                  business === 'target' ? 'Target' :
+                                  business === 'kroger' ? 'Kroger' :
+                                  'Walgreens';
+
+            const providerLabel = business === 'all' ? 'Current provider' : competitorName;
+
+            // Update competitor labels in comparison rows
+            document.querySelectorAll('.competitor-label').forEach(label => {
+                label.textContent = competitorName;
+            });
+
+            // Update provider name labels in hero and cost bars
+            document.querySelectorAll('.competitor-name-label').forEach(label => {
+                label.textContent = providerLabel;
+            });
+
+            // Update hero numbers
+            document.getElementById('provider-cost').textContent = formatCurrency(data.providerCost);
+            document.getElementById('rjw-cost').textContent = formatCurrency(data.rjwCost);
+            document.getElementById('savings-amount').textContent = formatCurrency(data.savings);
+            document.getElementById('savings-percent').textContent = data.savingsPercent + '% cost reduction';
+
+            // Update cost bars
+            const maxCost = data.providerCost;
+            const rjwPercent = (data.rjwCost / maxCost * 100).toFixed(1);
+            const savingsPercent = (data.savings / maxCost * 100).toFixed(1);
+
+            document.getElementById('bar-provider').textContent = formatCurrency(data.providerCost);
+            document.getElementById('bar-provider').style.width = '100%';
+
+            document.getElementById('bar-rjw').textContent = formatCurrency(data.rjwCost);
+            document.getElementById('bar-rjw').style.width = rjwPercent + '%';
+
+            document.getElementById('bar-savings').textContent = formatCurrency(data.savings);
+            document.getElementById('bar-savings').style.width = Math.max(savingsPercent, 12.6) + '%';
+        }
+
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

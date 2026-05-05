@@ -50,7 +50,10 @@ import {
   AccountCircle as AccountCircleIcon,
   Lightbulb as LightbulbIcon,
   ArrowUpward as ArrowUpwardIcon,
-  ArrowDownward as ArrowDownwardIcon
+  ArrowDownward as ArrowDownwardIcon,
+  FlashOn as FlashOnIcon,
+  DescriptionOutlined as DescriptionOutlinedIcon,
+  Download as DownloadIcon
 } from '@mui/icons-material'
 
 const drawerWidth = 280
@@ -80,32 +83,33 @@ function App() {
   const [adjustRatesModalOpen, setAdjustRatesModalOpen] = useState(false)
   const [ratesChanged, setRatesChanged] = useState(false)
   const [quoteGenerated, setQuoteGenerated] = useState(false)
+  const [isRecalculating, setIsRecalculating] = useState(false)
   const [quoteDetailLevel, setQuoteDetailLevel] = useState('standard')
   const [chatInput, setChatInput] = useState('')
   const [entryPoint, setEntryPoint] = useState(null) // 'traditional' or 'chat'
   const [isChatFocused, setIsChatFocused] = useState(false)
   const [editableRates, setEditableRates] = useState({
-    warehouseRates: [
-      { location: 'Chicago, IL - Primary', rate: 3.25 },
-      { location: 'Dallas, TX - Secondary', rate: 2.95 }
-    ],
-    channelRates: [
-      { channel: 'CVS', ratePerPallet: 42.00 },
-      { channel: 'Walgreens', ratePerPallet: 45.50 },
-      { channel: 'Target', ratePerPallet: 43.75 },
-      { channel: 'Kroger', ratePerPallet: 41.25 }
+    consolidationRates: [
+      { retailer: 'HEB', city: 'San Marcos', state: 'TX', deliveryWindow: 'Monday - Wednesday', transitTime: '9 Days', pltRate: 165.00, tlCap: 2950.00 },
+      { retailer: 'HEB', city: 'San Antonio', state: 'TX', deliveryWindow: 'Monday - Wednesday', transitTime: '9 Days', pltRate: 165.00, tlCap: 2900.00 },
+      { retailer: 'Hyvee', city: 'Cumming', state: 'IA', deliveryWindow: 'Friday', transitTime: '7 Days', pltRate: 110.00, tlCap: 1275.00 },
+      { retailer: 'Kroger', city: 'Puyallup', state: 'WA', deliveryWindow: 'Thursday - Monday', transitTime: '11 Days', pltRate: 220.00, tlCap: 4725.00 },
+      { retailer: 'Kroger', city: 'Fountain', state: 'CO', deliveryWindow: 'Tuesday - Friday', transitTime: '10 Days', pltRate: 175.00, tlCap: 3450.00 },
+      { retailer: 'Kroger', city: 'Riverside', state: 'CA', deliveryWindow: 'Monday - Friday', transitTime: '11 Days', pltRate: 180.00, tlCap: 3575.00 },
+      { retailer: 'Kroger', city: 'Cleveland', state: 'TN', deliveryWindow: 'Wednesday - Thursday', transitTime: '8 Days', pltRate: 130.00, tlCap: 1850.00 },
+      { retailer: 'Kroger', city: 'Bluffton', state: 'IN', deliveryWindow: 'Thursday', transitTime: '7 Days', pltRate: 75.00, tlCap: 1000.00 }
     ]
   })
   const [originalRates, setOriginalRates] = useState({
-    warehouseRates: [
-      { location: 'Chicago, IL - Primary', rate: 3.25 },
-      { location: 'Dallas, TX - Secondary', rate: 2.95 }
-    ],
-    channelRates: [
-      { channel: 'CVS', ratePerPallet: 42.00 },
-      { channel: 'Walgreens', ratePerPallet: 45.50 },
-      { channel: 'Target', ratePerPallet: 43.75 },
-      { channel: 'Kroger', ratePerPallet: 41.25 }
+    consolidationRates: [
+      { retailer: 'HEB', city: 'San Marcos', state: 'TX', deliveryWindow: 'Monday - Wednesday', transitTime: '9 Days', pltRate: 165.00, tlCap: 2950.00 },
+      { retailer: 'HEB', city: 'San Antonio', state: 'TX', deliveryWindow: 'Monday - Wednesday', transitTime: '9 Days', pltRate: 165.00, tlCap: 2900.00 },
+      { retailer: 'Hyvee', city: 'Cumming', state: 'IA', deliveryWindow: 'Friday', transitTime: '7 Days', pltRate: 110.00, tlCap: 1275.00 },
+      { retailer: 'Kroger', city: 'Puyallup', state: 'WA', deliveryWindow: 'Thursday - Monday', transitTime: '11 Days', pltRate: 220.00, tlCap: 4725.00 },
+      { retailer: 'Kroger', city: 'Fountain', state: 'CO', deliveryWindow: 'Tuesday - Friday', transitTime: '10 Days', pltRate: 175.00, tlCap: 3450.00 },
+      { retailer: 'Kroger', city: 'Riverside', state: 'CA', deliveryWindow: 'Monday - Friday', transitTime: '11 Days', pltRate: 180.00, tlCap: 3575.00 },
+      { retailer: 'Kroger', city: 'Cleveland', state: 'TN', deliveryWindow: 'Wednesday - Thursday', transitTime: '8 Days', pltRate: 130.00, tlCap: 1850.00 },
+      { retailer: 'Kroger', city: 'Bluffton', state: 'IN', deliveryWindow: 'Thursday', transitTime: '7 Days', pltRate: 75.00, tlCap: 1000.00 }
     ]
   })
   const open = Boolean(anchorEl)
@@ -579,25 +583,21 @@ function App() {
     }, 300)
   }
 
-  const handleRateChange = (type, idx, value) => {
+  const handleRateChange = (idx, field, value) => {
     const newRates = { ...editableRates }
-    if (type === 'warehouse') {
-      newRates.warehouseRates = [...editableRates.warehouseRates]
-      newRates.warehouseRates[idx] = { ...newRates.warehouseRates[idx], rate: parseFloat(value) || 0 }
-    } else {
-      newRates.channelRates = [...editableRates.channelRates]
-      newRates.channelRates[idx] = { ...newRates.channelRates[idx], ratePerPallet: parseFloat(value) || 0 }
+    newRates.consolidationRates = [...editableRates.consolidationRates]
+    newRates.consolidationRates[idx] = {
+      ...newRates.consolidationRates[idx],
+      [field]: parseFloat(value) || 0
     }
     setEditableRates(newRates)
 
     // Check if rates changed by comparing newRates with originalRates
-    const warehouseChanged = newRates.warehouseRates.some((rate, i) =>
-      rate.rate !== originalRates.warehouseRates[i].rate
+    const ratesChanged = newRates.consolidationRates.some((rate, i) =>
+      rate.pltRate !== originalRates.consolidationRates[i].pltRate ||
+      rate.tlCap !== originalRates.consolidationRates[i].tlCap
     )
-    const channelChanged = newRates.channelRates.some((rate, i) =>
-      rate.ratePerPallet !== originalRates.channelRates[i].ratePerPallet
-    )
-    setRatesChanged(warehouseChanged || channelChanged)
+    setRatesChanged(ratesChanged)
   }
 
   const handleOpenAdjustRates = () => {
@@ -629,7 +629,6 @@ function App() {
         text: 'Quote regenerated with your updated rates.',
         timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
         isHeadsUp: true,
-        showRatesPreview: true,
         showFinalizeButton: true
       }])
     }, 500)
@@ -665,11 +664,33 @@ function App() {
         text: `${quoteType} Quote Preview Is Generating — Review the HTML in the new tab.`,
         timestamp: '03:09 PM',
         isHeadsUp: true,
-        showRatesPreview: true,
         showFinalizeButton: true
       }])
       setCurrentStep(8)
     }, 500)
+  }
+
+  const handleMarkForReview = () => {
+    // Mark quote as generated and move to Pending Review state
+    setQuoteGenerated(true)
+    setQuoteStatus('Pending Review')
+    setCurrentStep(8)
+  }
+
+  const handleSaveAdjustedRates = () => {
+    // Save the adjusted rates
+    setOriginalRates(JSON.parse(JSON.stringify(editableRates)))
+    setRatesChanged(false)
+    setAdjustRatesModalOpen(false)
+
+    // Show recalculating modal
+    setIsRecalculating(true)
+
+    // After brief delay, close recalculating modal and return to quote preview
+    setTimeout(() => {
+      setIsRecalculating(false)
+      setCurrentStep(7) // Return to quote preview
+    }, 1200)
   }
 
   const handleFinalizeQuote = () => {
@@ -689,6 +710,28 @@ function App() {
       }])
       setCurrentStep(9)
     }, 500)
+  }
+
+  // Easter egg: Skip to quote preview
+  const handleOliveEasterEgg = () => {
+    setSelectedClient('Justin\'s IL Consolidation Program')
+    setQuoteStatus('Draft')
+    setEntryPoint('traditional')
+    setCurrentStep(7)
+    setMessages([
+      {
+        type: 'system',
+        text: 'Perfect! I\'ve pulled the relevant details from your CRM for Justin\'s IL Consolidation Program. I found their account history, current rates, and shipping patterns with 117 shipments across 4 retailers. Let me validate the data before we proceed.',
+        timestamp: '03:01 PM'
+      },
+      {
+        type: 'system',
+        text: 'I\'ve analyzed the data and calculated formal consolidation rates. Review the pricing factors and rates below.',
+        timestamp: '03:08 PM',
+        showRatesPreview: true
+      }
+    ])
+    setNavDrawerOpen(false)
   }
 
   // Mock data for chat history
@@ -967,17 +1010,43 @@ function App() {
                     primary={client.name}
                     primaryTypographyProps={{ fontSize: '14px', ml: 1 }}
                   />
+                  {client.name === 'OLIVE PACKING COMPANY' && (
+                    <Tooltip title="Skip to quote preview (easter egg)" arrow>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleOliveEasterEgg()
+                        }}
+                        sx={{
+                          mr: 0.5,
+                          color: '#FFD700',
+                          opacity: 0.6,
+                          '&:hover': {
+                            opacity: 1,
+                            bgcolor: 'rgba(255, 215, 0, 0.1)'
+                          }
+                        }}
+                      >
+                        <FlashOnIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
                   <Box
                     sx={{
                       bgcolor: '#e0e0e0',
                       borderRadius: '50%',
                       width: 32,
                       height: 32,
+                      minWidth: 32,
+                      minHeight: 32,
+                      flexShrink: 0,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '12px',
-                      fontWeight: 600
+                      fontWeight: 600,
+                      fontVariantNumeric: 'tabular-nums'
                     }}
                   >
                     {client.quoteCount}
@@ -2407,53 +2476,9 @@ function App() {
                           <Typography variant="overline" sx={{ fontWeight: 600, color: '#ff9800', display: 'block', mb: 0.5 }}>
                             HEADS UP
                           </Typography>
-                          <Typography variant="body2" sx={{ color: '#333', mb: message.showRatesPreview ? 2 : (message.showFinalizeButton ? 2 : 0) }}>
+                          <Typography variant="body2" sx={{ color: '#333', mb: message.showFinalizeButton ? 2 : 0 }}>
                             {message.text}
                           </Typography>
-                          {message.showRatesPreview && (
-                            <Box sx={{ mb: 2, p: 3, bgcolor: '#f5f5f5', borderRadius: 1, border: '1px solid #e0e0e0', width: 'calc(100% + 24px)', ml: '-12px', mr: '-12px' }}>
-                              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2.5, color: '#333', fontSize: '15px' }}>
-                                Current Rates
-                              </Typography>
-                              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, mb: 2.5 }}>
-                                <Box>
-                                  <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1.5, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                    Warehouse Rates
-                                  </Typography>
-                                  {editableRates.warehouseRates.map((rate, idx) => (
-                                    <Typography key={idx} variant="body2" sx={{ fontSize: '14px', color: '#333', mb: 0.75, lineHeight: 1.6 }}>
-                                      {rate.location}: ${rate.rate.toFixed(2)}/pallet/day
-                                    </Typography>
-                                  ))}
-                                </Box>
-                                <Box>
-                                  <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1.5, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                    Channel Rates
-                                  </Typography>
-                                  {editableRates.channelRates.map((rate, idx) => (
-                                    <Typography key={idx} variant="body2" sx={{ fontSize: '14px', color: '#333', mb: 0.75, lineHeight: 1.6 }}>
-                                      {rate.channel}: ${rate.ratePerPallet.toFixed(2)}/pallet
-                                    </Typography>
-                                  ))}
-                                </Box>
-                              </Box>
-                              <Button
-                                variant="outlined"
-                                onClick={handleOpenAdjustRates}
-                                sx={{
-                                  textTransform: 'none',
-                                  borderColor: '#F57C00',
-                                  color: '#F57C00',
-                                  '&:hover': {
-                                    borderColor: '#E65100',
-                                    bgcolor: '#FFF3E0'
-                                  }
-                                }}
-                              >
-                                Adjust Rates
-                              </Button>
-                            </Box>
-                          )}
                           {message.showFinalizeButton && (
                             <Button
                               variant="contained"
@@ -2817,54 +2842,48 @@ function App() {
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>April 28, 2026</Typography>
                     </Box>
 
-                    {/* Pricing Factors - Badge Style */}
+                    {/* Pricing Factors - Chip Style */}
                     <Box sx={{ mb: 3, pb: 3, borderBottom: '1px solid #e0e0e0' }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#00446A' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: '#00446A', fontSize: '13px' }}>
                         Pricing Factors
                       </Typography>
-                      <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-                        <Box sx={{
-                          bgcolor: '#e3f2fd',
-                          px: 2,
-                          py: 1,
-                          borderRadius: 1,
-                          border: '1px solid #90caf9'
-                        }}>
-                          <Typography variant="caption" sx={{ color: '#666', display: 'block', fontSize: '11px' }}>
-                            Volume
-                          </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#1976d2' }}>
-                            High
-                          </Typography>
-                        </Box>
-                        <Box sx={{
-                          bgcolor: '#fff3e0',
-                          px: 2,
-                          py: 1,
-                          borderRadius: 1,
-                          border: '1px solid #ffb74d'
-                        }}>
-                          <Typography variant="caption" sx={{ color: '#666', display: 'block', fontSize: '11px' }}>
-                            Pallet Density
-                          </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#f57c00' }}>
-                            Medium
-                          </Typography>
-                        </Box>
-                        <Box sx={{
-                          bgcolor: '#ffebee',
-                          px: 2,
-                          py: 1,
-                          borderRadius: 1,
-                          border: '1px solid #ef5350'
-                        }}>
-                          <Typography variant="caption" sx={{ color: '#666', display: 'block', fontSize: '11px' }}>
-                            Competition
-                          </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#d32f2f' }}>
-                            High
-                          </Typography>
-                        </Box>
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        <Chip
+                          label="Volume · High"
+                          size="small"
+                          sx={{
+                            bgcolor: '#e3f2fd',
+                            color: '#1976d2',
+                            fontSize: '12px',
+                            fontWeight: 500,
+                            height: '28px',
+                            border: '1px solid #90caf9'
+                          }}
+                        />
+                        <Chip
+                          label="Pallet Density · Medium"
+                          size="small"
+                          sx={{
+                            bgcolor: '#fff3e0',
+                            color: '#f57c00',
+                            fontSize: '12px',
+                            fontWeight: 500,
+                            height: '28px',
+                            border: '1px solid #ffb74d'
+                          }}
+                        />
+                        <Chip
+                          label="Competition · High"
+                          size="small"
+                          sx={{
+                            bgcolor: '#ffebee',
+                            color: '#d32f2f',
+                            fontSize: '12px',
+                            fontWeight: 500,
+                            height: '28px',
+                            border: '1px solid #ef5350'
+                          }}
+                        />
                       </Box>
                     </Box>
 
@@ -2885,59 +2904,27 @@ function App() {
                       </Box>
                     </Box>
 
-                  {/* Current Rates Preview */}
-                  <Box sx={{ mb: 3 }}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: '#00446A' }}>
-                      Current Rates
-                    </Typography>
-                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
-                      <Box sx={{ bgcolor: '#f5f5f5', p: 2, borderRadius: 1, border: '1px solid #e0e0e0' }}>
-                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1 }}>
-                          Warehouse Rates
-                        </Typography>
-                        {editableRates.warehouseRates.map((rate, idx) => (
-                          <Typography key={idx} variant="body2" sx={{ fontSize: '13px', color: '#333', mb: 0.5 }}>
-                            {rate.location}: ${rate.rate.toFixed(2)}/pallet/day
-                          </Typography>
-                        ))}
-                      </Box>
-                      <Box sx={{ bgcolor: '#f5f5f5', p: 2, borderRadius: 1, border: '1px solid #e0e0e0' }}>
-                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#666', display: 'block', mb: 1 }}>
-                          Channel Rates
-                        </Typography>
-                        {editableRates.channelRates.map((rate, idx) => (
-                          <Typography key={idx} variant="body2" sx={{ fontSize: '13px', color: '#333', mb: 0.5 }}>
-                            {rate.channel}: ${rate.ratePerPallet.toFixed(2)}/pallet
-                          </Typography>
-                        ))}
-                      </Box>
-                    </Box>
-                  </Box>
-
-                  {/* Model Factors Confirmation */}
+                  {/* Pricing Confirmation Section */}
                   <Box sx={{
-                    mt: 3,
-                    p: 2.5,
+                    mx: -3,
+                    p: '20px 24px',
                     bgcolor: '#fffbf0',
-                    border: '1px solid #ffc107',
-                    borderRadius: 1
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 2
                   }}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-                      <InfoIcon sx={{ color: '#f57c00', mt: 0.5, fontSize: 20 }} />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#333', mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, flex: 1 }}>
+                      <InfoIcon sx={{ color: '#f57c00', mt: 0.25, fontSize: 18 }} />
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#333', mb: 0.5, fontSize: '14px' }}>
                           Do you agree with these pricing factors and rates?
                         </Typography>
-                        <Typography variant="caption" sx={{ color: '#666', display: 'block', lineHeight: 1.6 }}>
-                          The factors and rates shown above will determine the pricing in your quote.
-                          If you need adjustments, use the Adjust Rates button below.
+                        <Typography variant="caption" sx={{ color: '#666', display: 'block', lineHeight: 1.6, fontSize: '13px' }}>
+                          The factors and rates above will determine the pricing in your quote.
                         </Typography>
                       </Box>
                     </Box>
-                  </Box>
-
-                  {/* Action Buttons */}
-                  <Box sx={{ pt: 3, borderTop: '1px solid #e0e0e0', display: 'flex', gap: 2 }}>
                     <Button
                       variant="outlined"
                       onClick={handleOpenAdjustRates}
@@ -2945,58 +2932,395 @@ function App() {
                         textTransform: 'none',
                         borderColor: '#F57C00',
                         color: '#F57C00',
-                        padding: '12px 20px',
-                        fontSize: '16px',
-                        fontWeight: 600,
+                        padding: '8px 20px',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        whiteSpace: 'nowrap',
                         '&:hover': {
                           borderColor: '#E65100',
-                          bgcolor: '#FFF3E0'
+                          bgcolor: 'rgba(255, 243, 224, 0.5)'
                         }
                       }}
                     >
-                      Adjust Rates
+                      Adjust rates
                     </Button>
+                  </Box>
+
+                  {/* Combined Actions Section */}
+                  <Box sx={{
+                    mx: -3,
+                    p: '20px 24px',
+                    bgcolor: '#f8f8f8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4
+                  }}>
+                    {/* INTERNAL */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Typography
+                        sx={{
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          color: '#666',
+                          letterSpacing: '0.05em',
+                          textTransform: 'uppercase',
+                          lineHeight: 1
+                        }}
+                      >
+                        Internal
+                      </Typography>
+                      <Button
+                        component="a"
+                        href="/value-calculator.html"
+                        target="_blank"
+                        variant="outlined"
+                        startIcon={<DownloadIcon sx={{ fontSize: 14 }} />}
+                        sx={{
+                          textTransform: 'none',
+                          borderColor: '#1976d2',
+                          color: '#1976d2',
+                          padding: '6px 16px',
+                          fontSize: '13px',
+                          fontWeight: 400,
+                          borderRadius: '4px',
+                          '&:hover': {
+                            borderColor: '#1565c0',
+                            bgcolor: 'rgba(25, 118, 210, 0.04)'
+                          }
+                        }}
+                      >
+                        Download calculator
+                      </Button>
+                      {currentStep === 8 && (
+                        <Button
+                          component="a"
+                          href="/value-communicator.html"
+                          target="_blank"
+                          variant="outlined"
+                          startIcon={<DescriptionOutlinedIcon sx={{ fontSize: 14 }} />}
+                          sx={{
+                            textTransform: 'none',
+                            borderColor: '#17A2B8',
+                            color: '#17A2B8',
+                            padding: '6px 16px',
+                            fontSize: '13px',
+                            fontWeight: 400,
+                            borderRadius: '4px',
+                            '&:hover': {
+                              borderColor: '#138496',
+                              bgcolor: 'rgba(23, 162, 184, 0.04)'
+                            }
+                          }}
+                        >
+                          Value Communicator
+                        </Button>
+                      )}
+                    </Box>
+
+                    {/* CLIENT DELIVERABLES */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'flex-end' }}>
+                      <Typography
+                        sx={{
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          color: '#666',
+                          letterSpacing: '0.05em',
+                          textTransform: 'uppercase',
+                          lineHeight: 1
+                        }}
+                      >
+                        Client deliverables
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Tooltip title="Right-click to open in new tab" arrow placement="top">
+                          <Button
+                            component="a"
+                            href="/quote-preview.html"
+                            target="_blank"
+                            variant="outlined"
+                            onClick={(e) => {
+                              setQuoteDetailLevel('standard')
+                            }}
+                            sx={{
+                              borderColor: '#1976d2',
+                              color: '#1976d2',
+                              textTransform: 'none',
+                              borderRadius: '4px',
+                              padding: '8px 16px',
+                              fontSize: '13px',
+                              fontWeight: 400,
+                              '&:hover': {
+                                borderColor: '#1565c0',
+                                bgcolor: 'rgba(25, 118, 210, 0.04)'
+                              }
+                            }}
+                          >
+                            Standard quote
+                          </Button>
+                        </Tooltip>
+                        <Tooltip title="Right-click to open in new tab" arrow placement="top">
+                          <Button
+                            component="a"
+                            href="/quote-preview-detailed.html"
+                            target="_blank"
+                            variant="contained"
+                            onClick={(e) => {
+                              setQuoteDetailLevel('detailed')
+                            }}
+                            sx={{
+                              bgcolor: '#1976d2',
+                              color: 'white',
+                              textTransform: 'none',
+                              borderRadius: '4px',
+                              padding: '8px 16px',
+                              fontSize: '13px',
+                              fontWeight: 500,
+                              boxShadow: 'none',
+                              '&:hover': {
+                                bgcolor: '#1565c0',
+                                boxShadow: 'none'
+                              }
+                            }}
+                          >
+                            Detailed quote
+                          </Button>
+                        </Tooltip>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Submit for Review Section */}
+                  <Box sx={{
+                    mt: 3,
+                    p: 3,
+                    textAlign: 'center',
+                    borderTop: '1px solid #e0e0e0'
+                  }}>
+                    <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
+                      Ready to continue? You'll still be able to adjust rates and regenerate quotes in the review stage
+                    </Typography>
                     <Button
                       variant="contained"
-                      onClick={() => {
-                        setQuoteDetailLevel('standard')
-                        handleGenerateQuote()
-                      }}
+                      onClick={handleMarkForReview}
                       sx={{
-                        flex: 1,
-                        bgcolor: '#00446A',
+                        bgcolor: '#1976d2',
+                        color: 'white',
                         textTransform: 'none',
                         borderRadius: '4px',
-                        padding: '12px 20px',
-                        fontSize: '16px',
-                        fontWeight: 600,
+                        padding: '12px 32px',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        boxShadow: 'none',
                         '&:hover': {
-                          bgcolor: '#003350'
+                          bgcolor: '#1565c0',
+                          boxShadow: 'none'
                         }
                       }}
                     >
-                      Generate Standard Quote
+                      Continue to review
                     </Button>
+                  </Box>
+                </Box>
+              )}
+
+              {/* Step 8: Pending Review State */}
+              {currentStep === 8 && (
+                <Box
+                  sx={{
+                    bgcolor: 'white',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: 2,
+                    p: 3,
+                    mb: 2
+                  }}
+                >
+                  {/* Status Banner */}
+                  <Box sx={{
+                    mb: 3,
+                    p: 2.5,
+                    bgcolor: '#e3f2fd',
+                    borderRadius: 1,
+                    borderLeft: '4px solid #1976d2'
+                  }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#1976d2', mb: 1 }}>
+                      Quote in Review — Pending State
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#666', fontSize: '13px', lineHeight: 1.6 }}>
+                      Your quote has moved from <strong>Draft</strong> to <strong>Pending Review</strong>. This gives you a chance to review the generated quotes, make final adjustments to rates, and regenerate if needed. Once you're completely satisfied, you'll finalize the quote to lock it in and mark it as complete.
+                    </Typography>
+                  </Box>
+
+                  {/* Project Info */}
+                  <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr',
+                    gap: 2,
+                    mb: 3,
+                    pb: 3,
+                    borderBottom: '1px solid #e0e0e0'
+                  }}>
+                    <Typography variant="body2" sx={{ color: '#666' }}>Client:</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>Justin</Typography>
+
+                    <Typography variant="body2" sx={{ color: '#666' }}>Project:</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>IL Consolidation Program</Typography>
+
+                    <Typography variant="body2" sx={{ color: '#666' }}>Status:</Typography>
+                    <Chip label="Pending Review" size="small" sx={{ bgcolor: '#e3f2fd', color: '#1976d2', fontWeight: 600, width: 'fit-content' }} />
+                  </Box>
+
+                  {/* Actions */}
+                  <Box sx={{
+                    mx: -3,
+                    p: '20px 24px',
+                    bgcolor: '#f8f8f8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    mb: 3
+                  }}>
+                    {/* Adjust Rates */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Button
+                        variant="outlined"
+                        onClick={handleOpenAdjustRates}
+                        sx={{
+                          textTransform: 'none',
+                          borderColor: '#1976d2',
+                          color: '#1976d2',
+                          padding: '8px 20px',
+                          fontSize: '13px',
+                          fontWeight: 500,
+                          borderRadius: '4px',
+                          '&:hover': {
+                            borderColor: '#1565c0',
+                            bgcolor: 'rgba(25, 118, 210, 0.04)'
+                          }
+                        }}
+                      >
+                        Adjust rates
+                      </Button>
+                    </Box>
+
+                    {/* Download Options */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'flex-end' }}>
+                      <Button
+                        component="a"
+                        href="/value-calculator.html"
+                        target="_blank"
+                        variant="outlined"
+                        startIcon={<DownloadIcon sx={{ fontSize: 14 }} />}
+                        sx={{
+                          textTransform: 'none',
+                          borderColor: '#d0d0d0',
+                          color: '#666',
+                          padding: '8px 16px',
+                          fontSize: '13px',
+                          fontWeight: 400,
+                          borderRadius: '4px',
+                          '&:hover': {
+                            borderColor: '#aaa',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                      >
+                        Calculator
+                      </Button>
+                      <Button
+                        component="a"
+                        href="/value-communicator.html"
+                        target="_blank"
+                        variant="outlined"
+                        startIcon={<DescriptionOutlinedIcon sx={{ fontSize: 14 }} />}
+                        sx={{
+                          textTransform: 'none',
+                          borderColor: '#d0d0d0',
+                          color: '#666',
+                          padding: '8px 16px',
+                          fontSize: '13px',
+                          fontWeight: 400,
+                          borderRadius: '4px',
+                          '&:hover': {
+                            borderColor: '#aaa',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                      >
+                        Value Communicator
+                      </Button>
+                      <Button
+                        component="a"
+                        href="/quote-preview.html"
+                        target="_blank"
+                        variant="outlined"
+                        sx={{
+                          borderColor: '#1976d2',
+                          color: '#1976d2',
+                          textTransform: 'none',
+                          borderRadius: '4px',
+                          padding: '8px 16px',
+                          fontSize: '13px',
+                          fontWeight: 400,
+                          '&:hover': {
+                            borderColor: '#1565c0',
+                            bgcolor: 'rgba(25, 118, 210, 0.04)'
+                          }
+                        }}
+                      >
+                        Standard quote
+                      </Button>
+                      <Button
+                        component="a"
+                        href="/quote-preview-detailed.html"
+                        target="_blank"
+                        variant="contained"
+                        sx={{
+                          bgcolor: '#1976d2',
+                          color: 'white',
+                          textTransform: 'none',
+                          borderRadius: '4px',
+                          padding: '8px 16px',
+                          fontSize: '13px',
+                          fontWeight: 500,
+                          boxShadow: 'none',
+                          '&:hover': {
+                            bgcolor: '#1565c0',
+                            boxShadow: 'none'
+                          }
+                        }}
+                      >
+                        Detailed quote
+                      </Button>
+                    </Box>
+                  </Box>
+
+                  {/* Finalize Section */}
+                  <Box sx={{
+                    textAlign: 'center',
+                    pt: 2
+                  }}>
+                    <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
+                      When you're completely satisfied with the quote
+                    </Typography>
                     <Button
                       variant="contained"
-                      onClick={() => {
-                        setQuoteDetailLevel('detailed')
-                        handleGenerateQuote()
-                      }}
+                      onClick={handleFinalizeQuote}
                       sx={{
-                        flex: 1,
-                        bgcolor: '#00446A',
+                        bgcolor: '#2e7d32',
+                        color: 'white',
                         textTransform: 'none',
                         borderRadius: '4px',
-                        padding: '12px 20px',
-                        fontSize: '16px',
-                        fontWeight: 600,
+                        padding: '12px 32px',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        boxShadow: 'none',
                         '&:hover': {
-                          bgcolor: '#003350'
+                          bgcolor: '#1b5e20',
+                          boxShadow: 'none'
                         }
                       }}
                     >
-                      Generate Detailed Quote
+                      Finalize quote
                     </Button>
                   </Box>
                 </Box>
@@ -3233,91 +3557,69 @@ function App() {
       <Dialog
         open={adjustRatesModalOpen}
         onClose={handleCloseAdjustRates}
-        maxWidth="md"
+        maxWidth="lg"
         fullWidth
       >
         <DialogTitle sx={{ bgcolor: '#f5f5f5', borderBottom: '1px solid #e0e0e0' }}>
           <Typography variant="h6" sx={{ fontWeight: 600, color: '#333' }}>
             Adjust Rates
           </Typography>
+          <Typography variant="subtitle2" sx={{ color: '#666', mt: 0.5 }}>
+            Formal Consolidation Rates
+          </Typography>
         </DialogTitle>
         <DialogContent sx={{ p: 3, mt: 2 }}>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#555' }}>
-              Warehouse Rates ($/pallet/day)
-            </Typography>
-            <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 1, overflow: 'hidden', bgcolor: 'white' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ background: '#FAFAFA', borderBottom: '1px solid #e0e0e0' }}>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#666' }}>Location</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>Rate ($/pallet/day)</th>
+          <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 1, overflow: 'auto', bgcolor: 'white' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
+              <thead>
+                <tr style={{ background: '#00446A', color: 'white' }}>
+                  <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13px', fontWeight: 600, borderRight: '1px solid rgba(255,255,255,0.1)' }}>Retailer</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13px', fontWeight: 600, borderRight: '1px solid rgba(255,255,255,0.1)' }}>City</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13px', fontWeight: 600, borderRight: '1px solid rgba(255,255,255,0.1)' }}>State</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13px', fontWeight: 600, borderRight: '1px solid rgba(255,255,255,0.1)' }}>Delivery Window</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13px', fontWeight: 600, borderRight: '1px solid rgba(255,255,255,0.1)' }}>Transit Time</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '13px', fontWeight: 600, borderRight: '1px solid rgba(255,255,255,0.1)' }}>PLT Rate</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '13px', fontWeight: 600 }}>TL Cap</th>
+                </tr>
+              </thead>
+              <tbody>
+                {editableRates.consolidationRates.map((item, idx) => (
+                  <tr key={idx} style={{ borderBottom: idx < editableRates.consolidationRates.length - 1 ? '1px solid #e0e0e0' : 'none', background: idx % 2 === 0 ? 'white' : '#fafafa' }}>
+                    <td style={{ padding: '10px 16px', fontSize: '13px', fontWeight: 500 }}>{item.retailer}</td>
+                    <td style={{ padding: '10px 16px', fontSize: '13px' }}>{item.city}</td>
+                    <td style={{ padding: '10px 16px', fontSize: '13px' }}>{item.state}</td>
+                    <td style={{ padding: '10px 16px', fontSize: '13px' }}>{item.deliveryWindow}</td>
+                    <td style={{ padding: '10px 16px', fontSize: '13px' }}>{item.transitTime}</td>
+                    <td style={{ padding: '10px 16px', textAlign: 'right' }}>
+                      <TextField
+                        type="number"
+                        value={item.pltRate}
+                        onChange={(e) => handleRateChange(idx, 'pltRate', e.target.value)}
+                        size="small"
+                        sx={{
+                          width: 100,
+                          '& input': { textAlign: 'right', fontSize: '13px', padding: '6px 10px' },
+                          '& .MuiOutlinedInput-root': { height: 32 }
+                        }}
+                      />
+                    </td>
+                    <td style={{ padding: '10px 16px', textAlign: 'right' }}>
+                      <TextField
+                        type="number"
+                        value={item.tlCap}
+                        onChange={(e) => handleRateChange(idx, 'tlCap', e.target.value)}
+                        size="small"
+                        sx={{
+                          width: 110,
+                          '& input': { textAlign: 'right', fontSize: '13px', padding: '6px 10px' },
+                          '& .MuiOutlinedInput-root': { height: 32 }
+                        }}
+                      />
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {editableRates.warehouseRates.map((item, idx) => (
-                    <tr key={idx} style={{ borderBottom: idx < editableRates.warehouseRates.length - 1 ? '1px solid #e0e0e0' : 'none' }}>
-                      <td style={{ padding: '10px 16px', fontSize: '13px' }}>{item.location}</td>
-                      <td style={{ padding: '10px 16px', textAlign: 'right' }}>
-                        <TextField
-                          type="number"
-                          value={item.rate}
-                          onChange={(e) => handleRateChange('warehouse', idx, e.target.value)}
-                          size="small"
-                          sx={{
-                            width: 100,
-                            '& input': { textAlign: 'right', fontSize: '13px', padding: '6px 10px' },
-                            '& .MuiOutlinedInput-root': { height: 32 }
-                          }}
-                          InputProps={{
-                            startAdornment: <Typography sx={{ mr: 0.5, color: '#666', fontSize: '13px' }}>$</Typography>
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: '#555' }}>
-              Channel-Specific Lane Rates
-            </Typography>
-            <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 1, overflow: 'hidden', bgcolor: 'white' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ background: '#FAFAFA', borderBottom: '1px solid #e0e0e0' }}>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#666' }}>Channel</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#666' }}>Rate per Pallet</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {editableRates.channelRates.map((item, idx) => (
-                    <tr key={idx} style={{ borderBottom: idx < editableRates.channelRates.length - 1 ? '1px solid #e0e0e0' : 'none' }}>
-                      <td style={{ padding: '10px 16px', fontSize: '13px' }}>{item.channel}</td>
-                      <td style={{ padding: '10px 16px', textAlign: 'right' }}>
-                        <TextField
-                          type="number"
-                          value={item.ratePerPallet}
-                          onChange={(e) => handleRateChange('channel', idx, e.target.value)}
-                          size="small"
-                          sx={{
-                            width: 100,
-                            '& input': { textAlign: 'right', fontSize: '13px', padding: '6px 10px' },
-                            '& .MuiOutlinedInput-root': { height: 32 }
-                          }}
-                          InputProps={{
-                            startAdornment: <Typography sx={{ mr: 0.5, color: '#666', fontSize: '13px' }}>$</Typography>
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box>
+                ))}
+              </tbody>
+            </table>
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2, borderTop: '1px solid #e0e0e0', gap: 1 }}>
@@ -3327,53 +3629,56 @@ function App() {
           >
             Cancel
           </Button>
-          {quoteGenerated && ratesChanged ? (
-            <Button
-              variant="contained"
-              onClick={handleRegenerateQuote}
-              sx={{
-                bgcolor: '#F57C00',
-                textTransform: 'none',
-                '&:hover': {
-                  bgcolor: '#E65100'
-                }
-              }}
-            >
-              Regenerate Quote
-            </Button>
-          ) : quoteGenerated ? (
-            <Button
-              variant="contained"
-              onClick={handleFinalizeFromModal}
-              sx={{
-                bgcolor: '#F57C00',
-                textTransform: 'none',
-                '&:hover': {
-                  bgcolor: '#E65100'
-                }
-              }}
-            >
-              Regenerate Quote
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              onClick={() => {
-                setAdjustRatesModalOpen(false)
-                handleGenerateQuote()
-              }}
-              sx={{
-                bgcolor: '#00446A',
-                textTransform: 'none',
-                '&:hover': {
-                  bgcolor: '#003350'
-                }
-              }}
-            >
-              Generate Quote
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            onClick={handleSaveAdjustedRates}
+            sx={{
+              bgcolor: '#1976d2',
+              textTransform: 'none',
+              '&:hover': {
+                bgcolor: '#1565c0'
+              }
+            }}
+          >
+            Save adjusted rates
+          </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Recalculating Modal */}
+      <Dialog
+        open={isRecalculating}
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            minWidth: 450,
+            textAlign: 'center',
+            p: 6
+          }
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+          <Box
+            sx={{
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              border: '4px solid #e0e0e0',
+              borderTopColor: '#1976d2',
+              animation: 'spin 1s linear infinite',
+              '@keyframes spin': {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' }
+              }
+            }}
+          />
+          <Typography variant="h6" sx={{ fontWeight: 600, color: '#333', mt: 1 }}>
+            Recalculating...
+          </Typography>
+          <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+            Applying your adjusted rates
+          </Typography>
+        </Box>
       </Dialog>
     </Box>
   )
