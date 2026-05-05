@@ -13,573 +13,818 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
+            background: #F5F5F5;
             color: #333;
-        }
-
-        .slide-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .slide {
-            background: white;
-            min-height: 100vh;
-            padding: 60px 80px;
-            page-break-after: always;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            background: #00446A;
-            color: white;
-            padding: 24px 80px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header .logo {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .header .project-name {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .slide-title {
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 40px;
-            line-height: 1.2;
-        }
-
-        .highlight-teal {
-            color: #17A2B8;
-        }
-
-        .highlight-value {
-            color: #17A2B8;
-            font-weight: 700;
-        }
-
-        .chevron {
-            color: #17A2B8;
-            font-size: 60px;
-            font-weight: 700;
-            margin-right: 20px;
-        }
-
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            flex: 1;
-        }
-
-        .dark-card {
-            background: #4A4A4A;
-            color: white;
-            padding: 32px;
-            border-radius: 12px;
-        }
-
-        .teal-card {
-            background: #17A2B8;
-            color: white;
-            padding: 32px;
-            border-radius: 12px;
-        }
-
-        .light-card {
-            background: #E8E8E8;
-            padding: 32px;
-            border-radius: 12px;
-            color: #333;
-        }
-
-        .outlined-card {
-            border: 3px solid #17A2B8;
-            background: white;
-            padding: 32px;
-            border-radius: 12px;
-        }
-
-        .big-number {
-            font-size: 72px;
-            font-weight: 700;
-            line-height: 1;
-            margin-bottom: 16px;
-        }
-
-        .medium-number {
-            font-size: 48px;
-            font-weight: 700;
-            line-height: 1;
-            margin-bottom: 12px;
-        }
-
-        .card-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .card-subtitle {
-            font-size: 18px;
-            font-style: italic;
-            margin-bottom: 20px;
-        }
-
-        .bullet-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .bullet-list li {
-            padding-left: 30px;
-            position: relative;
-            margin-bottom: 16px;
-            font-size: 16px;
             line-height: 1.6;
         }
 
-        .bullet-list li:before {
+        .header {
+            background: #2C3E50;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #17A2B8;
+        }
+
+        .header-left {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .header-right {
+            font-size: 13px;
+            color: #B0BEC5;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0;
+            background: white;
+        }
+
+        .exec-summary {
+            background: #2C3E50;
+            padding: 48px 60px;
+            color: white;
+        }
+
+        .exec-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #B0BEC5;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 24px;
+        }
+
+        .main-headline {
+            font-size: 32px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .main-value {
+            color: #5CB85C;
+            font-weight: 700;
+        }
+
+        .sub-headline {
+            font-size: 14px;
+            color: #B0BEC5;
+            margin-bottom: 40px;
+        }
+
+        .summary-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 32px;
+        }
+
+        .summary-col {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 32px;
+            border-radius: 8px;
+            border-left: 4px solid #17A2B8;
+        }
+
+        .summary-col.revenue {
+            border-left-color: #5CB85C;
+        }
+
+        .summary-col-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #B0BEC5;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .summary-col-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: white;
+        }
+
+        .summary-col.savings .summary-col-value {
+            color: #17A2B8;
+        }
+
+        .summary-col.revenue .summary-col-value {
+            color: #5CB85C;
+        }
+
+        .summary-col-desc {
+            font-size: 13px;
+            color: #E0E0E0;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .summary-bullets {
+            list-style: none;
+            margin-top: 16px;
+        }
+
+        .summary-bullets li {
+            font-size: 13px;
+            color: #E0E0E0;
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .summary-bullets li:before {
             content: "▸";
             position: absolute;
             left: 0;
             color: #17A2B8;
+            font-size: 14px;
+        }
+
+        .summary-col.revenue .summary-bullets li:before {
+            color: #5CB85C;
+        }
+
+        .section {
+            border-bottom: 1px solid #E0E0E0;
+            background: white;
+        }
+
+        .instructions {
+            background: #FFF9E6;
+            border-left: 4px solid #FFC107;
+            padding: 16px 60px;
+            text-align: center;
+            color: #856404;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .instructions-icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .section-header {
+            background: #FAFAFA;
+            padding: 24px 60px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .section-header:hover {
+            background: #F5F5F5;
+            border-left-color: #17A2B8;
+            transform: translateX(2px);
+        }
+
+        .section-header::after {
+            content: "Click to expand";
+            position: absolute;
+            right: 80px;
+            font-size: 12px;
+            color: #999;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .section-header:hover::after {
+            opacity: 1;
+        }
+
+        .section-header.active::after {
+            content: "Click to collapse";
+        }
+
+        .section-number {
+            width: 36px;
+            height: 36px;
+            background: #2C3E50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+        }
+
+        .section-chevron {
+            color: #17A2B8;
             font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .section-header.active .section-chevron {
+            transform: rotate(90deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+        }
+
+        .section-content.active {
+            max-height: 3000px;
+        }
+
+        .section-inner {
+            padding: 48px 60px;
+        }
+
+        .content-headline {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .content-subhead {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 32px;
+            font-style: italic;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-top: 32px;
+        }
+
+        .content-card {
+            background: #FAFAFA;
+            padding: 32px;
+            border-radius: 8px;
+            border-left: 3px solid #E0E0E0;
+        }
+
+        .card-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .card-label.problem {
+            color: #D32F2F;
+        }
+
+        .card-label.typical {
+            color: #999;
+        }
+
+        .card-label.advantage {
+            color: #17A2B8;
+        }
+
+        .card-label.outcome {
+            color: #5CB85C;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .advantage-card {
+            background: #E8F5F7;
+            padding: 40px;
+            border-radius: 8px;
+            grid-column: 1 / -1;
+            border-left: 4px solid #17A2B8;
+        }
+
+        .advantage-card .card-label {
+            color: #17A2B8;
+        }
+
+        .advantage-value {
+            font-size: 56px;
+            font-weight: 700;
+            color: #17A2B8;
+            margin: 20px 0 16px;
+            line-height: 1;
+        }
+
+        .advantage-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 32px;
+            padding-top: 24px;
+            border-top: 2px solid rgba(23, 162, 184, 0.2);
+            margin-top: 24px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #17A2B8;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .timeline {
             display: flex;
             flex-direction: column;
-            gap: 0;
-            background: #4A4A4A;
-            border-radius: 12px;
-            padding: 40px;
+            gap: 24px;
+            margin: 32px 0;
         }
 
         .timeline-item {
             display: flex;
-            align-items: center;
-            gap: 24px;
-            padding: 20px 0;
-            border-bottom: 2px solid #666;
-        }
-
-        .timeline-item:last-child {
-            border-bottom: none;
+            gap: 20px;
+            align-items: start;
         }
 
         .timeline-marker {
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             background: #17A2B8;
             border-radius: 50%;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
         }
 
         .timeline-content {
-            background: #E8E8E8;
-            padding: 20px 24px;
+            flex: 1;
+            background: #FAFAFA;
+            padding: 24px;
             border-radius: 8px;
-            flex: 1;
-            color: #333;
+            border-left: 3px solid #17A2B8;
         }
 
-        .arrow-down {
-            width: 0;
-            height: 0;
-            border-left: 30px solid transparent;
-            border-right: 30px solid transparent;
-            border-top: 40px solid #4A4A4A;
-            margin: 0 auto 20px;
-        }
-
-        .stat-row {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            margin: 30px 0;
-        }
-
-        .stat-item {
-            flex: 1;
-        }
-
-        .stat-label {
+        .timeline-title {
             font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            opacity: 0.8;
         }
 
-        .circle-list {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .circle-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-        }
-
-        .circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .circle-content h3 {
-            color: #17A2B8;
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-
-        .circle-content p {
-            font-size: 16px;
-            line-height: 1.6;
+        .timeline-desc {
+            font-size: 14px;
             color: #666;
+            line-height: 1.6;
         }
 
-        @media print {
-            .slide {
-                page-break-after: always;
+        .highlight {
+            color: #17A2B8;
+            font-weight: 600;
+        }
+
+        .outcome-box {
+            background: linear-gradient(135deg, #17A2B8 0%, #5CB85C 100%);
+            color: white;
+            padding: 48px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 4px 20px rgba(23, 162, 184, 0.3);
+        }
+
+        .outcome-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        .outcome-value {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1;
+        }
+
+        .outcome-desc {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .outcome-subdesc {
+            font-size: 14px;
+            margin-top: 12px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .total-summary {
+            background: #2C3E50;
+            padding: 60px;
+            color: white;
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .summary-columns,
+            .content-grid {
+                grid-template-columns: 1fr;
             }
-            body {
-                background: white;
+
+            .section-inner,
+            .exec-summary {
+                padding: 32px 24px;
             }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo">RJW LOGISTICS GROUP</div>
-        <div class="project-name">Justin's IL Consolidation Program</div>
+        <div class="header-left">RJW Logistics Group</div>
+        <div class="header-right">Justin - IL Consolidation Program - Justin's</div>
     </div>
 
-    <!-- Slide 1: Executive Summary -->
-    <div class="slide">
-        <div class="slide-title">
-            <span class="highlight-teal">$1.4M</span> in annual estimated net benefit for Justin with RJW
-        </div>
+    <div class="container">
+        <!-- Executive Summary -->
+        <div class="exec-summary">
+            <div class="exec-label">EXEC SUMMARY</div>
+            <div class="main-headline">
+                <span class="main-value">$1.4M</span> in annual estimated net benefit for Justin with RJW
+            </div>
+            <div class="sub-headline">Combined direct savings and revenue improvement</div>
 
-        <div class="stat-row">
-            <div class="stat-item">
-                <div class="chevron">≫</div>
-                <div class="highlight-teal medium-number">$477k</div>
-                <div style="font-size: 18px; font-style: italic;">in estimated <strong>direct savings</strong> annually</div>
-            </div>
-        </div>
-
-        <div class="stat-row">
-            <div class="stat-item">
-                <div class="chevron">≫</div>
-                <div class="highlight-teal medium-number">$800k+</div>
-                <div style="font-size: 18px; font-style: italic;">in estimated annual <strong>sales improvement</strong></div>
-            </div>
-        </div>
-
-        <div style="margin-top: 60px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
-            <div class="dark-card">
-                <div class="highlight-teal medium-number">$444K</div>
-                <div class="card-subtitle" style="color: #17A2B8; font-size: 16px; font-style: italic;">savings in OTIF fines & chargebacks</div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 16px; justify-content: center;">
-                <div style="font-size: 18px; font-weight: 600; padding: 12px 0; border-bottom: 2px solid #17A2B8;">99% On-Time</div>
-                <div style="font-size: 18px; font-weight: 600; padding: 12px 0; border-bottom: 2px solid #17A2B8;">Retailer Consolidation</div>
-                <div style="font-size: 18px; font-weight: 600; padding: 12px 0; border-bottom: 2px solid #17A2B8;">Stricter Execution</div>
-            </div>
-            <div class="dark-card">
-                <div class="highlight-teal medium-number">$33K</div>
-                <div class="card-subtitle" style="color: #17A2B8; font-size: 16px; font-style: italic;">savings in ASN/EDI chargebacks</div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 16px; justify-content: center;">
-                <div style="font-size: 18px; font-weight: 600; padding: 12px 0; border-bottom: 2px solid #17A2B8;">Reduced Chargebacks</div>
-                <div style="font-size: 18px; font-weight: 600; padding: 12px 0; border-bottom: 2px solid #17A2B8;">Lower Risk</div>
-                <div style="font-size: 18px; font-weight: 600; padding: 12px 0; border-bottom: 2px solid #17A2B8;">Less Fines</div>
-            </div>
-            <div class="outlined-card">
-                <div class="highlight-teal medium-number">$800K+</div>
-                <div class="card-subtitle" style="color: #17A2B8; font-size: 16px; font-style: italic;">sales improvement from higher in-stock</div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 16px; justify-content: center;">
-                <div style="font-size: 18px; font-weight: 600; padding: 12px 0; border-bottom: 2px solid #17A2B8;">Fewer Out of Stocks</div>
-                <div style="font-size: 18px; font-weight: 600; padding: 12px 0; border-bottom: 2px solid #17A2B8;">Reliable Movements</div>
-                <div style="font-size: 18px; font-weight: 600; padding: 12px 0; border-bottom: 2px solid #17A2B8;">Increased Demand</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 2: OTIF Savings -->
-    <div class="slide">
-        <div style="background: #f5f5f5; padding: 16px 24px; border-radius: 8px; margin-bottom: 32px;">
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                <div style="width: 32px; height: 32px; background: #4A4A4A; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">2</div>
-                <div style="font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">≫ OTIF SAVINGS</div>
-            </div>
-        </div>
-
-        <div style="margin-bottom: 24px;">
-            <div style="font-size: 32px; font-weight: 600; line-height: 1.3; margin-bottom: 12px;">
-                <span class="highlight-teal">Industry-leading OTIF</span> execution drives direct savings to Justin
-            </div>
-            <div style="font-size: 16px; color: #666; font-style: italic;">
-                RJW OTIF performance could save Justin <span class="highlight-teal">$440K+</span> annually
-            </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px;">
-            <!-- Left Column -->
-            <div style="display: flex; flex-direction: column; gap: 24px;">
-                <!-- The Problem -->
-                <div>
-                    <div style="font-size: 12px; font-weight: 600; color: #d32f2f; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">THE PROBLEM</div>
-                    <div style="font-size: 20px; font-weight: 600; color: #333; margin-bottom: 12px;">OTIF penalties are a direct cost to CPG brands</div>
-                    <p style="font-size: 15px; line-height: 1.7; color: #666;">Late or non-compliant deliveries can trigger retailer fines and deduction exposure across every shipment.</p>
+            <div class="summary-columns">
+                <div class="summary-col savings">
+                    <div class="summary-col-label">DIRECT SAVINGS</div>
+                    <div class="summary-col-value">$477k</div>
+                    <div class="summary-col-desc">Eliminated costs from better operations</div>
+                    <ul class="summary-bullets">
+                        <li>$440k OTIF penalty avoidance</li>
+                        <li>$60k damaged pallet reduction</li>
+                        <li>$32k ASN/EDI fine reduction</li>
+                    </ul>
                 </div>
 
-                <!-- Typical 3PL Reality -->
-                <div>
-                    <div style="font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">TYPICAL 3PL REALITY</div>
-                    <div style="font-size: 20px; font-weight: 600; color: #333; margin-bottom: 12px;">Typical 3PL performance creates more delivery failures</div>
-                    <p style="font-size: 15px; line-height: 1.7; color: #666;">At ~90% on-time performance, more shipments arrive late — driving higher annual OTIF costs.</p>
+                <div class="summary-col revenue">
+                    <div class="summary-col-label">REVENUE IMPROVEMENT</div>
+                    <div class="summary-col-value">$800k+</div>
+                    <div class="summary-col-desc">Estimated sales lift from higher in-stocks</div>
+                    <ul class="summary-bullets">
+                        <li>99% on-time flow</li>
+                        <li>Retailer consolidation</li>
+                        <li>Stricter execution</li>
+                    </ul>
                 </div>
             </div>
+        </div>
 
-            <!-- Right Column - RJW Advantage Card -->
-            <div style="background: #2C3E50; color: white; padding: 40px; border-radius: 12px; display: flex; flex-direction: column;">
-                <div style="font-size: 12px; font-weight: 600; color: #17A2B8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px;">RJW'S ADVANTAGE</div>
+        <!-- Instructions -->
+        <div class="instructions">
+            <span class="instructions-icon">👇</span>
+            Click on any section below to view detailed savings breakdowns
+        </div>
 
-                <div style="font-size: 24px; font-weight: 600; line-height: 1.3; margin-bottom: 20px;">
-                    RJW's 99% OTIF reduces Justin's chargeback exposure
-                </div>
+        <!-- Section 2: OTIF Savings -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-number">2</div>
+                <div class="section-title">≫ OTIF SAVINGS</div>
+                <div class="section-chevron">›</div>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-headline">
+                        <span class="highlight">Industry-leading OTIF</span> execution drives direct savings to Justin
+                    </div>
+                    <div class="content-subhead">
+                        RJW OTIF performance could save Justin <span class="highlight">$440K+</span> annually
+                    </div>
 
-                <p style="font-size: 15px; line-height: 1.7; margin-bottom: 32px; opacity: 0.9;">
-                    Fewer failed deliveries and tighter compliance execution translate directly to avoided penalties.
-                </p>
-
-                <div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 24px; margin-top: auto;">
-                    <div style="font-size: 48px; font-weight: 700; color: #17A2B8; line-height: 1; margin-bottom: 12px;">$440K+</div>
-                    <p style="font-size: 15px; line-height: 1.6; margin-bottom: 32px;">in annual savings for Justin through fewer failed deliveries & tighter compliance</p>
-
-                    <div style="display: flex; gap: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
-                        <div style="flex: 1;">
-                            <div style="font-size: 28px; font-weight: 700; color: #17A2B8;">99%</div>
-                            <div style="font-size: 12px; opacity: 0.7;">RJW OTIF</div>
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <div class="card-label problem">THE PROBLEM</div>
+                            <div class="card-title">OTIF penalties are a direct cost to CPG brands</div>
+                            <div class="card-desc">Late or non-compliant deliveries can trigger retailer fines and deduction exposure across every shipment.</div>
                         </div>
-                        <div style="flex: 1;">
-                            <div style="font-size: 28px; font-weight: 700;">~90%</div>
-                            <div style="font-size: 12px; opacity: 0.7;">Typical 3PL</div>
+
+                        <div class="content-card">
+                            <div class="card-label typical">TYPICAL 3PL REALITY</div>
+                            <div class="card-title">Typical 3PL performance creates more delivery failures</div>
+                            <div class="card-desc">At ~90% on-time performance, more shipments arrive late — driving higher annual OTIF costs.</div>
                         </div>
-                        <div style="flex: 1;">
-                            <div style="font-size: 28px; font-weight: 700;">75%</div>
-                            <div style="font-size: 12px; opacity: 0.7;">Industry avg</div>
+
+                        <div class="advantage-card">
+                            <div class="card-label advantage">RJW'S ADVANTAGE</div>
+                            <div class="card-title">RJW's 99% OTIF reduces Justin's chargeback exposure</div>
+                            <div class="advantage-desc">Fewer failed deliveries and tighter compliance execution translate directly to avoided penalties.</div>
+                            <div class="advantage-value">$440K+</div>
+                            <div class="advantage-desc">in annual savings for Justin through fewer failed deliveries & tighter compliance</div>
+                            <div class="stats-row">
+                                <div class="stat-item">
+                                    <div class="stat-value">99%</div>
+                                    <div class="stat-label">RJW OTIF</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">~90%</div>
+                                    <div class="stat-label">Typical 3PL</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">75%</div>
+                                    <div class="stat-label">Industry avg</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Slide 3: Damaged Pallet Savings -->
-    <div class="slide">
-        <div class="slide-title">
-            <span class="chevron">≫</span> <span class="highlight-teal">Damaged Pallet Savings</span> with RJW
-        </div>
-
-        <div style="font-size: 20px; margin-bottom: 40px;">
-            Justin's opportunity to reduce avoidable Walmart penalties
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 60px; margin-top: 60px;">
-            <div class="timeline" style="flex: 1;">
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div style="font-weight: 600; font-size: 18px; margin-bottom: 8px;">19,000+ pallets</div>
-                        <p>shipped annually, with each damaged pallet carrying <strong>$150 in fine exposure</strong></p>
+        <!-- Section 3: Damaged Pallets -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-number">3</div>
+                <div class="section-title">≫ FEE SAVINGS — DAMAGED PALLETS</div>
+                <div class="section-chevron">›</div>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-headline">
+                        <span class="highlight">Damaged pallet savings</span> with RJW
                     </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div style="font-weight: 600; font-size: 18px; margin-bottom: 8px; color: #17A2B8;">The RJW Difference</div>
-                        <p><strong>RJW identifies and addresses damaged pallets <em>before</em> they leave the facility</strong>, saving Justin heavy retailer fines</p>
+                    <div class="content-subhead">
+                        Justin's opportunity to reduce avoidable Walmart penalties
                     </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div style="font-weight: 600; font-size: 18px; margin-bottom: 8px;">Direct Savings</div>
-                        <p><strong>CPGs save up to $3 per pallet shipped</strong> on damaged pallet fees</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">THE EXPOSURE</div>
+                                <div class="timeline-desc">19,000+ pallets shipped annually, with each damaged pallet carrying <strong>$150 in fine exposure</strong></div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">THE RJW DIFFERENCE</div>
+                                <div class="timeline-desc">RJW identifies and addresses damaged pallets <em>before</em> they leave the facility, saving Justin heavy retailer fines</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">DIRECT SAVINGS</div>
+                                <div class="timeline-desc">CPGs save <strong>$3–$6 per pallet shipped</strong> on damaged pallet fines</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="outcome-box">
+                        <div class="outcome-label">THE OUTCOME</div>
+                        <div class="outcome-value">$60,000</div>
+                        <div class="outcome-desc">Estimated annual damaged pallet savings for Justin</div>
+                        <div class="outcome-subdesc">CPGs save up to $3–$6 per pallet shipped</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div style="flex: 0.8;">
-                <div style="background: white; border: 4px solid #17A2B8; padding: 48px; border-radius: 12px; text-align: center;">
-                    <div class="highlight-teal" style="font-size: 72px; font-weight: 700; margin-bottom: 16px;">$60,000</div>
-                    <div style="font-size: 22px; font-weight: 600; color: #333;">Estimated annual damaged pallet savings for Justin</div>
-                </div>
+        <!-- Section 4: ASN/EDI Fines -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-number">4</div>
+                <div class="section-title">≫ FEE SAVINGS — ASN / EDI FINES</div>
+                <div class="section-chevron">›</div>
             </div>
-        </div>
-    </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-headline">
+                        <span class="highlight">ASN fine savings</span> with RJW
+                    </div>
+                    <div class="content-subhead">
+                        Industry-leading compliance standards reduce ASN and EDI fines
+                    </div>
 
-    <!-- Slide 4: ASN Fine Savings -->
-    <div class="slide">
-        <div class="slide-title">
-            <span class="chevron">≫</span> <span class="highlight-teal">ASN Fine Savings</span> with RJW
-        </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">HOW IT WORKS</div>
+                                <div class="timeline-desc">~$65M in annual COGS shipped to Target, with each PO at risk of a 5% charge</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">IMPROVE RETAILER CONNECTIONS</div>
+                                <div class="timeline-desc">Improve Justin's retailer connections with <strong>RJW's retailer-approved API, EDI and automatic ASN programs</strong></div>
+                            </div>
+                        </div>
+                    </div>
 
-        <div style="font-size: 20px; margin-bottom: 40px;">
-            RJW's industry-leading compliance standards help Justin reduce ASN and EDI fines
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; margin-top: 60px;">
-            <div class="dark-card" style="display: flex; align-items: center; justify-content: center; text-align: center; min-height: 500px;">
-                <div>
-                    <div class="highlight-teal" style="font-size: 56px; font-weight: 700; margin-bottom: 24px;">$32k</div>
-                    <div style="font-size: 20px;">in estimated annual <span class="highlight-teal">ASN/EDI fine savings</span> for Justin</div>
-                </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                <div class="light-card">
-                    <p style="font-size: 16px; line-height: 1.8; margin-bottom: 12px;">~$65M in annual COGS shipped to Target, <strong>with each PO at risk of a 5% charge</strong></p>
-                    <div class="arrow-down"></div>
-                </div>
-
-                <div class="light-card">
-                    <p style="font-size: 16px; line-height: 1.8;">Improve Justin's connection to retailers and vendors with <strong>RJW's retailer-approved API, EDI and automatic ASN programs.</strong></p>
-                    <div class="arrow-down"></div>
-                </div>
-
-                <div class="light-card">
-                    <p style="font-size: 16px; line-height: 1.8;">RJW's strong compliance controls <span class="highlight-teal" style="font-weight: 600;">reduce chargebacks and save Justin thousands in annual retailer fines.</span></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 5: Consolidation Savings -->
-    <div class="slide">
-        <div class="slide-title">
-            <span class="chevron">≫</span> <span class="highlight-teal">Retail Consolidation</span> Savings
-        </div>
-
-        <div style="font-size: 20px; margin-bottom: 40px;">
-            <strong>RJW retail consolidation lowers outbound freight costs</strong> by replacing higher-cost LTL shipments
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 24px; margin-top: 60px;">
-            <div class="dark-card">
-                <div class="card-title" style="margin-bottom: 24px;">LTL shipping is fragmented and expensive</div>
-                <div style="text-align: center; margin: 30px 0;">
-                    <div style="font-size: 80px;">🚛</div>
-                    <div style="font-size: 80px; margin-top: 20px;">🚛</div>
-                    <div style="font-size: 80px; margin-top: 20px;">🚛</div>
-                </div>
-            </div>
-
-            <div class="teal-card">
-                <div class="card-title" style="margin-bottom: 24px;">RJW's Retailer Advantage</div>
-                <div class="light-card" style="background: white; color: #333; margin-top: 24px;">
-                    <p style="font-size: 15px; line-height: 1.7; margin-bottom: 20px;"><strong>RJW's internal consolidation program will directly benefit Justin's shipments with Target.</strong></p>
-                    <div style="text-align: center; margin: 30px 0;">
-                        <div style="font-size: 100px; filter: hue-rotate(200deg);">🚛</div>
-                        <div style="font-size: 14px; font-weight: 600; margin-top: 12px; color: #17A2B8;">RJW</div>
+                    <div class="outcome-box">
+                        <div class="outcome-label">ASN FINE SAVINGS</div>
+                        <div class="outcome-value">$32k</div>
+                        <div class="outcome-desc">in estimated annual ASN/EDI fine savings for Justin</div>
+                        <div class="outcome-subdesc">RJW's strong compliance controls reduce chargebacks and save Justin thousands in annual retailer fines</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="dark-card">
-                <div class="highlight-teal" style="font-size: 56px; font-weight: 700; margin-bottom: 16px;">$20k</div>
-                <div style="font-size: 20px; margin-bottom: 24px;">in annual savings with RJW's retailer consolidation programs</div>
-                <div style="font-size: 16px; font-style: italic; opacity: 0.9; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.3);">
-                    <strong>RJW's Retail Consolidation Services turn CPG supply chains into business growth drivers.</strong>
+        <!-- Section 5: Consolidation Savings -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-number">5</div>
+                <div class="section-title">≫ CONSOLIDATION SAVINGS</div>
+                <div class="section-chevron">›</div>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-headline">
+                        <span class="highlight">Retail consolidation</span> savings
+                    </div>
+                    <div class="content-subhead">
+                        RJW lowers outbound freight costs by replacing higher-cost LTL shipments
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <div class="card-label problem">THE PROBLEM</div>
+                            <div class="card-title">LTL shipping is fragmented and expensive</div>
+                            <div class="card-desc">Individual market trucks carry premium freight costs with no volume leverage. Every shipment priced in isolation.</div>
+                        </div>
+
+                        <div class="content-card">
+                            <div class="card-label advantage">RJW'S RETAILER ADVANTAGE</div>
+                            <div class="card-title">RJW's Retail Consolidation Service</div>
+                            <div class="card-desc">RJW's internal consolidation program will directly benefit Justin's shipments with Target.</div>
+                        </div>
+                    </div>
+
+                    <div class="outcome-box">
+                        <div class="outcome-label">THE OUTCOME</div>
+                        <div class="outcome-value">$20k / yr</div>
+                        <div class="outcome-desc">in annual savings with RJW's retailer consolidation programs</div>
+                        <div class="outcome-subdesc">RJW's Retail Consolidation Services turn CPG supply chains into business growth drivers</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Slide 6: Higher In-Stocks; Better Sales -->
-    <div class="slide">
-        <div class="slide-title">
-            <span class="chevron">≫</span> <span class="highlight-teal">Higher In-Stocks;</span> Better Sales
-        </div>
+        <!-- Section 6: Revenue Improvement -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-number">6</div>
+                <div class="section-title">≫ REVENUE IMPROVEMENT</div>
+                <div class="section-chevron">›</div>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-headline">
+                        Justin's opportunity to <span class="highlight">accelerate sales</span> through higher in-stocks
+                    </div>
+                    <div class="content-subhead">
+                        <span class="highlight">HIGHER IN-STOCKS; BETTER SALES</span>
+                    </div>
 
-        <div style="font-size: 20px; margin-bottom: 40px;">
-            <strong>Justin's opportunity to accelerate sales</strong> through higher in-stocks
-        </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">CONSISTENT PRODUCT FLOW</div>
+                                <div class="timeline-desc">RJW's consolidation model supports <strong>reliable movement through retailer networks</strong></div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">HIGHER IN-STOCK LEVELS</div>
+                                <div class="timeline-desc">Better on-time performance means <strong>fewer out-of-stocks</strong>. A 1–2% increase in on-shelf availability translates to ~1% revenue lift.</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">HIGHER SALES</div>
+                                <div class="timeline-desc">More product on shelf means <strong>more opportunities to convert demand into revenue</strong></div>
+                            </div>
+                        </div>
+                    </div>
 
-        <div style="display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 60px; margin-top: 60px;">
-            <div class="circle-list">
-                <div class="circle-item">
-                    <div class="circle">
-                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #17A2B8 0%, #0d7a8a 100%); display: flex; align-items: center; justify-content: center; font-size: 48px;">🚚</div>
-                    </div>
-                    <div class="circle-content">
-                        <h3>Consistent Product Flow</h3>
-                        <p>RJW's consolidation model supports <strong>reliable movement through retailer networks</strong></p>
-                    </div>
-                </div>
-
-                <div class="circle-item">
-                    <div class="circle">
-                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #17A2B8 0%, #0d7a8a 100%); display: flex; align-items: center; justify-content: center; font-size: 48px;">📦</div>
-                    </div>
-                    <div class="circle-content">
-                        <h3>Higher In-Stock Levels</h3>
-                        <p>Better inventory availability means <strong>fewer out-of-stocks</strong></p>
-                    </div>
-                </div>
-
-                <div class="circle-item">
-                    <div class="circle">
-                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #17A2B8 0%, #0d7a8a 100%); display: flex; align-items: center; justify-content: center; font-size: 48px;">📈</div>
-                    </div>
-                    <div class="circle-content">
-                        <h3>Higher Sales</h3>
-                        <p>More product on shelf means <strong>more opportunities to convert demand into revenue</strong></p>
+                    <div class="outcome-box">
+                        <div class="outcome-label">ANNUAL INCREMENTAL REVENUE OPPORTUNITY</div>
+                        <div class="outcome-value">$888k+</div>
+                        <div class="outcome-desc">annual incremental revenue opportunity for Justin</div>
+                        <div class="outcome-subdesc">According to McKinsey, a 5-10% increase in OTIF results in ~1% revenue boost for CPG brands</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="dark-card" style="display: flex; flex-direction: column; justify-content: center; text-align: center;">
-                <div class="highlight-teal" style="font-size: 64px; font-weight: 700; margin-bottom: 20px;">$888K+</div>
-                <div style="font-size: 24px; margin-bottom: 32px;"><span class="highlight-teal">annual incremental revenue</span> opportunity for Kudos</div>
-                <div style="font-size: 16px; font-style: italic; padding: 24px; background: rgba(255,255,255,0.1); border-radius: 8px; margin-top: 24px;">
-                    According to McKinsey, a 5-10% increase in OTIF results in ~1% revenue boost for CPG brands.
+        <!-- Total Summary -->
+        <div class="total-summary">
+            <div class="summary-columns" style="margin-top: 0; margin-bottom: 40px;">
+                <div class="summary-col savings">
+                    <div class="summary-col-label">DIRECT SAVINGS</div>
+                    <div class="summary-col-value">$477k</div>
+                    <div class="summary-col-desc">fines avoided + ASN + consolidation</div>
                 </div>
+
+                <div class="summary-col revenue">
+                    <div class="summary-col-label">REVENUE IMPROVEMENT</div>
+                    <div class="summary-col-value">$800k+</div>
+                    <div class="summary-col-desc">sales lift from better in-stock</div>
+                </div>
+            </div>
+
+            <div style="padding-top: 40px; border-top: 2px solid rgba(255,255,255,0.2);">
+                <div class="exec-label" style="margin-bottom: 16px;">TOTAL NET BENEFIT</div>
+                <div class="main-headline" style="font-size: 56px; margin-bottom: 12px;">
+                    <span class="main-value">$1.4M</span> / year
+                </div>
+                <div class="sub-headline" style="margin-bottom: 0; font-size: 16px;">Annual estimated net benefit for Justin with RJW</div>
             </div>
         </div>
     </div>
 
     <script>
-        // Print functionality
-        function printDeck() {
-            window.print();
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const allHeaders = document.querySelectorAll('.section-header');
+            const allContents = document.querySelectorAll('.section-content');
+
+            // Close all other sections
+            allHeaders.forEach(h => {
+                if (h !== header) {
+                    h.classList.remove('active');
+                }
+            });
+            allContents.forEach(c => {
+                if (c !== content) {
+                    c.classList.remove('active');
+                }
+            });
+
+            // Toggle current section
+            header.classList.toggle('active');
+            content.classList.toggle('active');
         }
 
-        // Add print button if needed
         document.addEventListener('DOMContentLoaded', function() {
             console.log('RJW Value Communicator loaded');
         });
