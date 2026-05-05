@@ -194,15 +194,17 @@
         .section-header::after {
             content: "Click to expand";
             position: absolute;
-            right: 80px;
-            font-size: 12px;
+            left: 60px;
+            bottom: 4px;
+            font-size: 11px;
             color: #999;
             opacity: 0;
             transition: opacity 0.2s;
+            font-style: italic;
         }
 
         .section-header:hover::after {
-            opacity: 1;
+            opacity: 0.7;
         }
 
         .section-header.active::after {
@@ -232,10 +234,19 @@
             flex: 1;
         }
 
+        .section-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #17A2B8;
+            margin-left: auto;
+            margin-right: 16px;
+        }
+
         .section-chevron {
             color: #17A2B8;
             font-size: 24px;
             transition: transform 0.3s;
+            flex-shrink: 0;
         }
 
         .section-header.active .section-chevron {
@@ -503,7 +514,7 @@
         <div class="exec-summary">
             <div class="exec-label">EXEC SUMMARY</div>
             <div class="main-headline">
-                <span class="main-value">$1.4M</span> in annual estimated net benefit for Justin with RJW
+                <span class="main-value">$1.4M</span> in annual estimated net benefit for Justin's with RJW
             </div>
             <div class="sub-headline">Combined direct savings and revenue improvement</div>
 
@@ -513,7 +524,7 @@
                     <div class="summary-col-value">$477k</div>
                     <div class="summary-col-desc">Eliminated costs from better operations</div>
                     <ul class="summary-bullets">
-                        <li>$440k OTIF penalty avoidance</li>
+                        <li>$440k OTIF (On-Time In-Full) penalty avoidance</li>
                         <li>$60k damaged pallet reduction</li>
                         <li>$32k ASN/EDI fine reduction</li>
                     </ul>
@@ -542,13 +553,14 @@
         <div class="section">
             <div class="section-header" onclick="toggleSection(this)">
                 <div class="section-number">2</div>
-                <div class="section-title">≫ OTIF SAVINGS</div>
+                <div class="section-title">≫ OTIF (On-Time In-Full) SAVINGS</div>
+                <div class="section-amount">$440K+</div>
                 <div class="section-chevron">›</div>
             </div>
             <div class="section-content">
                 <div class="section-inner">
                     <div class="content-headline">
-                        <span class="highlight">Industry-leading OTIF</span> execution drives direct savings to Justin
+                        <span class="highlight">Industry-leading OTIF (On-Time In-Full)</span> execution drives direct savings to Justin's
                     </div>
                     <div class="content-subhead">
                         RJW OTIF performance could save Justin <span class="highlight">$440K+</span> annually
@@ -572,7 +584,7 @@
                             <div class="card-title">RJW's 99% OTIF reduces Justin's chargeback exposure</div>
                             <div class="advantage-desc">Fewer failed deliveries and tighter compliance execution translate directly to avoided penalties.</div>
                             <div class="advantage-value">$440K+</div>
-                            <div class="advantage-desc">in annual savings for Justin through fewer failed deliveries & tighter compliance</div>
+                            <div class="advantage-desc">in annual savings for Justin's through fewer failed deliveries & tighter compliance</div>
                             <div class="stats-row">
                                 <div class="stat-item">
                                     <div class="stat-value">99%</div>
@@ -598,6 +610,7 @@
             <div class="section-header" onclick="toggleSection(this)">
                 <div class="section-number">3</div>
                 <div class="section-title">≫ FEE SAVINGS — DAMAGED PALLETS</div>
+                <div class="section-amount">$60,000</div>
                 <div class="section-chevron">›</div>
             </div>
             <div class="section-content">
@@ -636,7 +649,7 @@
                     <div class="outcome-box">
                         <div class="outcome-label">THE OUTCOME</div>
                         <div class="outcome-value">$60,000</div>
-                        <div class="outcome-desc">Estimated annual damaged pallet savings for Justin</div>
+                        <div class="outcome-desc">Estimated annual damaged pallet savings for Justin's</div>
                         <div class="outcome-subdesc">CPGs save up to $3–$6 per pallet shipped</div>
                     </div>
                 </div>
@@ -648,6 +661,7 @@
             <div class="section-header" onclick="toggleSection(this)">
                 <div class="section-number">4</div>
                 <div class="section-title">≫ FEE SAVINGS — ASN / EDI FINES</div>
+                <div class="section-amount">$32k</div>
                 <div class="section-chevron">›</div>
             </div>
             <div class="section-content">
@@ -679,7 +693,7 @@
                     <div class="outcome-box">
                         <div class="outcome-label">ASN FINE SAVINGS</div>
                         <div class="outcome-value">$32k</div>
-                        <div class="outcome-desc">in estimated annual ASN/EDI fine savings for Justin</div>
+                        <div class="outcome-desc">in estimated annual ASN/EDI fine savings for Justin's</div>
                         <div class="outcome-subdesc">RJW's strong compliance controls reduce chargebacks and save Justin thousands in annual retailer fines</div>
                     </div>
                 </div>
@@ -691,6 +705,7 @@
             <div class="section-header" onclick="toggleSection(this)">
                 <div class="section-number">5</div>
                 <div class="section-title">≫ CONSOLIDATION SAVINGS</div>
+                <div class="section-amount">$20k/yr</div>
                 <div class="section-chevron">›</div>
             </div>
             <div class="section-content">
@@ -731,6 +746,7 @@
             <div class="section-header" onclick="toggleSection(this)">
                 <div class="section-number">6</div>
                 <div class="section-title">≫ REVENUE IMPROVEMENT</div>
+                <div class="section-amount">$888k+</div>
                 <div class="section-chevron">›</div>
             </div>
             <div class="section-content">
@@ -769,7 +785,7 @@
                     <div class="outcome-box">
                         <div class="outcome-label">ANNUAL INCREMENTAL REVENUE OPPORTUNITY</div>
                         <div class="outcome-value">$888k+</div>
-                        <div class="outcome-desc">annual incremental revenue opportunity for Justin</div>
+                        <div class="outcome-desc">annual incremental revenue opportunity for Justin's</div>
                         <div class="outcome-subdesc">According to McKinsey, a 5-10% increase in OTIF results in ~1% revenue boost for CPG brands</div>
                     </div>
                 </div>
@@ -797,7 +813,7 @@
                 <div class="main-headline" style="font-size: 56px; margin-bottom: 12px;">
                     <span class="main-value">$1.4M</span> / year
                 </div>
-                <div class="sub-headline" style="margin-bottom: 0; font-size: 16px;">Annual estimated net benefit for Justin with RJW</div>
+                <div class="sub-headline" style="margin-bottom: 0; font-size: 16px;">Annual estimated net benefit for Justin's with RJW</div>
             </div>
         </div>
     </div>
