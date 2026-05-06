@@ -77,6 +77,7 @@ function App() {
   const [recommendationExpanded, setRecommendationExpanded] = useState(false)
   const [clientFilter, setClientFilter] = useState('all') // 'all', 'needs-attention', 'watch', 'healthy'
   const [badgeFilter, setBadgeFilter] = useState(null) // null or badge type ('W', 'M', 'L', '!', '✓')
+  const [focusMode, setFocusMode] = useState('margin') // 'margin' or 'growth'
   const [sortColumn, setSortColumn] = useState(null)
   const [sortDirection, setSortDirection] = useState('asc') // 'asc' or 'desc'
   const [ratesAccordionOpen, setRatesAccordionOpen] = useState(false)
@@ -202,18 +203,18 @@ function App() {
 
   // Customers data array for table rendering
   const customersData = [
-    { name: 'Our Home', revenue: '$21.2M', marginPerPallet: '$409', logisticsMarginPercent: '33.3', marginPercent: '39.2', walmartPercent: '11', ltlVariance: '+$18', strategicInsights: [], hasAIRecommendation: true },
-    { name: 'Trove Brands', revenue: '$3.9M', marginPerPallet: '$159', logisticsMarginPercent: '32.4', marginPercent: '41.0', walmartPercent: '15', ltlVariance: '+$12', strategicInsights: ['M'], hasAIRecommendation: false },
-    { name: 'Whirlybird Granola', revenue: '$2.7M', marginPerPallet: '$279', logisticsMarginPercent: '38.0', marginPercent: '39.8', walmartPercent: '7', ltlVariance: '+$25', strategicInsights: ['M'], hasAIRecommendation: false },
-    { name: 'Lipton', revenue: '$1.1M', marginPerPallet: '$235', logisticsMarginPercent: '28.6', marginPercent: '35.8', walmartPercent: '19', ltlVariance: '-$8', strategicInsights: ['L'], hasAIRecommendation: false },
-    { name: 'Milky Way', revenue: '$900K', marginPerPallet: '$454', logisticsMarginPercent: '47.0', marginPercent: '42.9', walmartPercent: '8', ltlVariance: '+$22', strategicInsights: ['!'], hasAIRecommendation: false },
-    { name: 'Justin', revenue: '$585,768', marginPerPallet: '$402', logisticsMarginPercent: '35.1', marginPercent: '12.3', walmartPercent: '8', ltlVariance: '-$42', strategicInsights: ['M', 'L'], hasAIRecommendation: true },
-    { name: 'Bragg Live Food', revenue: '$892,450', marginPerPallet: '$230', logisticsMarginPercent: '31.1', marginPercent: '16.8', walmartPercent: '12', ltlVariance: '+$15', strategicInsights: [], hasAIRecommendation: false },
-    { name: 'Trove Brands LLC', revenue: '$1,245,880', marginPerPallet: '$290', logisticsMarginPercent: '38.4', marginPercent: '11.2', walmartPercent: '18', ltlVariance: '+$8', strategicInsights: ['M'], hasAIRecommendation: true },
-    { name: 'WHIRLYBIRD GRANOLA', revenue: '$324,560', marginPerPallet: '$390', logisticsMarginPercent: '30.6', marginPercent: '17.5', walmartPercent: '5', ltlVariance: '+$22', strategicInsights: [], hasAIRecommendation: false },
-    { name: 'AB WORLD FOODS', revenue: '$1,567,230', marginPerPallet: '$345', logisticsMarginPercent: '29.0', marginPercent: '10.8', walmartPercent: '6', ltlVariance: '-$55', strategicInsights: ['M', 'L'], hasAIRecommendation: true },
-    { name: "Nature's Path Foods", revenue: '$2,145,900', marginPerPallet: '$211', logisticsMarginPercent: '32.6', marginPercent: '18.2', walmartPercent: '31', ltlVariance: '+$35', strategicInsights: ['W'], hasAIRecommendation: false },
-    { name: 'KULI KULI FOODS', revenue: '$456,280', marginPerPallet: '$340', logisticsMarginPercent: '34.0', marginPercent: '13.1', walmartPercent: '9', ltlVariance: '+$12', strategicInsights: ['M'], hasAIRecommendation: false }
+    { name: 'Our Home', revenue: '$21.2M', marginPerPallet: '$409', logisticsMarginPercent: '33.3', marginPercent: '39.2', walmartPercent: '11', ltlVariance: '+$18', strategicInsights: [], hasAIRecommendation: true, volumeGrowth: '24%', revenueGrowth: '+$4.2M', expansionScore: 85, newChannels: 3, growthTrend: 'Accelerating' },
+    { name: 'Trove Brands', revenue: '$3.9M', marginPerPallet: '$159', logisticsMarginPercent: '32.4', marginPercent: '41.0', walmartPercent: '15', ltlVariance: '+$12', strategicInsights: ['M'], hasAIRecommendation: false, volumeGrowth: '18%', revenueGrowth: '+$620K', expansionScore: 72, newChannels: 2, growthTrend: 'Steady' },
+    { name: 'Whirlybird Granola', revenue: '$2.7M', marginPerPallet: '$279', logisticsMarginPercent: '38.0', marginPercent: '39.8', walmartPercent: '7', ltlVariance: '+$25', strategicInsights: ['M'], hasAIRecommendation: false, volumeGrowth: '31%', revenueGrowth: '+$680K', expansionScore: 78, newChannels: 1, growthTrend: 'Accelerating' },
+    { name: 'Lipton', revenue: '$1.1M', marginPerPallet: '$235', logisticsMarginPercent: '28.6', marginPercent: '35.8', walmartPercent: '19', ltlVariance: '-$8', strategicInsights: ['L'], hasAIRecommendation: false, volumeGrowth: '8%', revenueGrowth: '+$85K', expansionScore: 45, newChannels: 0, growthTrend: 'Slowing' },
+    { name: 'Milky Way', revenue: '$900K', marginPerPallet: '$454', logisticsMarginPercent: '47.0', marginPercent: '42.9', walmartPercent: '8', ltlVariance: '+$22', strategicInsights: ['!'], hasAIRecommendation: false, volumeGrowth: '15%', revenueGrowth: '+$125K', expansionScore: 68, newChannels: 1, growthTrend: 'Steady' },
+    { name: 'Justin', revenue: '$585,768', marginPerPallet: '$402', logisticsMarginPercent: '35.1', marginPercent: '12.3', walmartPercent: '8', ltlVariance: '-$42', strategicInsights: ['M', 'L'], hasAIRecommendation: true, volumeGrowth: '42%', revenueGrowth: '+$175K', expansionScore: 92, newChannels: 4, growthTrend: 'Accelerating' },
+    { name: 'Bragg Live Food', revenue: '$892,450', marginPerPallet: '$230', logisticsMarginPercent: '31.1', marginPercent: '16.8', walmartPercent: '12', ltlVariance: '+$15', strategicInsights: [], hasAIRecommendation: false, volumeGrowth: '19%', revenueGrowth: '+$145K', expansionScore: 70, newChannels: 2, growthTrend: 'Steady' },
+    { name: 'Trove Brands LLC', revenue: '$1,245,880', marginPerPallet: '$290', logisticsMarginPercent: '38.4', marginPercent: '11.2', walmartPercent: '18', ltlVariance: '+$8', strategicInsights: ['M'], hasAIRecommendation: true, volumeGrowth: '27%', revenueGrowth: '+$265K', expansionScore: 81, newChannels: 3, growthTrend: 'Accelerating' },
+    { name: 'WHIRLYBIRD GRANOLA', revenue: '$324,560', marginPerPallet: '$390', logisticsMarginPercent: '30.6', marginPercent: '17.5', walmartPercent: '5', ltlVariance: '+$22', strategicInsights: [], hasAIRecommendation: false, volumeGrowth: '12%', revenueGrowth: '+$35K', expansionScore: 58, newChannels: 1, growthTrend: 'Steady' },
+    { name: 'AB WORLD FOODS', revenue: '$1,567,230', marginPerPallet: '$345', logisticsMarginPercent: '29.0', marginPercent: '10.8', walmartPercent: '6', ltlVariance: '-$55', strategicInsights: ['M', 'L'], hasAIRecommendation: true, volumeGrowth: '35%', revenueGrowth: '+$405K', expansionScore: 88, newChannels: 2, growthTrend: 'Accelerating' },
+    { name: "Nature's Path Foods", revenue: '$2,145,900', marginPerPallet: '$211', logisticsMarginPercent: '32.6', marginPercent: '18.2', walmartPercent: '31', ltlVariance: '+$35', strategicInsights: ['W'], hasAIRecommendation: false, volumeGrowth: '21%', revenueGrowth: '+$375K', expansionScore: 75, newChannels: 2, growthTrend: 'Steady' },
+    { name: 'KULI KULI FOODS', revenue: '$456,280', marginPerPallet: '$340', logisticsMarginPercent: '34.0', marginPercent: '13.1', walmartPercent: '9', ltlVariance: '+$12', strategicInsights: ['M'], hasAIRecommendation: false, volumeGrowth: '29%', revenueGrowth: '+$105K', expansionScore: 79, newChannels: 1, growthTrend: 'Accelerating' }
   ]
 
   const handleAIClick = (clientData) => {
@@ -1095,38 +1096,99 @@ function App() {
             bgcolor: '#f5f5f5',
             overflow: 'hidden'
           }}>
-            {/* Header */}
+            {/* Sticky Header with Toggle */}
             <Box sx={{
-              p: 2,
+              position: 'sticky',
+              top: 0,
+              zIndex: 100,
               bgcolor: 'white',
               borderBottom: '1px solid #e0e0e0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
+              boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
             }}>
-              <Box>
-                <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '18px', color: '#323130' }}>
-                  Client Scorecard Q4
-                </Typography>
-                <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px' }}>
-                  October 1 - December 31, 2025
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  sx={{ textTransform: 'none', borderColor: '#e0e0e0', color: '#666' }}
-                >
-                  Refresh
-                </Button>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  sx={{ textTransform: 'none', borderColor: '#e0e0e0', color: '#666' }}
-                >
-                  Export
-                </Button>
+              <Box sx={{
+                p: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '18px', color: '#323130' }}>
+                    Client Scorecard Q4
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px' }}>
+                    October 1 - December 31, 2025
+                  </Typography>
+                </Box>
+
+                {/* Focus Mode Toggle - Integrated */}
+                <Box sx={{
+                  display: 'inline-flex',
+                  bgcolor: '#f5f5f5',
+                  borderRadius: '8px',
+                  p: 0.5,
+                  gap: 0.5,
+                  mx: 2
+                }}>
+                  <Button
+                    variant={focusMode === 'margin' ? 'contained' : 'text'}
+                    onClick={() => setFocusMode('margin')}
+                    sx={{
+                      textTransform: 'none',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      px: 3,
+                      py: 1,
+                      borderRadius: '6px',
+                      bgcolor: focusMode === 'margin' ? '#107C10' : 'transparent',
+                      color: focusMode === 'margin' ? 'white' : '#605E5C',
+                      '&:hover': {
+                        bgcolor: focusMode === 'margin' ? '#107C10' : '#e0e0e0'
+                      },
+                      boxShadow: focusMode === 'margin' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    📈 Focus on Margin % Gain
+                  </Button>
+                  <Button
+                    variant={focusMode === 'growth' ? 'contained' : 'text'}
+                    onClick={() => setFocusMode('growth')}
+                    sx={{
+                      textTransform: 'none',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      px: 3,
+                      py: 1,
+                      borderRadius: '6px',
+                      bgcolor: focusMode === 'growth' ? '#0078D4' : 'transparent',
+                      color: focusMode === 'growth' ? 'white' : '#605E5C',
+                      '&:hover': {
+                        bgcolor: focusMode === 'growth' ? '#0078D4' : '#e0e0e0'
+                      },
+                      boxShadow: focusMode === 'growth' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    🚀 Focus on Growth
+                  </Button>
+                </Box>
+
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    sx={{ textTransform: 'none', borderColor: '#e0e0e0', color: '#666' }}
+                  >
+                    Refresh
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    sx={{ textTransform: 'none', borderColor: '#e0e0e0', color: '#666' }}
+                  >
+                    Export
+                  </Button>
+                </Box>
               </Box>
             </Box>
 
@@ -1134,54 +1196,97 @@ function App() {
             <Box sx={{ flexGrow: 1, overflow: 'auto', p: 3 }}>
               {/* Top Metrics Cards - Enhanced PBI Style */}
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, mb: 3 }}>
-                {/* Margin Improvement Card */}
+                {/* Card 1 - Changes based on focus mode */}
                 <Box sx={{
                   bgcolor: 'white',
                   p: 3,
                   border: '1px solid #E1E1E1',
-                  borderLeft: '4px solid #107C10',
+                  borderLeft: focusMode === 'margin' ? '4px solid #107C10' : '4px solid #0078D4',
                   boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                 }}>
-                  <Typography variant="caption" sx={{
-                    color: '#8A8886',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    letterSpacing: '0.5px',
-                    textTransform: 'uppercase',
-                    display: 'block',
-                    mb: 1.5
-                  }}>
-                    Margin Improvement Opportunity
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <Typography variant="caption" sx={{
+                      color: '#8A8886',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      letterSpacing: '0.5px',
+                      textTransform: 'uppercase'
+                    }}>
+                      {focusMode === 'margin' ? 'Margin Improvement Opportunity' : 'Revenue Growth Opportunity'}
+                    </Typography>
+                    {focusMode === 'growth' && (
+                      <Tooltip
+                        title={
+                          <Box sx={{ p: 1 }}>
+                            <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>Calculation Methodology:</Typography>
+                            <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
+                              • 8 clients identified with expansion score &gt; 75
+                            </Typography>
+                            <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
+                              • Current total revenue: $8.4M
+                            </Typography>
+                            <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
+                              • Average YoY growth rate: 25%
+                            </Typography>
+                            <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
+                              • Projected growth: $8.4M × 25% = $2.1M
+                            </Typography>
+                            <Divider sx={{ my: 1, bgcolor: 'rgba(255,255,255,0.2)' }} />
+                            <Typography variant="caption" sx={{ display: 'block', fontStyle: 'italic' }}>
+                              Based on: volume trends, new channel additions, and market expansion readiness scores
+                            </Typography>
+                          </Box>
+                        }
+                        arrow
+                        placement="right"
+                      >
+                        <InfoIcon sx={{ fontSize: '14px', color: '#8A8886', cursor: 'help' }} />
+                      </Tooltip>
+                    )}
+                  </Box>
                   <Typography variant="h3" sx={{ fontWeight: 700, color: '#323130', mb: 1, fontSize: '48px', lineHeight: 1 }}>
-                    $127K
+                    {focusMode === 'margin' ? '$127K' : '$2.1M'}
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5, lineHeight: 1.4 }}>
-                    Across 5 of 24 clients priced below market
+                    {focusMode === 'margin'
+                      ? 'Across 5 of 24 clients priced below market'
+                      : 'Projected annual growth across 8 expansion-ready clients'}
                   </Typography>
 
                   {/* Progress Bar */}
                   <Box sx={{ mb: 1 }}>
                     <Box sx={{ height: 8, bgcolor: '#E1E1E1', borderRadius: 1, overflow: 'hidden' }}>
-                      <Box sx={{ width: '42%', height: '100%', bgcolor: '#107C10' }}></Box>
+                      <Box sx={{
+                        width: focusMode === 'margin' ? '42%' : '67%',
+                        height: '100%',
+                        bgcolor: focusMode === 'margin' ? '#107C10' : '#0078D4'
+                      }}></Box>
                     </Box>
                   </Box>
                   <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block', mb: 2 }}>
-                    42% of $300K annual target
+                    {focusMode === 'margin'
+                      ? '42% of $300K annual target'
+                      : '67% of $3.2M growth pipeline identified'}
                   </Typography>
 
                   {/* Status */}
-                  <Typography variant="caption" sx={{ color: '#107C10', fontSize: '12px', fontWeight: 600 }}>
-                    ▲ Up $23K vs. Q3 — on track
+                  <Typography variant="caption" sx={{
+                    color: focusMode === 'margin' ? '#107C10' : '#0078D4',
+                    fontSize: '12px',
+                    fontWeight: 600
+                  }}>
+                    {focusMode === 'margin'
+                      ? '▲ Up $23K vs. Q3 — on track'
+                      : '▲ Up 15% vs. Q3 — accelerating'}
                   </Typography>
                 </Box>
 
-                {/* Walmart Diversification Card */}
+                {/* Card 2 - Changes based on focus mode */}
                 <Box sx={{
                   bgcolor: 'white',
                   p: 3,
                   border: '1px solid #E1E1E1',
-                  borderLeft: '4px solid #FFB900',
+                  borderLeft: focusMode === 'margin' ? '4px solid #FFB900' : '4px solid #107C10',
                   boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                 }}>
                   <Typography variant="caption" sx={{
@@ -1193,37 +1298,51 @@ function App() {
                     display: 'block',
                     mb: 1.5
                   }}>
-                    Walmart Over-Concentration Risk
+                    {focusMode === 'margin' ? 'Walmart Over-Concentration Risk' : 'High-Growth Clients'}
                   </Typography>
                   <Typography variant="h3" sx={{ fontWeight: 700, color: '#323130', mb: 1, fontSize: '48px', lineHeight: 1 }}>
-                    9
+                    {focusMode === 'margin' ? '9' : '12'}
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5, lineHeight: 1.4 }}>
-                    of 24 clients above 23% — diversification needed
+                    {focusMode === 'margin'
+                      ? 'of 24 clients above 23% — diversification needed'
+                      : 'of 24 clients with 20%+ YoY volume growth'}
                   </Typography>
 
                   {/* Progress Bar */}
                   <Box sx={{ mb: 1 }}>
                     <Box sx={{ height: 8, bgcolor: '#E1E1E1', borderRadius: 1, overflow: 'hidden' }}>
-                      <Box sx={{ width: '38%', height: '100%', bgcolor: '#F2711C' }}></Box>
+                      <Box sx={{
+                        width: focusMode === 'margin' ? '38%' : '50%',
+                        height: '100%',
+                        bgcolor: focusMode === 'margin' ? '#F2711C' : '#107C10'
+                      }}></Box>
                     </Box>
                   </Box>
                   <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block', mb: 2 }}>
-                    38% of portfolio at concentration risk
+                    {focusMode === 'margin'
+                      ? '38% of portfolio at concentration risk'
+                      : '50% of portfolio showing strong growth trajectory'}
                   </Typography>
 
                   {/* Status */}
-                  <Typography variant="caption" sx={{ color: '#F2711C', fontSize: '12px', fontWeight: 600 }}>
-                    Strategic priority: retailer diversification
+                  <Typography variant="caption" sx={{
+                    color: focusMode === 'margin' ? '#F2711C' : '#107C10',
+                    fontSize: '12px',
+                    fontWeight: 600
+                  }}>
+                    {focusMode === 'margin'
+                      ? 'Strategic priority: retailer diversification'
+                      : '▲ Up 3 clients vs. Q3 — momentum building'}
                   </Typography>
                 </Box>
 
-                {/* At-Risk Card */}
+                {/* Card 3 - Changes based on focus mode */}
                 <Box sx={{
                   bgcolor: 'white',
                   p: 3,
                   border: '1px solid #E1E1E1',
-                  borderLeft: '4px solid #107C10',
+                  borderLeft: focusMode === 'margin' ? '4px solid #D13438' : '4px solid #FFB900',
                   boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                 }}>
                   <Typography variant="caption" sx={{
@@ -1235,28 +1354,42 @@ function App() {
                     display: 'block',
                     mb: 1.5
                   }}>
-                    At-Risk: Below LTL Benchmark
+                    {focusMode === 'margin' ? 'At-Risk: Below LTL Benchmark' : 'New Market Opportunities'}
                   </Typography>
                   <Typography variant="h3" sx={{ fontWeight: 700, color: '#323130', mb: 1, fontSize: '48px', lineHeight: 1 }}>
-                    3
+                    {focusMode === 'margin' ? '3' : '6'}
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5, lineHeight: 1.4 }}>
-                    of 24 clients — margin risk on freight
+                    {focusMode === 'margin'
+                      ? 'of 24 clients — margin risk on freight'
+                      : 'clients ready to expand into new retail channels'}
                   </Typography>
 
                   {/* Progress Bar */}
                   <Box sx={{ mb: 1 }}>
                     <Box sx={{ height: 8, bgcolor: '#E1E1E1', borderRadius: 1, overflow: 'hidden' }}>
-                      <Box sx={{ width: '13%', height: '100%', bgcolor: '#107C10' }}></Box>
+                      <Box sx={{
+                        width: focusMode === 'margin' ? '13%' : '25%',
+                        height: '100%',
+                        bgcolor: focusMode === 'margin' ? '#D13438' : '#FFB900'
+                      }}></Box>
                     </Box>
                   </Box>
                   <Typography variant="caption" sx={{ color: '#605E5C', fontSize: '11px', display: 'block', mb: 2 }}>
-                    13% of portfolio — 1 resolved since Q3
+                    {focusMode === 'margin'
+                      ? '13% of portfolio — 1 resolved since Q3'
+                      : '25% of portfolio with expansion potential'}
                   </Typography>
 
                   {/* Status */}
-                  <Typography variant="caption" sx={{ color: '#107C10', fontSize: '12px', fontWeight: 600 }}>
-                    ▼ Down 1 from Q3 — improving
+                  <Typography variant="caption" sx={{
+                    color: focusMode === 'margin' ? '#107C10' : '#FFB900',
+                    fontSize: '12px',
+                    fontWeight: 600
+                  }}>
+                    {focusMode === 'margin'
+                      ? '▼ Down 1 from Q3 — improving'
+                      : '▲ Up 2 clients vs. Q3 — qualifying leads'}
                   </Typography>
                 </Box>
               </Box>
@@ -1413,69 +1546,69 @@ function App() {
                           </Tooltip>
                         </th>
                         <th
-                          onClick={() => handleSort('marginPerPallet')}
+                          onClick={() => handleSort(focusMode === 'margin' ? 'marginPerPallet' : 'volumeGrowth')}
                           style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '12%', cursor: 'pointer', userSelect: 'none' }}
                         >
-                          <Tooltip title="Gross margin per pallet - higher is better for profitability" arrow placement="top">
+                          <Tooltip title={focusMode === 'margin' ? "Gross margin per pallet - higher is better for profitability" : "Year-over-year volume growth percentage"} arrow placement="top">
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
-                              <span>Margin $/Pallet</span>
-                              {sortColumn === 'marginPerPallet' && (
+                              <span>{focusMode === 'margin' ? 'Margin $/Pallet' : 'YoY Volume %'}</span>
+                              {sortColumn === (focusMode === 'margin' ? 'marginPerPallet' : 'volumeGrowth') && (
                                 sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
                               )}
                             </Box>
                           </Tooltip>
                         </th>
                         <th
-                          onClick={() => handleSort('logisticsMargin')}
+                          onClick={() => handleSort(focusMode === 'margin' ? 'logisticsMargin' : 'revenueGrowth')}
                           style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '13%', cursor: 'pointer', userSelect: 'none' }}
                         >
-                          <Tooltip title="Logistics margin percentage - measures efficiency of transportation operations" arrow placement="top">
+                          <Tooltip title={focusMode === 'margin' ? "Logistics margin percentage - measures efficiency of transportation operations" : "Revenue growth in dollars year-over-year"} arrow placement="top">
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
-                              <span>Logistics Margin %</span>
-                              {sortColumn === 'logisticsMargin' && (
+                              <span>{focusMode === 'margin' ? 'Logistics Margin %' : 'Revenue Growth $'}</span>
+                              {sortColumn === (focusMode === 'margin' ? 'logisticsMargin' : 'revenueGrowth') && (
                                 sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
                               )}
                             </Box>
                           </Tooltip>
                         </th>
                         <th
-                          onClick={() => handleSort('margin')}
+                          onClick={() => handleSort(focusMode === 'margin' ? 'margin' : 'expansionScore')}
                           style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '12%', cursor: 'pointer', userSelect: 'none' }}
                         >
-                          <Tooltip title="Overall margin percentage compared to average of 15.5% - key profitability indicator" arrow placement="top">
+                          <Tooltip title={focusMode === 'margin' ? "Overall margin percentage compared to average of 15.5% - key profitability indicator" : "Market expansion readiness score (0-100)"} arrow placement="top">
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
-                              <span>Margin %</span>
-                              {sortColumn === 'margin' && (
+                              <span>{focusMode === 'margin' ? 'Margin %' : 'Expansion Score'}</span>
+                              {sortColumn === (focusMode === 'margin' ? 'margin' : 'expansionScore') && (
                                 sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
                               )}
                             </Box>
                           </Tooltip>
                         </th>
                         <th
-                          onClick={() => handleSort('walmart')}
+                          onClick={() => handleSort(focusMode === 'margin' ? 'walmart' : 'newChannels')}
                           style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '11%', cursor: 'pointer', userSelect: 'none' }}
                         >
-                          <Tooltip title="Walmart concentration - target is below 23% for healthy diversification" arrow placement="top">
+                          <Tooltip title={focusMode === 'margin' ? "Walmart concentration - target is below 23% for healthy diversification" : "Number of new retail channels added this year"} arrow placement="top">
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
-                              <span>Walmart %</span>
-                              {sortColumn === 'walmart' && (
+                              <span>{focusMode === 'margin' ? 'Walmart %' : 'New Channels'}</span>
+                              {sortColumn === (focusMode === 'margin' ? 'walmart' : 'newChannels') && (
                                 sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
                               )}
                             </Box>
                           </Tooltip>
                         </th>
                         <th
-                          onClick={() => handleSort('ltl')}
+                          onClick={() => handleSort(focusMode === 'margin' ? 'ltl' : 'growthTrend')}
                           style={{ padding: '10px 12px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#605E5C', textTransform: 'uppercase', letterSpacing: '0.5px', width: '11%', cursor: 'pointer', userSelect: 'none' }}
                         >
                           <Tooltip
-                            title="Shows how far this client is above or below the LTL freight benchmark on a per-pallet basis. Positive values indicate favorable freight performance; negative values indicate the account is below benchmark and may be eroding margin."
+                            title={focusMode === 'margin' ? "Shows how far this client is above or below the LTL freight benchmark on a per-pallet basis. Positive values indicate favorable freight performance; negative values indicate the account is below benchmark and may be eroding margin." : "Growth trajectory indicator: Accelerating, Steady, or Slowing"}
                             arrow
                             placement="top"
                           >
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5 }}>
-                              <span>LTL Variance</span>
-                              {sortColumn === 'ltl' && (
+                              <span>{focusMode === 'margin' ? 'LTL Variance' : 'Growth Trend'}</span>
+                              {sortColumn === (focusMode === 'margin' ? 'ltl' : 'growthTrend') && (
                                 sortDirection === 'asc' ? <ArrowUpwardIcon sx={{ fontSize: '12px' }} /> : <ArrowDownwardIcon sx={{ fontSize: '12px' }} />
                               )}
                             </Box>
@@ -1596,26 +1729,58 @@ function App() {
                               <div style={{ color: '#0078D4', fontWeight: 500, textDecoration: 'underline' }}>{customer.name}</div>
                               <div style={{ fontSize: '12px', color: '#605E5C', fontWeight: 400 }}>{customer.revenue}</div>
                             </td>
-                            <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130', fontWeight: 600 }}>{customer.marginPerPallet}</td>
-                            <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130', fontWeight: 600 }}>{customer.logisticsMarginPercent}%</td>
-                            <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                                <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                                  <Box sx={{ width: marginBarWidth, height: '100%', bgcolor: marginColor }}></Box>
-                                </Box>
-                                <span style={{ color: marginColor, fontWeight: 600, minWidth: 45 }}>{customer.marginPercent}%</span>
-                              </Box>
+                            <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130', fontWeight: 600 }}>
+                              {focusMode === 'margin' ? customer.marginPerPallet : (
+                                <span style={{ color: parseInt(customer.volumeGrowth) > 20 ? '#107C10' : '#605E5C' }}>{customer.volumeGrowth}</span>
+                              )}
+                            </td>
+                            <td style={{ padding: '12px 16px', textAlign: 'right', color: '#323130', fontWeight: 600 }}>
+                              {focusMode === 'margin' ? `${customer.logisticsMarginPercent}%` : (
+                                <span style={{ color: '#0078D4' }}>{customer.revenueGrowth}</span>
+                              )}
                             </td>
                             <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                                <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
-                                  <Box sx={{ width: walmartBarWidth, height: '100%', bgcolor: walmartColor }}></Box>
+                              {focusMode === 'margin' ? (
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                                  <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
+                                    <Box sx={{ width: marginBarWidth, height: '100%', bgcolor: marginColor }}></Box>
+                                  </Box>
+                                  <span style={{ color: marginColor, fontWeight: 600, minWidth: 45 }}>{customer.marginPercent}%</span>
                                 </Box>
-                                <span style={{ color: walmartColor, fontWeight: 600, minWidth: 45 }}>{customer.walmartPercent}%</span>
-                              </Box>
+                              ) : (
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                                  <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
+                                    <Box sx={{ width: `${customer.expansionScore}%`, height: '100%', bgcolor: customer.expansionScore > 75 ? '#107C10' : '#FFB900' }}></Box>
+                                  </Box>
+                                  <span style={{ color: customer.expansionScore > 75 ? '#107C10' : '#FFB900', fontWeight: 600, minWidth: 45 }}>{customer.expansionScore}</span>
+                                </Box>
+                              )}
                             </td>
                             <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                              <span style={{ color: ltlColor, fontWeight: 600 }}>{ltlVariance}</span>
+                              {focusMode === 'margin' ? (
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                                  <Box sx={{ flex: 1, maxWidth: 60, height: 4, bgcolor: '#F3F2F1', borderRadius: 1, overflow: 'hidden' }}>
+                                    <Box sx={{ width: walmartBarWidth, height: '100%', bgcolor: walmartColor }}></Box>
+                                  </Box>
+                                  <span style={{ color: walmartColor, fontWeight: 600, minWidth: 45 }}>{customer.walmartPercent}%</span>
+                                </Box>
+                              ) : (
+                                <span style={{ color: customer.newChannels > 2 ? '#107C10' : '#605E5C', fontWeight: 600 }}>{customer.newChannels}</span>
+                              )}
+                            </td>
+                            <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                              {focusMode === 'margin' ? (
+                                <span style={{ color: ltlColor, fontWeight: 600 }}>{ltlVariance}</span>
+                              ) : (
+                                <span style={{
+                                  color: customer.growthTrend === 'Accelerating' ? '#107C10' : customer.growthTrend === 'Slowing' ? '#D13438' : '#605E5C',
+                                  fontWeight: 600,
+                                  fontSize: '12px'
+                                }}>
+                                  {customer.growthTrend === 'Accelerating' ? '▲ ' : customer.growthTrend === 'Slowing' ? '▼ ' : '→ '}
+                                  {customer.growthTrend}
+                                </span>
+                              )}
                             </td>
                             <td style={{ padding: '12px 16px' }}>
                               <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center' }}>
@@ -1705,6 +1870,60 @@ function App() {
                     Rate analysis and recommendations
                   </Typography>
                 </Box>
+
+                {/* Focus Mode Toggle - Compact */}
+                <Box sx={{
+                  display: 'inline-flex',
+                  bgcolor: '#f5f5f5',
+                  borderRadius: '6px',
+                  p: 0.4,
+                  gap: 0.4
+                }}>
+                  <Button
+                    variant={focusMode === 'margin' ? 'contained' : 'text'}
+                    onClick={() => setFocusMode('margin')}
+                    sx={{
+                      textTransform: 'none',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      px: 2,
+                      py: 0.75,
+                      minWidth: 'auto',
+                      borderRadius: '4px',
+                      bgcolor: focusMode === 'margin' ? '#107C10' : 'transparent',
+                      color: focusMode === 'margin' ? 'white' : '#605E5C',
+                      '&:hover': {
+                        bgcolor: focusMode === 'margin' ? '#107C10' : '#e0e0e0'
+                      },
+                      boxShadow: focusMode === 'margin' ? '0 1px 2px rgba(0,0,0,0.1)' : 'none',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    📈 Margin
+                  </Button>
+                  <Button
+                    variant={focusMode === 'growth' ? 'contained' : 'text'}
+                    onClick={() => setFocusMode('growth')}
+                    sx={{
+                      textTransform: 'none',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      px: 2,
+                      py: 0.75,
+                      minWidth: 'auto',
+                      borderRadius: '4px',
+                      bgcolor: focusMode === 'growth' ? '#0078D4' : 'transparent',
+                      color: focusMode === 'growth' ? 'white' : '#605E5C',
+                      '&:hover': {
+                        bgcolor: focusMode === 'growth' ? '#0078D4' : '#e0e0e0'
+                      },
+                      boxShadow: focusMode === 'growth' ? '0 1px 2px rgba(0,0,0,0.1)' : 'none',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    🚀 Growth
+                  </Button>
+                </Box>
               </Box>
 
               {/* Content */}
@@ -1717,13 +1936,13 @@ function App() {
                       {/* Conditional KPI Cards based on customer type */}
                       {selectedCustomerDetail.type === 'summary' ? (
                         <>
-                          {/* Margin / Pallet Card */}
+                          {/* Card 1 - Changes based on focus mode */}
                           <Box sx={{
                             bgcolor: 'white',
                             p: 3,
                             borderRadius: '4px',
                             boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
-                            borderLeft: '4px solid #0078D4',
+                            borderLeft: focusMode === 'margin' ? '4px solid #0078D4' : '4px solid #107C10',
                             transition: 'box-shadow 0.3s',
                             '&:hover': {
                               boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
@@ -1738,35 +1957,35 @@ function App() {
                               display: 'block',
                               mb: 1.5
                             }}>
-                              Margin / Pallet
+                              {focusMode === 'margin' ? 'Margin / Pallet' : 'YoY Volume Growth'}
                             </Typography>
                             <Typography sx={{
                               fontSize: '36px',
                               fontWeight: 600,
-                              color: '#323130',
+                              color: focusMode === 'margin' ? '#323130' : '#107C10',
                               lineHeight: 1,
                               mb: 1
                             }}>
-                              {selectedCustomerDetail.marginPerPallet}
+                              {focusMode === 'margin' ? selectedCustomerDetail.marginPerPallet : '+42%'}
                             </Typography>
                             <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
-                              Above industry benchmark
+                              {focusMode === 'margin' ? 'Above industry benchmark' : 'vs. 15% portfolio average'}
                             </Typography>
                             <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
-                              <Box sx={{ width: '85%', height: '100%', bgcolor: '#107C10' }}></Box>
+                              <Box sx={{ width: focusMode === 'margin' ? '85%' : '100%', height: '100%', bgcolor: '#107C10' }}></Box>
                             </Box>
                             <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '13px' }}>
-                              ▲ Strong margin performance
+                              {focusMode === 'margin' ? '▲ Strong margin performance' : '▲ Exceptional growth trajectory'}
                             </Typography>
                           </Box>
 
-                          {/* Margin % Card */}
+                          {/* Card 2 - Changes based on focus mode */}
                           <Box sx={{
                             bgcolor: 'white',
                             p: 3,
                             borderRadius: '4px',
                             boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
-                            borderLeft: '4px solid #107C10',
+                            borderLeft: focusMode === 'margin' ? '4px solid #107C10' : '4px solid #0078D4',
                             transition: 'box-shadow 0.3s',
                             '&:hover': {
                               boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
@@ -1781,35 +2000,35 @@ function App() {
                               display: 'block',
                               mb: 1.5
                             }}>
-                              Margin %
+                              {focusMode === 'margin' ? 'Margin %' : 'Revenue Growth'}
                             </Typography>
                             <Typography sx={{
                               fontSize: '36px',
                               fontWeight: 600,
-                              color: '#107C10',
+                              color: focusMode === 'margin' ? '#107C10' : '#0078D4',
                               lineHeight: 1,
                               mb: 1
                             }}>
-                              {selectedCustomerDetail.marginPercent}
+                              {focusMode === 'margin' ? selectedCustomerDetail.marginPercent : '+$175K'}
                             </Typography>
                             <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
-                              vs. 15.5% avg benchmark
+                              {focusMode === 'margin' ? 'vs. 15.5% avg benchmark' : 'Annual revenue increase'}
                             </Typography>
                             <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
-                              <Box sx={{ width: '100%', height: '100%', bgcolor: '#107C10' }}></Box>
+                              <Box sx={{ width: '100%', height: '100%', bgcolor: focusMode === 'margin' ? '#107C10' : '#0078D4' }}></Box>
                             </Box>
-                            <Typography variant="caption" sx={{ color: '#107C10', fontWeight: 600, fontSize: '13px' }}>
-                              ▲ Significantly above average
+                            <Typography variant="caption" sx={{ color: focusMode === 'margin' ? '#107C10' : '#0078D4', fontWeight: 600, fontSize: '13px' }}>
+                              {focusMode === 'margin' ? '▲ Significantly above average' : '▲ Strong revenue acceleration'}
                             </Typography>
                           </Box>
 
-                          {/* # of Pallets Card */}
+                          {/* Card 3 - Changes based on focus mode */}
                           <Box sx={{
                             bgcolor: 'white',
                             p: 3,
                             borderRadius: '4px',
                             boxShadow: '0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.11)',
-                            borderLeft: '4px solid #8A8886',
+                            borderLeft: focusMode === 'margin' ? '4px solid #8A8886' : '4px solid #FFB900',
                             transition: 'box-shadow 0.3s',
                             '&:hover': {
                               boxShadow: '0 3.2px 7.2px rgba(0,0,0,0.15), 0 0.6px 1.8px rgba(0,0,0,0.13)'
@@ -1824,25 +2043,25 @@ function App() {
                               display: 'block',
                               mb: 1.5
                             }}>
-                              # of Pallets
+                              {focusMode === 'margin' ? '# of Pallets' : 'New Channels Added'}
                             </Typography>
                             <Typography sx={{
                               fontSize: '36px',
                               fontWeight: 600,
-                              color: '#323130',
+                              color: focusMode === 'margin' ? '#323130' : '#FFB900',
                               lineHeight: 1,
                               mb: 1
                             }}>
-                              {selectedCustomerDetail.numPallets}
+                              {focusMode === 'margin' ? selectedCustomerDetail.numPallets : '4'}
                             </Typography>
                             <Typography variant="body2" sx={{ color: '#605E5C', fontSize: '13px', mb: 1.5 }}>
-                              Annual volume
+                              {focusMode === 'margin' ? 'Annual volume' : 'This year (Target, CVS, Kroger, Walgreens)'}
                             </Typography>
                             <Box sx={{ width: '100%', height: 6, bgcolor: '#EDEBE9', borderRadius: 1, overflow: 'hidden', mb: 1 }}>
-                              <Box sx={{ width: '90%', height: '100%', bgcolor: '#0078D4' }}></Box>
+                              <Box sx={{ width: focusMode === 'margin' ? '90%' : '100%', height: '100%', bgcolor: focusMode === 'margin' ? '#0078D4' : '#FFB900' }}></Box>
                             </Box>
-                            <Typography variant="caption" sx={{ color: '#0078D4', fontWeight: 600, fontSize: '13px' }}>
-                              High-volume strategic account
+                            <Typography variant="caption" sx={{ color: focusMode === 'margin' ? '#0078D4' : '#FFB900', fontWeight: 600, fontSize: '13px' }}>
+                              {focusMode === 'margin' ? 'High-volume strategic account' : '▲ Rapid channel expansion'}
                             </Typography>
                           </Box>
 
